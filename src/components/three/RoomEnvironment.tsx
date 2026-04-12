@@ -23,8 +23,8 @@ export default function RoomEnvironment() {
     const positions = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount; i++) {
       positions[i * 3] = (Math.random() - 0.5) * 10;
-      positions[i * 3 + 1] = Math.random() * 5;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 8;
+      positions[i * 3 + 1] = Math.random() * 4 + 0.5; // Spawn slightly higher, away from ground
+      positions[i * 3 + 2] = -2.5 + (Math.random() * 3.5); // Spawn strictly between Z=-2.5 and Z=1.0 (safely behind camera)
     }
     return { positions, count: particleCount };
   }, []);
