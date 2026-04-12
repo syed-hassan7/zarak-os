@@ -41,7 +41,7 @@ export default function DownloadCV() {
       <div className="grid grid-cols-2 gap-4 w-full max-w-xs pt-4">
         <div className="border border-os-border/50 p-2 rounded bg-os-surface/30">
           <div className="text-[9px] text-os-text-sec/50 uppercase">Size</div>
-          <div className="text-[11px] text-os-text-pri font-mono">1.2 MB</div>
+          <div className="text-[11px] text-os-text-pri font-mono">116 KB</div>
         </div>
         <div className="border border-os-border/50 p-2 rounded bg-os-surface/30">
           <div className="text-[9px] text-os-text-sec/50 uppercase">Format</div>
