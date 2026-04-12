@@ -1,4 +1,4 @@
-# ZARAK_OS // KERNEL_V3.0.0
+# ZARAK_OS // KERNEL_V2.6.1
 
 A high-fidelity, immersive "Cyber-Noir" portfolio operating system built for **Syed Zarak Hassan**. This project simulates a terminal-driven, retro-futuristic desktop environment seamlessly embedded into a full 3D interactive hacker workspace to showcase professional experience, skills, and projects in the field of Compliance and Information Security.
 
