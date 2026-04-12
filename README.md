@@ -2,8 +2,6 @@
 
 A high-fidelity, immersive "Cyber-Noir" portfolio operating system built for **Syed Zarak Hassan**. This project simulates a terminal-driven, retro-futuristic desktop environment seamlessly embedded into a full 3D interactive hacker workspace to showcase professional experience, skills, and projects in the field of Compliance and Information Security.
 
-![ZARAK_OS Preview](https://picsum.photos/seed/cyberpunk/1200/600)
-
 ## 🌑 Overview
 
 ZARAK_OS is more than a portfolio; it's a digital experience featuring a custom window manager, functional terminal, and interactive 3D desktop. It abandons generic web patterns for a technical, "specialist tool" cyber-noir aesthetic inspired by classic terminal interfaces.
