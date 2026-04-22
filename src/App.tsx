@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Analytics } from '@vercel/analytics/react';
 import BootScreen from './components/BootScreen';
 import LoginScreen from './components/LoginScreen';
 import Desktop from './components/Desktop';
@@ -26,6 +27,7 @@ export default function App() {
           <Desktop key="desktop" />
         )}
       </AnimatePresence>
+      <Analytics />
     </div>
   );
 }
