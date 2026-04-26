@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 
 const EXPERIENCE = [
   {
@@ -39,59 +39,58 @@ const EXPERIENCE = [
 
 export default function Experience() {
   return (
-    <div className="p-6 h-full overflow-y-auto custom-scrollbar bg-os-bg/30">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div className="flex items-center gap-4 mb-10 border-b border-os-border/30 pb-6">
-          <div className="w-12 h-12 rounded-lg bg-os-accent/10 border border-os-accent/30 flex items-center justify-center">
-            <span className="text-os-accent font-bold text-xl">01</span>
+    <div className="h-full overflow-y-auto bg-os-bg/65 p-7 custom-scrollbar">
+      <div className="mx-auto max-w-4xl space-y-7">
+        <header className="rounded-3xl border border-white/10 bg-white/[0.045] p-6 shadow-xl shadow-black/10 backdrop-blur-xl">
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-os-accent/20 bg-os-accent/[0.08]">
+              <span className="text-lg font-semibold text-os-accent">01</span>
+            </div>
+            <div>
+              <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-os-text-sec/70">Career history</p>
+              <h2 className="mt-1 text-2xl font-semibold tracking-tight text-os-text-pri">Experience</h2>
+            </div>
           </div>
-          <div>
-            <h2 className="text-os-text-pri text-lg font-bold tracking-widest uppercase">Career_Logs</h2>
-            <p className="text-os-text-sec text-[10px] font-mono uppercase tracking-widest opacity-50">System_Event_History // Compliance_Analyst</p>
-          </div>
-        </div>
-        
-        <div className="grid gap-8">
+        </header>
+
+        <div className="space-y-4">
           {EXPERIENCE.map((exp, i) => (
             <motion.div 
               key={i} 
-              initial={{ y: 20, opacity: 0 }}
+              initial={{ y: 14, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: i * 0.1 }}
-              className="relative group"
+              transition={{ delay: i * 0.07 }}
+              className="group rounded-3xl border border-white/10 bg-os-surface/45 p-5 shadow-xl shadow-black/10 transition-colors hover:border-white/18 hover:bg-white/[0.055] motion-reduce:transition-none"
             >
-              {/* Technical Grid Background */}
-              <div className="absolute -inset-4 bg-os-surface/20 rounded-xl border border-os-border/30 group-hover:border-os-accent/20 transition-colors -z-10" />
-              
-              <div className="flex flex-col md:flex-row gap-6">
-                <div className="md:w-48 shrink-0">
-                  <div className="text-[10px] text-os-accent font-mono mb-1 tracking-tighter">{exp.date}</div>
-                  <div className={`text-[9px] inline-block px-2 py-0.5 rounded-sm font-bold tracking-widest uppercase ${
+              <div className="flex flex-col gap-5 md:flex-row">
+                <div className="shrink-0 md:w-48">
+                  <div className="mb-2 font-mono text-[11px] text-os-text-sec/75">{exp.date}</div>
+                  <div className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${
                     exp.status === 'ACTIVE' ? 'bg-os-accent/20 text-os-accent' :
                     exp.status === 'IN_PROGRESS' ? 'bg-os-warn/20 text-os-warn' :
-                    'bg-os-text-sec/20 text-os-text-sec'
+                    'bg-white/10 text-os-text-sec'
                   }`}>
                     {exp.status}
                   </div>
                 </div>
 
                 <div className="flex-1 space-y-4">
-                  <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+                  <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-start">
                     <div>
-                      <h3 className="text-os-text-pri font-bold text-lg tracking-tight">{exp.company}</h3>
-                      <p className="text-os-text-sec text-sm italic">{exp.role}</p>
+                      <h3 className="text-lg font-semibold tracking-tight text-os-text-pri">{exp.company}</h3>
+                      <p className="mt-1 text-sm text-os-text-sec">{exp.role}</p>
                     </div>
-                    <div className="text-[10px] text-os-text-sec/30 font-mono hidden sm:block">
+                    <div className="hidden rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-[10px] text-os-text-sec/45 sm:block">
                       ID: 0X{i}F{i+7}A
                     </div>
                   </div>
 
-                  <div className="grid sm:grid-cols-2 gap-3 pt-2">
+                  <div className="grid gap-3 sm:grid-cols-2">
                     {exp.achievements.map((ach, j) => (
-                      <div key={j} className="bg-os-chrome/30 border border-os-border/20 p-3 rounded-md group-hover:bg-os-chrome/50 transition-colors">
-                        <div className="flex gap-3 items-start">
-                          <div className="w-1 h-1 rounded-full bg-os-accent mt-1.5 shrink-0" />
-                          <p className="text-os-text-sec text-[11px] leading-relaxed">{ach}</p>
+                      <div key={j} className="rounded-2xl border border-white/8 bg-white/[0.035] p-3.5">
+                        <div className="flex items-start gap-3">
+                          <div className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-os-accent/80" />
+                          <p className="text-xs leading-relaxed text-os-text-pri/78">{ach}</p>
                         </div>
                       </div>
                     ))}
@@ -102,10 +101,8 @@ export default function Experience() {
           ))}
         </div>
 
-        <div className="mt-12 pt-8 border-t border-os-border/20 text-center">
-          <p className="text-[10px] text-os-text-sec/30 font-mono uppercase tracking-[0.3em]">
-            // End_Of_Transmission //
-          </p>
+        <div className="pt-3 text-center">
+          <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-os-text-sec/35">End of transmission</p>
         </div>
       </div>
     </div>

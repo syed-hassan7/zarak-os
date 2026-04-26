@@ -13,9 +13,9 @@ const data = [
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-os-surface border border-os-accent p-3 shadow-xl">
-        <p className="text-os-accent text-[12px] font-bold mb-1">{payload[0].payload.subject}</p>
-        <p className="text-os-text-pri text-[11px] font-mono">{payload[0].payload.evidence}</p>
+      <div className="rounded-2xl border border-white/12 bg-os-bg/95 p-3 shadow-2xl shadow-black/30 backdrop-blur-xl">
+        <p className="mb-1 text-xs font-semibold text-os-text-pri">{payload[0].payload.subject}</p>
+        <p className="text-[11px] text-os-text-sec">{payload[0].payload.evidence}</p>
       </div>
     );
   }
@@ -24,50 +24,74 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 export default function Skills() {
   return (
-    <div className="h-full flex flex-col p-6 items-center justify-center">
-      <div className="text-os-text-sec text-[11px] font-mono mb-4">
-        competency_scan.exe
-      </div>
-      
-      <div className="w-full h-[310px]">
-        <ResponsiveContainer width="100%" height="100%">
-          <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
-            <PolarGrid stroke="#21273A" />
-            <PolarAngleAxis 
-              dataKey="subject" 
-              tick={{ fill: '#4B9EBF', fontSize: 10, fontFamily: 'JetBrains Mono' }} 
-            />
-            <Radar
-              name="Syed Zarak Hassan"
-              dataKey="A"
-              stroke="#00D9C0"
-              fill="#00D9C0"
-              fillOpacity={0.12}
-            />
-            <Tooltip content={<CustomTooltip />} />
-          </RadarChart>
-        </ResponsiveContainer>
-      </div>
+    <div className="flex h-full flex-col overflow-y-auto bg-os-bg/65 p-7 custom-scrollbar">
+      <header className="mb-5 rounded-3xl border border-white/10 bg-white/[0.045] p-5 shadow-xl shadow-black/10 backdrop-blur-xl">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-os-text-sec/70">Capability map</p>
+            <h2 className="mt-1 text-2xl font-semibold tracking-tight text-os-text-pri">Skills</h2>
+          </div>
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-os-accent/20 bg-os-accent/[0.08]">
+            <Shield className="h-5 w-5 text-os-accent" />
+          </div>
+        </div>
+      </header>
 
-      <div className="mt-2 w-full bg-os-surface/30 border border-os-border/50 rounded-lg p-4">
-        <div className="text-[10px] text-os-text-sec uppercase tracking-widest mb-3 flex items-center justify-between border-b border-os-border/50 pb-2">
-           <div className="flex items-center gap-2">
-             <Shield className="w-3 h-3 text-os-accent" />
-             <span>Verified Credentials</span>
-           </div>
-           <Award className="w-3 h-3 text-[#F5BF4F]" />
-        </div>
-        
-        <div className="grid grid-cols-2 gap-4 text-[10px] text-os-text-pri font-mono">
-          <div className="flex flex-col gap-1 border-l border-os-accent/30 pl-2">
-            <span className="text-os-accent font-bold">MSc Cyber Security</span>
-            <span className="text-os-text-sec/80 leading-tight">Currently completing at Nottingham Trent Uni</span>
+      <div className="grid min-h-[360px] flex-1 gap-5 lg:grid-cols-[1.35fr_0.9fr]">
+        <section className="rounded-3xl border border-white/10 bg-os-surface/45 p-4 shadow-xl shadow-black/10">
+          <div className="mb-2 px-2 font-mono text-[10px] uppercase tracking-[0.22em] text-os-text-sec/55">
+            competency scan
           </div>
-          <div className="flex flex-col gap-1 border-l border-[#F5BF4F]/30 pl-2">
-            <span className="text-[#F5BF4F] font-bold">Prof. Cyber Security</span>
-            <span className="text-os-text-sec/80 leading-tight">Google Certified & Active SOC Member</span>
+          <div className="h-[330px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <RadarChart cx="50%" cy="50%" outerRadius="76%" data={data}>
+                <PolarGrid stroke="rgba(255,255,255,0.12)" />
+                <PolarAngleAxis
+                  dataKey="subject"
+                  tick={{ fill: 'rgba(224,231,255,0.72)', fontSize: 10, fontFamily: 'Inter, system-ui, sans-serif' }}
+                />
+                <Radar
+                  name="Syed Zarak Hassan"
+                  dataKey="A"
+                  stroke="#00D9C0"
+                  fill="#00D9C0"
+                  fillOpacity={0.14}
+                />
+                <Tooltip content={<CustomTooltip />} />
+              </RadarChart>
+            </ResponsiveContainer>
           </div>
-        </div>
+        </section>
+
+        <section className="rounded-3xl border border-white/10 bg-white/[0.045] p-5 shadow-xl shadow-black/10">
+          <div className="mb-5 flex items-center justify-between border-b border-white/10 pb-4">
+            <div className="flex items-center gap-2">
+              <Shield className="h-4 w-4 text-os-accent" />
+              <span className="text-sm font-semibold text-os-text-pri">Verified credentials</span>
+            </div>
+            <Award className="h-4 w-4 text-[#F5BF4F]" />
+          </div>
+
+          <div className="space-y-3">
+            <div className="rounded-2xl border border-os-accent/15 bg-os-accent/[0.055] p-4">
+              <span className="text-sm font-semibold text-os-accent">MSc Cyber Security</span>
+              <p className="mt-2 text-xs leading-relaxed text-os-text-sec">Currently completing at Nottingham Trent Uni</p>
+            </div>
+            <div className="rounded-2xl border border-[#F5BF4F]/15 bg-[#F5BF4F]/[0.055] p-4">
+              <span className="text-sm font-semibold text-[#F5BF4F]">Prof. Cyber Security</span>
+              <p className="mt-2 text-xs leading-relaxed text-os-text-sec">Google Certified & Active SOC Member</p>
+            </div>
+          </div>
+
+          <div className="mt-5 space-y-2">
+            {data.map((skill) => (
+              <div key={skill.subject} className="flex items-center justify-between gap-3 rounded-2xl border border-white/8 bg-white/[0.035] px-3 py-2.5">
+                <span className="text-xs text-os-text-pri/82">{skill.subject}</span>
+                <span className="font-mono text-[11px] text-os-text-sec">{skill.A}</span>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </div>
   );

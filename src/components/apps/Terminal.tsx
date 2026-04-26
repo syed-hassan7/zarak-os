@@ -1,10 +1,11 @@
 import { type FormEvent, type KeyboardEvent, useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { TERMINAL_COMMANDS, TERM_COLORS } from '../../constants';
+import { isAppId, type AppId } from '../../os/types';
 
 interface TerminalProps {
   isMobile?: boolean;
-  onOpenApp?: (id: string) => void;
+  onOpenApp?: (id: AppId) => void;
 }
 
 export default function Terminal({ isMobile, onOpenApp }: TerminalProps) {
@@ -47,7 +48,10 @@ export default function Terminal({ isMobile, onOpenApp }: TerminalProps) {
       const responses = (TERMINAL_COMMANDS as Record<string, { text: string; color?: string; action?: string; target?: string }[]>)[cmd];
       responses.forEach((res) => {
         if (res.action === 'OPEN_WINDOW' && onOpenApp) {
-          onOpenApp(res.target?.split('.')[0] ?? '');
+          const targetAppId = res.target?.split('.')[0] ?? '';
+          if (isAppId(targetAppId)) {
+            onOpenApp(targetAppId);
+          }
         }
         if (res.action === 'OPEN_URL' && res.target) {
           window.open(res.target, '_blank', 'noopener,noreferrer');
