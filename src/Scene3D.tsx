@@ -1,4 +1,4 @@
-import { Suspense, useState, useCallback, useEffect } from 'react';
+import { Suspense, useState, useCallback, useEffect, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { PerspectiveCamera } from '@react-three/drei';
 import { AnimatePresence } from 'motion/react';
@@ -10,7 +10,7 @@ import App from './App';
 
 // ── Constants ──
 const CAM_START  = new THREE.Vector3(0, 5.5, 8);
-const CAM_END    = new THREE.Vector3(0, 2.1, 3.0);
+const CAM_END    = new THREE.Vector3(0, 2.08, 2.55);
 const CAM_TARGET = new THREE.Vector3(0, 1.9, -0.5);
 
 // Monitor corners in world-space (exact inner bezel edges from DeskScene geometry)
@@ -79,7 +79,7 @@ function CameraAnimator({
       cameraRef.current.position.copy(CAM_START);
     }
 
-    const t = Math.min((clock.getElapsedTime() - startTime.current) / 2.5, 1);
+    const t = Math.min((clock.getElapsedTime() - startTime.current) / 1.55, 1);
     cameraRef.current.position.lerpVectors(CAM_START, CAM_END, 1 - Math.pow(1 - t, 3));
 
     if (t >= 1) {
@@ -99,9 +99,6 @@ function CameraAnimator({
     />
   );
 }
-
-// Need useRef for CameraAnimator
-import { useRef } from 'react';
 
 /**
  * Root 3D scene.
@@ -130,11 +127,11 @@ export default function Scene3D() {
 
   const handleLoadComplete = useCallback(() => {
     setIsLoaded(true);
-    setTimeout(() => setSceneReady(true), 600);
+    setTimeout(() => setSceneReady(true), 180);
   }, []);
 
   const handleCameraComplete = useCallback(() => {
-    setTimeout(() => setShowApp(true), 400);
+    setTimeout(() => setShowApp(true), 180);
   }, []);
 
   return (
@@ -147,7 +144,7 @@ export default function Scene3D() {
       {/* 3D Canvas */}
       <Canvas
         shadows={false}
-        dpr={[1, 1.5]}
+        dpr={[1, 1.25]}
         gl={{
           antialias: true,
           alpha: false,

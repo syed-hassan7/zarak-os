@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 export default function DigitalBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -11,8 +11,10 @@ export default function DigitalBackground() {
     if (!ctx) return;
 
     let animationFrameId: number;
+    let lastFrameTime = 0;
     let width = canvas.parentElement?.clientWidth || window.innerWidth;
     let height = canvas.parentElement?.clientHeight || window.innerHeight;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const resize = () => {
       width = canvas.parentElement?.clientWidth || window.innerWidth;
@@ -25,8 +27,8 @@ export default function DigitalBackground() {
     resize();
 
     // Node Properties
-    const MAX_NODES = Math.floor((width * height) / 15000); // Responsive density
-    const CONNECTION_DISTANCE = 150;
+    const MAX_NODES = Math.min(80, Math.floor((width * height) / 22000)); // Responsive density
+    const CONNECTION_DISTANCE = 135;
     
     interface Node {
       x: number;
@@ -48,7 +50,23 @@ export default function DigitalBackground() {
         });
     }
 
-    const draw = () => {
+    const draw = (timestamp: number) => {
+      if (prefersReducedMotion) {
+        return;
+      }
+
+      if (document.visibilityState === 'hidden') {
+        animationFrameId = requestAnimationFrame(draw);
+        return;
+      }
+
+      if (timestamp - lastFrameTime < 33) {
+        animationFrameId = requestAnimationFrame(draw);
+        return;
+      }
+
+      lastFrameTime = timestamp;
+
       // Clear with very slight transparency for trail effect
       ctx.fillStyle = 'rgba(5, 7, 10, 0.4)';
       ctx.fillRect(0, 0, width, height);
@@ -98,7 +116,7 @@ export default function DigitalBackground() {
       animationFrameId = requestAnimationFrame(draw);
     };
 
-    draw();
+    animationFrameId = requestAnimationFrame(draw);
 
     return () => {
       window.removeEventListener('resize', resize);

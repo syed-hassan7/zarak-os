@@ -71,7 +71,7 @@ export default function About() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.06 }}
-                className="group rounded-2xl border border-white/10 bg-white/[0.045] p-4 shadow-lg shadow-black/10 transition-all hover:-translate-y-0.5 hover:border-white/18 hover:bg-white/[0.07] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                className="group transform-gpu rounded-2xl border border-white/10 bg-white/[0.045] p-4 shadow-lg shadow-black/10 transition-[transform,background-color,border-color] duration-100 ease-out hover:-translate-y-0.5 hover:border-white/18 hover:bg-white/[0.07] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
               >
                 <div className="mb-3 flex items-center justify-between">
                   <div className="flex items-center gap-2 text-os-text-sec transition-colors group-hover:text-os-text-pri">

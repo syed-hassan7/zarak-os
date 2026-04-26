@@ -36,7 +36,7 @@ export default function FloatingDock({
               aria-label={app.label}
               aria-current={isActive ? 'page' : undefined}
               onClick={() => onToggleApp(app.id)}
-              className={`group relative flex h-12 w-12 items-center justify-center rounded-[18px] border transition-all duration-200 motion-reduce:transition-none ${
+              className={`group relative flex h-12 w-12 transform-gpu items-center justify-center rounded-[18px] border transition-[transform,background-color,border-color,color] duration-100 ease-out will-change-transform motion-reduce:transition-none ${
                 isActive
                   ? 'border-white/25 bg-white/18 text-os-text-pri shadow-xl shadow-black/25'
                   : 'border-white/10 bg-white/[0.08] text-os-text-sec hover:-translate-y-1 hover:border-white/22 hover:bg-white/14 hover:text-os-text-pri motion-reduce:hover:translate-y-0'
@@ -54,7 +54,7 @@ export default function FloatingDock({
                   }`}
                 />
               )}
-              <span className="pointer-events-none absolute bottom-full mb-2 max-w-40 rounded-lg border border-white/10 bg-os-bg/88 px-2 py-1 text-[10px] text-os-text-pri opacity-0 shadow-xl backdrop-blur-xl transition-opacity duration-150 group-hover:opacity-100 motion-reduce:transition-none">
+              <span className="pointer-events-none absolute bottom-full mb-2 max-w-40 rounded-lg border border-white/10 bg-os-bg/92 px-2 py-1 text-[10px] text-os-text-pri opacity-0 shadow-lg transition-opacity duration-100 group-hover:opacity-100 motion-reduce:transition-none">
                 {app.label}
               </span>
             </button>

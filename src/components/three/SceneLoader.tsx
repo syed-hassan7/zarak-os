@@ -1,25 +1,16 @@
+import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { useState, useEffect } from 'react';
 
 const LOAD_STEPS = [
-  'ALLOCATING_GPU_MEMORY',
-  'COMPILING_SHADERS',
-  'LOADING_SCENE_GRAPH',
-  'INITIALIZING_MATERIALS',
-  'BUILDING_GEOMETRY',
-  'CONFIGURING_LIGHTS',
-  'RENDERING_ENVIRONMENT',
-  'BOOTING_DISPLAY',
+  'Preparing workspace',
+  'Focusing display',
+  'Starting session',
 ];
 
 interface SceneLoaderProps {
   onComplete: () => void;
 }
 
-/**
- * A dedicated 3D scene loading overlay that shows initialization progress.
- * Styled consistently with the ZARAK_OS boot aesthetic.
- */
 export default function SceneLoader({ onComplete }: SceneLoaderProps) {
   const [progress, setProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
@@ -27,7 +18,7 @@ export default function SceneLoader({ onComplete }: SceneLoaderProps) {
   useEffect(() => {
     let frame: number;
     let start: number | null = null;
-    const duration = 3200; // Total load animation duration in ms
+    const duration = 1650;
 
     const animate = (timestamp: number) => {
       if (!start) start = timestamp;
@@ -39,9 +30,10 @@ export default function SceneLoader({ onComplete }: SceneLoaderProps) {
 
       if (pct < 100) {
         frame = requestAnimationFrame(animate);
-      } else {
-        onComplete();
+        return;
       }
+
+      onComplete();
     };
 
     frame = requestAnimationFrame(animate);
@@ -53,88 +45,52 @@ export default function SceneLoader({ onComplete }: SceneLoaderProps) {
       initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.6 }}
-      className="fixed inset-0 bg-os-bg z-9999 flex flex-col items-center justify-center font-mono select-none"
+      transition={{ duration: 0.45 }}
+      className="fixed inset-0 z-[9999] flex select-none flex-col items-center justify-center overflow-hidden bg-os-bg font-sans"
     >
-      {/* Top status bar */}
-      <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-start">
-        <div>
-          <div className="text-os-accent text-[11px] tracking-[0.3em] font-bold">ZARAK_OS</div>
-          <div className="text-os-text-sec/50 text-[9px] tracking-widest mt-1">ENVIRONMENT_LOADER_V1.0</div>
-        </div>
-        <div className="text-os-text-sec/40 text-[10px] tracking-widest font-mono">
-          GPU_INIT
-        </div>
-      </div>
+      <div className="absolute inset-0 bg-[linear-gradient(145deg,rgba(45,212,191,0.12),transparent_32%,rgba(255,255,255,0.055)_72%,transparent_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.12),transparent_44%),linear-gradient(180deg,rgba(5,7,10,0.1),rgba(5,7,10,0.9))]" />
 
-      {/* Center content */}
-      <div className="w-full max-w-md px-8 space-y-8">
-        {/* Main title */}
-        <div className="text-center space-y-2">
-          <motion.div
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-os-accent text-sm tracking-[0.4em] uppercase font-bold"
-          >
-            Initializing Environment
-          </motion.div>
-          <motion.div
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="text-os-text-sec/60 text-[10px] tracking-[0.2em] uppercase"
-          >
-            Loading 3D Workspace
-          </motion.div>
-        </div>
+      <div className="relative z-10 flex w-full max-w-sm flex-col items-center px-8 text-center">
+        <motion.div
+          initial={{ y: 10, opacity: 0, scale: 0.96 }}
+          animate={{ y: 0, opacity: 1, scale: 1 }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-6 flex h-16 w-16 items-center justify-center rounded-3xl border border-white/12 bg-white/[0.07] shadow-2xl shadow-black/25 backdrop-blur-2xl"
+        >
+          <img src="/logo.svg" alt="ZARAK_OS" className="h-8 w-8 object-contain opacity-90" />
+        </motion.div>
 
-        {/* Progress bar */}
-        <div className="space-y-3">
-          <div className="w-full h-[3px] bg-os-border/30 rounded-full overflow-hidden">
+        <motion.div
+          initial={{ y: 8, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.08, duration: 0.42 }}
+          className="text-sm font-semibold tracking-[0.22em] text-os-text-pri"
+        >
+          ZARAK_OS
+        </motion.div>
+        <motion.div
+          initial={{ y: 8, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.14, duration: 0.42 }}
+          className="mt-2 text-[10px] uppercase tracking-[0.2em] text-os-text-sec/70"
+        >
+          {LOAD_STEPS[currentStep]}
+        </motion.div>
+
+        <div className="mt-8 w-full space-y-3">
+          <div className="h-1.5 overflow-hidden rounded-full border border-white/10 bg-white/[0.045] shadow-inner shadow-black/20">
             <motion.div
-              className="h-full rounded-full bg-linear-to-r from-os-accent to-os-warn"
+              className="h-full rounded-full bg-os-accent"
               style={{ width: `${progress}%` }}
               transition={{ ease: 'linear', duration: 0.1 }}
             />
           </div>
-
-          <div className="flex justify-between items-center">
-            <span className="text-os-text-sec/60 text-[10px] tracking-widest uppercase">
-              {LOAD_STEPS[currentStep]}
-            </span>
-            <span className="text-os-accent text-[11px] font-bold tracking-wider">
-              {Math.round(progress)}%
-            </span>
+          <div className="flex items-center justify-between font-mono text-[10px] text-os-text-sec/55">
+            <span>ENVIRONMENT</span>
+            <span>{Math.round(progress)}%</span>
           </div>
         </div>
-
-        {/* Step indicators */}
-        <div className="grid grid-cols-4 gap-2">
-          {LOAD_STEPS.map((step, i) => (
-            <div
-              key={step}
-              className={`h-1 rounded-full transition-all duration-300 ${
-                i <= currentStep ? 'bg-os-accent' : 'bg-os-border/20'
-              }`}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Bottom details */}
-      <div className="absolute bottom-0 left-0 right-0 p-6 flex justify-between items-end">
-        <div className="text-[9px] text-os-text-sec/30 tracking-widest uppercase space-y-1">
-          <div>RENDERER: WebGL2</div>
-          <div>SCENE: PROCEDURAL_DESK</div>
-        </div>
-        <motion.div
-          animate={{ opacity: [0.3, 0.8, 0.3] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="text-[9px] text-os-accent/60 tracking-widest uppercase"
-        >
-          ● SYSTEM_ACTIVE
-        </motion.div>
       </div>
     </motion.div>
   );

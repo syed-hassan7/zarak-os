@@ -23,6 +23,7 @@ interface WindowProps {
 
 type ResizeDirection = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
 type WorkArea = { minX: number; minY: number; maxX: number; maxY: number };
+type DragBounds = { left: number; top: number; right: number; bottom: number };
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
@@ -78,6 +79,16 @@ function getMaximizedRect(minSize: WindowSize): WindowRect {
   );
 }
 
+function getDragBounds(layout: WindowLayout): DragBounds {
+  const workArea = getFreeWorkArea();
+  return {
+    left: workArea.minX,
+    top: workArea.minY,
+    right: Math.max(workArea.minX, workArea.maxX - layout.width),
+    bottom: Math.max(workArea.minY, workArea.maxY - layout.height),
+  };
+}
+
 export default function Window(props: WindowProps) {
   const {
     title,
@@ -95,6 +106,7 @@ export default function Window(props: WindowProps) {
   const animationTimerRef = useRef<number | null>(null);
   const [resizeDirection, setResizeDirection] = useState<ResizeDirection | null>(null);
   const [isFrameAnimating, setIsFrameAnimating] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -221,13 +233,24 @@ export default function Window(props: WindowProps) {
     <Draggable 
       nodeRef={nodeRef}
       handle=".window-handle" 
-      onStart={onFocus}
+      bounds={getDragBounds(layout)}
+      onStart={() => {
+        onFocus();
+        setIsDragging(true);
+      }}
       onDrag={(_, data) => {
         if (layout.isMaximized) return;
-        const nextRect = clampRect(
-          { ...layout, x: data.x, y: data.y },
-          minSize,
-        );
+        onLayoutChange({
+          ...layout,
+          x: data.x,
+          y: data.y,
+          isMaximized: false,
+        });
+      }}
+      onStop={(_, data) => {
+        setIsDragging(false);
+        if (layout.isMaximized) return;
+        const nextRect = clampRect({ ...layout, x: data.x, y: data.y }, minSize);
         onLayoutChange({
           ...layout,
           ...nextRect,
@@ -239,19 +262,25 @@ export default function Window(props: WindowProps) {
     >
       <div 
         ref={nodeRef}
-        className={`absolute pointer-events-auto group/window flex flex-col overflow-hidden rounded-2xl border backdrop-blur-2xl ${
-          isFrameAnimating
+        className={`absolute pointer-events-auto group/window flex transform-gpu flex-col overflow-hidden rounded-2xl border will-change-transform ${
+          isDragging || resizeDirection
+            ? 'transition-none backdrop-blur-xl'
+            : isFrameAnimating
             ? 'transition-[width,height,transform,border-color,box-shadow,background-color,opacity] duration-200 ease-out motion-reduce:transition-none'
             : 'transition-[border-color,box-shadow,background-color,opacity] duration-150 motion-reduce:transition-none'
-        } ${
+        } ${isDragging || resizeDirection ? '' : 'backdrop-blur-2xl'} ${
           resizeDirection
             ? 'border-white/30 ring-1 ring-white/25 shadow-2xl shadow-black/35'
+            : isDragging
+              ? 'border-white/24 ring-1 ring-white/15 shadow-lg shadow-black/20'
             : ''
         } ${
-          isActive
-            ? 'border-white/22 bg-os-bg/88 ring-1 ring-white/12 shadow-2xl shadow-black/45'
-            : 'border-white/10 bg-os-bg/70 opacity-90 shadow-xl shadow-black/30'
-        }`}
+          isDragging || resizeDirection
+            ? ''
+            : isActive
+              ? 'border-white/22 bg-os-bg/88 ring-1 ring-white/12 shadow-2xl shadow-black/45'
+              : 'border-white/10 bg-os-bg/70 opacity-90 shadow-xl shadow-black/30'
+        } ${isDragging ? 'bg-os-bg/84' : ''} ${resizeDirection ? 'bg-os-bg/86' : ''}`}
         style={{
           zIndex,
           width: layout.width,
@@ -273,19 +302,19 @@ export default function Window(props: WindowProps) {
               onClick={(e) => { e.stopPropagation(); onClose(); }}
               title="Close"
               aria-label="Close window"
-              className="w-3 h-3 rounded-full bg-[#ED6A5E] hover:brightness-110 transition-all border border-[#CE5347] shadow-sm shadow-black/20 outline-none focus-visible:ring-2 focus-visible:ring-os-text-pri/70 focus-visible:ring-offset-2 focus-visible:ring-offset-os-chrome motion-reduce:transition-none" 
+              className="w-3 h-3 rounded-full bg-[#ED6A5E] hover:brightness-110 transition-[filter,box-shadow] duration-100 border border-[#CE5347] shadow-sm shadow-black/20 outline-none focus-visible:ring-2 focus-visible:ring-os-text-pri/70 focus-visible:ring-offset-2 focus-visible:ring-offset-os-chrome motion-reduce:transition-none" 
             />
             <button 
               onClick={(e) => { e.stopPropagation(); onMinimize(); }}
               title="Minimize"
               aria-label="Minimize window"
-              className="w-3 h-3 rounded-full bg-[#F5BF4F] hover:brightness-110 transition-all border border-[#D6A243] shadow-sm shadow-black/20 outline-none focus-visible:ring-2 focus-visible:ring-os-text-pri/70 focus-visible:ring-offset-2 focus-visible:ring-offset-os-chrome motion-reduce:transition-none" 
+              className="w-3 h-3 rounded-full bg-[#F5BF4F] hover:brightness-110 transition-[filter,box-shadow] duration-100 border border-[#D6A243] shadow-sm shadow-black/20 outline-none focus-visible:ring-2 focus-visible:ring-os-text-pri/70 focus-visible:ring-offset-2 focus-visible:ring-offset-os-chrome motion-reduce:transition-none" 
             />
             <button 
               onClick={(e) => { e.stopPropagation(); handleMaximizeToggle(); }}
               title="Maximize"
               aria-label="Maximize window"
-              className="w-3 h-3 rounded-full bg-[#62C554] hover:brightness-110 transition-all border border-[#58A942] shadow-sm shadow-black/20 outline-none focus-visible:ring-2 focus-visible:ring-os-text-pri/70 focus-visible:ring-offset-2 focus-visible:ring-offset-os-chrome motion-reduce:transition-none" 
+              className="w-3 h-3 rounded-full bg-[#62C554] hover:brightness-110 transition-[filter,box-shadow] duration-100 border border-[#58A942] shadow-sm shadow-black/20 outline-none focus-visible:ring-2 focus-visible:ring-os-text-pri/70 focus-visible:ring-offset-2 focus-visible:ring-offset-os-chrome motion-reduce:transition-none" 
             />
           </div>
           <div className={`flex-1 text-center text-[11px] font-mono tracking-widest uppercase ${
