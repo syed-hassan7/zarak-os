@@ -9,7 +9,6 @@ ZARAK_OS is more than a portfolio; it's a digital experience featuring a custom 
 ### Key Features
 
 - **3D Desk Environment**: A fully immersive, procedurally lit 3D hacker workspace constructed with Three.js and React Three Fiber.
-- **Boot Sequence**: A realistic system initialization sequence with diagnostic logs.
 - **Secure Login**: A themed authentication screen with biometric session tracking.
 - **Window Manager**: Fully draggable and stackable windows with glassmorphism effects.
 - **Functional Terminal**: Custom command-line interface with commands like `ls`, `help`, `open`, and `ssh`.
