@@ -11,6 +11,18 @@ const Scene3D = lazy(() => import('./Scene3D.tsx'));
  * or browsers without WebGL support.
  */
 function canRender3D(): boolean {
+  const isSmallViewport = window.matchMedia('(max-width: 767px)').matches;
+  const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+  const hasNoHover = window.matchMedia('(hover: none)').matches;
+  const hasTouchPoints = navigator.maxTouchPoints > 0;
+  const hasMobileUserAgent = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop|Mobile/i.test(
+    navigator.userAgent
+  );
+
+  if (isSmallViewport || isCoarsePointer || hasNoHover || hasTouchPoints || hasMobileUserAgent) {
+    return false;
+  }
+
   // Check WebGL support
   try {
     const canvas = document.createElement('canvas');
@@ -21,12 +33,6 @@ function canRender3D(): boolean {
   } catch {
     return false;
   }
-
-  // Check if mobile device
-  const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
-    navigator.userAgent
-  ) || (window.innerWidth < 768 && 'ontouchstart' in window);
-  if (isMobile) return false;
 
   // Check hardware concurrency (skip 3D on very low-spec machines)
   if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) return false;
