@@ -1,41 +1,5 @@
 import { motion } from 'motion/react';
-
-const EXPERIENCE = [
-  {
-    date: "[2025-09 → present]",
-    company: "THRIVE LEARNING",
-    role: "Compliance Analyst",
-    status: "ACTIVE",
-    achievements: [
-      "MDM migration: 250 endpoints, 0 downtime, -40% support tickets",
-      "DPA tracker: approval time reduced 70%",
-      "ISO 9001 Stage 1 audit: passed — 6 process flows authored",
-      "50+ vendor audits managed in Vanta",
-      "Delivered RFI response that closed high-value prospect deal"
-    ]
-  },
-  {
-    date: "[2021-09 → 2024-08]",
-    company: "NEXIQUE DESIGN LABS",
-    role: "Lead Project Manager",
-    status: "CLOSED",
-    achievements: [
-      "15+ client projects delivered end-to-end",
-      "$8,500+ revenue generated, ~100% client satisfaction",
-      "Built onboarding workflows for 5-person team"
-    ]
-  },
-  {
-    date: "[2025-01 → 2026-12]",
-    company: "MSc CYBER SECURITY",
-    role: "Nottingham Trent University",
-    status: "IN_PROGRESS",
-    achievements: [
-      "Dissertation: diagrammatic techniques in audit comprehension",
-      "Modules: Network Security, Digital Forensics, Ethical Hacking"
-    ]
-  }
-];
+import { experienceTimeline } from '../../data/recruiterProfile';
 
 export default function Experience() {
   return (
@@ -54,9 +18,9 @@ export default function Experience() {
         </header>
 
         <div className="space-y-4">
-          {EXPERIENCE.map((exp, i) => (
+          {experienceTimeline.map((exp, i) => (
             <motion.div 
-              key={i} 
+              key={exp.id} 
               initial={{ y: 14, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: i * 0.07 }}

@@ -1,14 +1,6 @@
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { Shield, Award } from 'lucide-react';
-
-const data = [
-  { subject: 'GRC Frameworks', A: 95, evidence: "ISO 27001, ISO 9001, Cyber Essentials" },
-  { subject: 'Third-Party Risk', A: 92, evidence: "Vanta, 50+ audits, DPA Tracking" },
-  { subject: 'Endpoint Security', A: 88, evidence: "Kandji (MDM migration), Pulseway" },
-  { subject: 'Security Ops', A: 80, evidence: "IAM, IR, Vulnerability Mgmt" },
-  { subject: 'Data Privacy', A: 85, evidence: "GDPR, Stakeholder Management" },
-  { subject: 'SIEM & Network', A: 75, evidence: "Splunk, Chronicle, Suricata, Wireshark" },
-];
+import { certifications, educationHistory, recruiterProfile, skillsRadarMetrics } from '../../data/recruiterProfile';
 
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
@@ -44,15 +36,15 @@ export default function Skills() {
           </div>
           <div className="h-[330px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <RadarChart cx="50%" cy="50%" outerRadius="76%" data={data}>
+              <RadarChart cx="50%" cy="50%" outerRadius="76%" data={skillsRadarMetrics}>
                 <PolarGrid stroke="rgba(255,255,255,0.12)" />
                 <PolarAngleAxis
                   dataKey="subject"
                   tick={{ fill: 'rgba(224,231,255,0.72)', fontSize: 10, fontFamily: 'Inter, system-ui, sans-serif' }}
                 />
                 <Radar
-                  name="Syed Zarak Hassan"
-                  dataKey="A"
+                  name={recruiterProfile.name}
+                  dataKey="score"
                   stroke="#00D9C0"
                   fill="#00D9C0"
                   fillOpacity={0.14}
@@ -74,20 +66,20 @@ export default function Skills() {
 
           <div className="space-y-3">
             <div className="rounded-2xl border border-os-accent/15 bg-os-accent/[0.055] p-4">
-              <span className="text-sm font-semibold text-os-accent">MSc Cyber Security</span>
-              <p className="mt-2 text-xs leading-relaxed text-os-text-sec">Currently completing at Nottingham Trent Uni</p>
+              <span className="text-sm font-semibold text-os-accent">{educationHistory[0].course}</span>
+              <p className="mt-2 text-xs leading-relaxed text-os-text-sec">Currently completing at {educationHistory[0].schoolShort}</p>
             </div>
             <div className="rounded-2xl border border-[#F5BF4F]/15 bg-[#F5BF4F]/[0.055] p-4">
               <span className="text-sm font-semibold text-[#F5BF4F]">Prof. Cyber Security</span>
-              <p className="mt-2 text-xs leading-relaxed text-os-text-sec">Google Certified & Active SOC Member</p>
+              <p className="mt-2 text-xs leading-relaxed text-os-text-sec">{certifications[1].issuer.split(' ')[0]} Certified & Active {certifications[0].title}</p>
             </div>
           </div>
 
           <div className="mt-5 space-y-2">
-            {data.map((skill) => (
+            {skillsRadarMetrics.map((skill) => (
               <div key={skill.subject} className="flex items-center justify-between gap-3 rounded-2xl border border-white/8 bg-white/[0.035] px-3 py-2.5">
                 <span className="text-xs text-os-text-pri/82">{skill.subject}</span>
-                <span className="font-mono text-[11px] text-os-text-sec">{skill.A}</span>
+                <span className="font-mono text-[11px] text-os-text-sec">{skill.score}</span>
               </div>
             ))}
           </div>

@@ -3,8 +3,8 @@ import {
   Cpu,
   FileDown,
   FileText,
+  Linkedin,
   MessageSquare,
-  Milestone,
   Radar,
   Terminal as TerminalIcon,
 } from 'lucide-react';
@@ -14,21 +14,11 @@ import type { AppDefinition, AppId } from './types';
 const About = lazy(() => import('../components/apps/About'));
 const ContactInfo = lazy(() => import('../components/apps/ContactInfo'));
 const DownloadCV = lazy(() => import('../components/apps/DownloadCV'));
-const Experience = lazy(() => import('../components/apps/Experience'));
+const LinkedInSnapshot = lazy(() => import('../components/apps/LinkedInSnapshot'));
 const Skills = lazy(() => import('../components/apps/Skills'));
 const VenderScope = lazy(() => import('../components/apps/VenderScope'));
 
 export const APP_REGISTRY = [
-  {
-    id: 'experience',
-    label: 'experience.app',
-    icon: Milestone,
-    component: Experience,
-    defaultWindowSize: { width: 800, height: 500 },
-    minimumWindowSize: { width: 520, height: 360 },
-    dockVisible: true,
-    searchKeywords: ['career', 'work', 'jobs', 'thrive', 'nexique', 'msc'],
-  },
   {
     id: 'skills',
     label: 'skills.app',
@@ -71,14 +61,24 @@ export const APP_REGISTRY = [
     searchKeywords: ['contact', 'email', 'message', 'ssh'],
   },
   {
-    id: 'download-cv',
-    label: 'download-my-cv.app',
+    id: 'cv',
+    label: 'CV.app',
     icon: FileDown,
     component: DownloadCV,
-    defaultWindowSize: { width: 800, height: 500 },
-    minimumWindowSize: { width: 420, height: 320 },
+    defaultWindowSize: { width: 980, height: 680 },
+    minimumWindowSize: { width: 620, height: 420 },
     dockVisible: true,
-    searchKeywords: ['cv', 'resume', 'download', 'pdf'],
+    searchKeywords: ['cv', 'resume', 'document', 'pdf', 'viewer', 'download'],
+  },
+  {
+    id: 'linkedin',
+    label: 'linkedin-experience.app',
+    icon: Linkedin,
+    component: LinkedInSnapshot,
+    defaultWindowSize: { width: 920, height: 640 },
+    minimumWindowSize: { width: 560, height: 420 },
+    dockVisible: true,
+    searchKeywords: ['linkedin', 'profile', 'snapshot', 'network', 'recruiter', 'experience', 'career', 'work', 'jobs'],
   },
   {
     id: 'about',

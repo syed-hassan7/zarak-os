@@ -1,13 +1,13 @@
 import type { ComponentType } from 'react';
 
 export const APP_IDS = [
-  'experience',
   'skills',
   'terminal',
   'venderscope',
   'about',
   'contact',
-  'download-cv',
+  'cv',
+  'linkedin',
 ] as const;
 
 export type AppId = (typeof APP_IDS)[number];

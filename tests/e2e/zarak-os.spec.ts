@@ -1,20 +1,16 @@
 import { expect, test, type Page } from '@playwright/test';
 
 const DOCK_APPS = [
-  'experience.app',
   'skills.app',
   'terminal.app',
   'venderscope.browser',
   'contact.ssh',
-  'download-my-cv.app',
+  'CV.app',
+  'linkedin-experience.app',
   'about.txt',
 ];
 
 const APP_SMOKE_CASES = [
-  {
-    appName: 'experience.app',
-    assertions: ['Career history', 'THRIVE LEARNING'],
-  },
   {
     appName: 'skills.app',
     assertions: ['Capability map', 'Verified credentials'],
@@ -28,8 +24,12 @@ const APP_SMOKE_CASES = [
     assertions: ['Initiate Connection', 'syedzrk1000@gmail.com'],
   },
   {
-    appName: 'download-my-cv.app',
-    assertions: ['Download CV', 'Syed_Zarak_Hassan_CV_2026.pdf'],
+    appName: 'CV.app',
+    assertions: ['Syed_Zarak_Hassan_CV_2026.pdf', 'Open in new tab'],
+  },
+  {
+    appName: 'linkedin-experience.app',
+    assertions: ['Static profile snapshot', 'Connect on LinkedIn'],
   },
   {
     appName: 'about.txt',
@@ -166,6 +166,23 @@ test('terminal commands render expected output and can launch apps', async ({ pa
   await terminalInput.press('Enter');
   await expect(page.getByText('connection established.')).toBeVisible();
   await expect(page.getByText('venderscope - continuous vendor risk intelligence')).toBeVisible();
+});
+
+test('CV and LinkedIn apps expose the expected recruiter actions', async ({ page }) => {
+  await unlockWorkstation(page);
+
+  await openDockApp(page, 'CV.app');
+  await expect(page.getByRole('button', { name: 'Download PDF' }).first()).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Open in new tab' }).first()).toHaveAttribute(
+    'href',
+    '/Syed_Zarak_Hassan_CV_2026.pdf',
+  );
+
+  await openDockApp(page, 'linkedin-experience.app');
+  await expect(page.getByRole('link', { name: 'Connect on LinkedIn' })).toHaveAttribute(
+    'href',
+    'https://www.linkedin.com/in/zarak-hassan7/',
+  );
 });
 
 test('mobile viewport uses terminal fallback mode', async ({ page }) => {

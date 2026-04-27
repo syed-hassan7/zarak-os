@@ -1,12 +1,13 @@
 import { ExternalLink, Terminal, Mail, Github, Linkedin, AppWindow } from 'lucide-react';
 import { motion } from 'motion/react';
+import { recruiterProfile } from '../../data/recruiterProfile';
 
 export default function About() {
   const links = [
     { label: 'GitHub', value: 'github.com/darkyzowo', url: 'https://github.com/darkyzowo', icon: Github },
-    { label: 'LinkedIn', value: 'in/zarak-hassan7', url: 'https://linkedin.com/in/zarak-hassan7', icon: Linkedin },
+    { label: 'LinkedIn', value: recruiterProfile.linkedIn.handle, url: recruiterProfile.linkedIn.url, icon: Linkedin },
     { label: 'Tool', value: 'venderscope.vercel.app', url: 'https://venderscope.vercel.app', icon: AppWindow },
-    { label: 'Email', value: 'syedzrk1000@gmail.com', url: 'mailto:syedzrk1000@gmail.com', icon: Mail },
+    { label: 'Email', value: recruiterProfile.email, url: `mailto:${recruiterProfile.email}`, icon: Mail },
   ];
 
   return (
@@ -15,15 +16,15 @@ export default function About() {
 
       <div className="relative border-b border-white/10 bg-white/[0.045] px-8 py-7 backdrop-blur-xl">
         <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/12 bg-white/[0.07] shadow-lg shadow-black/15">
-            <Terminal className="h-5 w-5 text-os-accent" />
-          </div>
-          <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-os-text-sec/75">Operator profile</p>
-            <h1 className="mt-1 text-2xl font-semibold tracking-tight text-os-text-pri">Syed Zarak Hassan</h1>
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/12 bg-white/[0.07] shadow-lg shadow-black/15">
+              <Terminal className="h-5 w-5 text-os-accent" />
+            </div>
+            <div>
+              <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-os-text-sec/75">Operator profile</p>
+              <h1 className="mt-1 text-2xl font-semibold tracking-tight text-os-text-pri">{recruiterProfile.name}</h1>
+            </div>
           </div>
         </div>
-      </div>
 
       <div className="relative z-10 flex-1 space-y-7 p-8">
         <section className="rounded-2xl border border-white/10 bg-white/[0.045] p-5 shadow-xl shadow-black/10">
@@ -36,15 +37,15 @@ export default function About() {
           <div className="grid gap-4 text-sm sm:grid-cols-[140px_1fr]">
             <span className="text-xs uppercase tracking-[0.18em] text-os-text-sec/70">Location</span>
             <span className="text-os-text-pri">
-              Nottingham, England
+              {recruiterProfile.location.about}
               <span className="ml-2 rounded-full bg-os-accent/10 px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] text-os-accent">Open to reloc.</span>
             </span>
 
             <span className="text-xs uppercase tracking-[0.18em] text-os-text-sec/70">Current</span>
             <span className="leading-relaxed text-os-text-pri">
-              Compliance Analyst @ Thrive Learning
+              {recruiterProfile.currentRoleSummary}
               <br />
-              <span className="text-os-text-sec">MSc Cybersecurity, Nottingham Trent University (2026)</span>
+              <span className="text-os-text-sec">{recruiterProfile.currentStudySummary}</span>
             </span>
           </div>
         </section>

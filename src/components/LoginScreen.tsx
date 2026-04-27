@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { Fingerprint, LockKeyhole, ShieldCheck, UserRound, Wifi } from 'lucide-react';
+import { recruiterProfile } from '../data/recruiterProfile';
 
 export default function LoginScreen(props: { onLogin: () => void; key?: string }) {
   const { onLogin } = props;
@@ -135,7 +136,7 @@ export default function LoginScreen(props: { onLogin: () => void; key?: string }
                 <ShieldCheck className="h-4 w-4" />
               </div>
             </div>
-            <h1 className="text-lg font-semibold tracking-tight text-os-text-pri">Syed Zarak Hassan</h1>
+            <h1 className="text-lg font-semibold tracking-tight text-os-text-pri">{recruiterProfile.name}</h1>
             <p className="mt-1 text-[11px] uppercase tracking-[0.2em] text-os-text-sec/75">
               System administrator / Level 0
             </p>
@@ -194,7 +195,7 @@ export default function LoginScreen(props: { onLogin: () => void; key?: string }
       </main>
 
       <footer className="relative z-10 flex items-center justify-between gap-4 px-5 pb-5 text-[10px] uppercase tracking-[0.16em] text-os-text-sec/55">
-        <span>Property of Syed Zarak Hassan</span>
+        <span>Property of {recruiterProfile.name}</span>
         <span className="font-mono">AES-256 GCM</span>
       </footer>
     </motion.div>

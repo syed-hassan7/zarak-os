@@ -1,6 +1,5 @@
 import { ExternalLink, Mail, MessageSquare, ShieldCheck } from 'lucide-react';
-
-const EMAIL = 'syedzrk1000@gmail.com';
+import { recruiterProfile } from '../../data/recruiterProfile';
 
 export default function ContactInfo() {
   return (
@@ -33,10 +32,10 @@ export default function ContactInfo() {
               <div>
                 <p className="text-[10px] uppercase tracking-[0.22em] text-os-text-sec/55">Official email</p>
                 <a
-                  href={`mailto:${EMAIL}`}
+                  href={`mailto:${recruiterProfile.email}`}
                   className="mt-2 block break-all text-lg font-semibold text-os-text-pri transition-colors hover:text-os-accent"
                 >
-                  {EMAIL}
+                  {recruiterProfile.email}
                 </a>
               </div>
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.055] text-os-text-sec">
@@ -46,11 +45,11 @@ export default function ContactInfo() {
 
             <p className="max-w-xl text-sm leading-7 text-os-text-pri/82">
               Thanks for being interested! My official email is{' '}
-              <span className="font-mono text-os-accent">{EMAIL}</span>. Looking forward to getting in touch!
+              <span className="font-mono text-os-accent">{recruiterProfile.email}</span>. Looking forward to getting in touch!
             </p>
 
             <a
-              href={`mailto:${EMAIL}`}
+              href={`mailto:${recruiterProfile.email}`}
               className="mt-7 inline-flex items-center gap-2 rounded-xl border border-os-accent/20 bg-os-accent px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-os-bg shadow-lg shadow-os-accent/10 transition-[filter,box-shadow] duration-100 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-os-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-os-bg motion-reduce:transition-none"
             >
               <Mail size={16} />
