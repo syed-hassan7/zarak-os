@@ -1,5 +1,6 @@
 import { lazy } from 'react';
 import {
+  Bot,
   Cpu,
   FileDown,
   FileText,
@@ -12,6 +13,7 @@ import Terminal from '../components/apps/Terminal';
 import type { AppDefinition, AppId } from './types';
 
 const About = lazy(() => import('../components/apps/About'));
+const AskZarak = lazy(() => import('../components/apps/AskZarak'));
 const ContactInfo = lazy(() => import('../components/apps/ContactInfo'));
 const DownloadCV = lazy(() => import('../components/apps/DownloadCV'));
 const LinkedInSnapshot = lazy(() => import('../components/apps/LinkedInSnapshot'));
@@ -89,6 +91,16 @@ export const APP_REGISTRY = [
     minimumWindowSize: { width: 520, height: 360 },
     dockVisible: true,
     searchKeywords: ['about', 'profile', 'operator', 'links'],
+  },
+  {
+    id: 'ask-zarak',
+    label: 'ask-zarak.app',
+    icon: Bot,
+    component: AskZarak,
+    defaultWindowSize: { width: 760, height: 620 },
+    minimumWindowSize: { width: 520, height: 420 },
+    dockVisible: false,
+    searchKeywords: ['ask', 'zarak', 'assistant', 'chat', 'portfolio', 'hire', 'recruiter', 'qa'],
   },
 ] satisfies AppDefinition[];
 

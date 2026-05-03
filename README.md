@@ -12,10 +12,13 @@ ZARAK_OS is more than a portfolio; it's a digital experience featuring a custom 
 - **Secure Login**: A themed authentication screen with biometric session tracking.
 - **Window Manager**: Fully draggable, minimizable, resizable, and stackable windows with session layout persistence.
 - **Functional Terminal**: Custom command-line interface with commands like `ls`, `help`, `open`, and `ssh`.
+- **ask-zarak.app**: Local, source-limited portfolio assistant. No API, no backend, no hallucinated claims — answers are matched deterministically against a verified knowledge base with typewriter streaming, confidence badges, and follow-up suggestions.
 - **Recruiter Review Apps**: Native in-OS `CV.app` and `linkedin-experience.app` windows for resume review and LinkedIn snapshot browsing.
 - **In-App CV Rendering**: PDF.js-powered CV preview with download and open-in-tab fallbacks when browser PDF plugins are blocked.
 - **LinkedIn Experience Snapshot**: Static recruiter-friendly LinkedIn profile and experience view with a direct connect CTA.
 - **Spotlight + Mission Control**: Keyboard-first shell interactions for app search, launch, and overview.
+- **Dynamic Dock**: App icons appear in the dock only while open or minimized; animated enter/exit via Framer Motion spring transitions.
+- **Quick Commands**: Menu bar shortcut reference panel surfacing all keyboard shortcuts (`⌘K`, `F3`, `⌘H`, `⌘Q`).
 - **Digital Background**: A dynamic, canvas-based animated grid that reacts to the system state.
 - **Cyber-Noir Aesthetic**: A deep navy and electric teal color palette with CRT scanline overlays and subtle digital glows.
 - **Responsive Design**: Optimized for desktop use while maintaining a stable "terminal mode" for mobile devices.
@@ -37,6 +40,12 @@ ZARAK_OS is more than a portfolio; it's a digital experience featuring a custom 
 
 ```text
 src/
+├── assistant/          # Local portfolio assistant engine
+│   ├── answerEngine.ts # Query → answer resolver with starter questions
+│   ├── search.ts       # Token-scored knowledge search (no API)
+│   ├── actions.ts      # Action handlers (open app, copy email)
+│   ├── types.ts        # AssistantAnswer, AssistantKnowledgeEntry types
+│   └── knowledge.generated.ts  # Auto-generated from content/zarak-brain/
 ├── components/
 │   ├── apps/           # Recruiter-facing apps, terminal, and portfolio modules
 │   ├── shell/          # Dock, menu bar, Spotlight, Mission Control, window manager
@@ -44,12 +53,16 @@ src/
 │   ├── Desktop.tsx     # Main shell composition
 │   ├── LoginScreen.tsx # Secure entry sequence
 │   └── Window.tsx      # Draggable window wrapper
-├── data/
-│   └── recruiterProfile.ts  # Typed single source of truth for recruiter-facing facts
 ├── os/                 # App registry, command registry, reducer, provider, types
 ├── constants.ts        # Terminal command output
 ├── Scene3D.tsx         # Primary 3D orchestration layer
 └── App.tsx             # Root 2D OS application logic
+content/
+└── zarak-brain/        # Markdown knowledge base (frontmatter-driven)
+scripts/
+└── build-assistant-knowledge.mjs  # Compiles content/ → knowledge.generated.ts
+tests/
+└── e2e/                # Playwright end-to-end test suite
 ```
 
 ## 🚀 Getting Started

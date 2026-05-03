@@ -8,6 +8,7 @@ export const APP_IDS = [
   'contact',
   'cv',
   'linkedin',
+  'ask-zarak',
 ] as const;
 
 export type AppId = (typeof APP_IDS)[number];

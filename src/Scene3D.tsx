@@ -10,7 +10,7 @@ import App from './App';
 
 // ── Constants ──
 const CAM_START  = new THREE.Vector3(0, 5.5, 8);
-const CAM_END    = new THREE.Vector3(0, 2.08, 2.55);
+const CAM_END    = new THREE.Vector3(0, 2.08, 2.2);
 const CAM_TARGET = new THREE.Vector3(0, 1.9, -0.5);
 
 // Monitor corners in world-space (exact inner bezel edges from DeskScene geometry)

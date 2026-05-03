@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Terminal from './apps/Terminal';
 import DesktopSurface from './shell/DesktopSurface';
+import FloatingAskZarak from './shell/FloatingAskZarak';
 import FloatingDock from './shell/FloatingDock';
 import MenuBar from './shell/MenuBar';
 import MissionControl from './shell/MissionControl';
@@ -145,7 +146,7 @@ function DesktopShell(_props: { key?: string } = {}) {
           setIsMissionControlOpen(true);
         }}
       />
-      <DesktopSurface apps={APP_REGISTRY} onToggleApp={toggleApp} />
+      <DesktopSurface apps={APP_REGISTRY.filter((a) => a.id !== 'ask-zarak')} onToggleApp={toggleApp} />
       <WindowManager
         openApps={openApps}
         activeApp={activeApp}
@@ -164,6 +165,7 @@ function DesktopShell(_props: { key?: string } = {}) {
         minimizedApps={minimizedApps}
         onToggleApp={toggleApp}
       />
+      <FloatingAskZarak onOpen={() => toggleApp('ask-zarak')} />
       <Spotlight
         isOpen={isSpotlightOpen}
         openApps={openApps}
