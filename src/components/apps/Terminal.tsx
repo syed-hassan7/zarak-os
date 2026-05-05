@@ -172,7 +172,7 @@ export default function Terminal({ isMobile, onOpenApp }: TerminalProps) {
           >
             <ChevronRight size={15} className="shrink-0 text-os-accent" />
             <input
-              autoFocus
+              autoFocus={!isMobile}
               type="text"
               value={input}
               maxLength={100}
@@ -181,7 +181,7 @@ export default function Terminal({ isMobile, onOpenApp }: TerminalProps) {
               autoComplete="off"
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="h-full flex-1 bg-transparent text-os-text-pri caret-os-accent outline-none placeholder:text-os-text-sec/35"
+              className={`h-full flex-1 bg-transparent text-os-text-pri caret-os-accent outline-none placeholder:text-os-text-sec/35 ${isMobile ? 'text-base' : ''}`}
               aria-label="Terminal command input"
             />
           </form>

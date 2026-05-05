@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Download, ExternalLink, FileDown, FileText, LoaderCircle, ShieldCheck } from 'lucide-react';
 import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist';
+import type { PDFDocumentLoadingTask, PDFDocumentProxy } from 'pdfjs-dist';
 import { recruiterProfile } from '../../data/recruiterProfile';
 import type { AppComponentProps } from '../../os/types';
 
@@ -70,31 +71,122 @@ function PdfCanvasViewer({ handleDownload }: { handleDownload: () => void }) {
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [viewerWidth, setViewerWidth] = useState(0);
+  const pdfRef = useRef<PDFDocumentProxy | null>(null);
+  const pdfPromiseRef = useRef<Promise<PDFDocumentProxy | null> | null>(null);
+  const loadingTaskRef = useRef<PDFDocumentLoadingTask | null>(null);
+  const resizeFrameRef = useRef<number | null>(null);
+  const renderSequenceRef = useRef(0);
+  const lastRenderedWidthRef = useRef(0);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [errorMessage, setErrorMessage] = useState(
     'The in-app PDF renderer could not load the document. Open the file in a new tab or download it directly.',
   );
 
+  const loadPdf = () => {
+    if (pdfRef.current) {
+      return Promise.resolve(pdfRef.current);
+    }
+
+    if (pdfPromiseRef.current) {
+      return pdfPromiseRef.current;
+    }
+
+    const task = getDocument({
+      url: recruiterProfile.cv.fileUrl,
+      useWorkerFetch: false,
+    });
+
+    loadingTaskRef.current = task;
+    pdfPromiseRef.current = task.promise
+      .then((pdf) => {
+        pdfRef.current = pdf;
+        loadingTaskRef.current = null;
+        return pdf;
+      })
+      .catch((error) => {
+        loadingTaskRef.current = null;
+        pdfPromiseRef.current = null;
+        throw error;
+      });
+
+    return pdfPromiseRef.current;
+  };
+
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
 
-    const updateWidth = () => {
-      const nextWidth = Math.floor(viewport.clientWidth);
-      setViewerWidth((current) => (current === nextWidth ? current : nextWidth));
+    const updateWidth = (nextWidth: number) => {
+      if (nextWidth <= 0) return;
+      setViewerWidth((current) => {
+        if (current === 0) return nextWidth;
+        return Math.abs(current - nextWidth) < 12 ? current : nextWidth;
+      });
+    };
+
+    const measureWidth = () => {
+      updateWidth(Math.floor(viewport.clientWidth));
+    };
+
+    const queueMeasureWidth = (nextWidth?: number) => {
+      if (resizeFrameRef.current !== null) {
+        window.cancelAnimationFrame(resizeFrameRef.current);
+      }
+
+      resizeFrameRef.current = window.requestAnimationFrame(() => {
+        resizeFrameRef.current = null;
+        updateWidth(typeof nextWidth === 'number' ? nextWidth : Math.floor(viewport.clientWidth));
+      });
     };
 
     const observer = new ResizeObserver((entries) => {
       const nextWidth = Math.floor(entries[0]?.contentRect.width ?? viewport.clientWidth ?? 0);
-      setViewerWidth((current) => (current === nextWidth ? current : nextWidth));
+      queueMeasureWidth(nextWidth);
     });
 
-    updateWidth();
+    measureWidth();
     observer.observe(viewport);
-    window.addEventListener('resize', updateWidth);
+    window.addEventListener('resize', measureWidth);
     return () => {
       observer.disconnect();
-      window.removeEventListener('resize', updateWidth);
+      window.removeEventListener('resize', measureWidth);
+      if (resizeFrameRef.current !== null) {
+        window.cancelAnimationFrame(resizeFrameRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    let disposed = false;
+
+    void loadPdf()
+      .then(async (pdf) => {
+        if (!disposed || !pdf) return;
+        await pdf.destroy();
+      })
+      .catch((error) => {
+        if (disposed) return;
+        setStatus('error');
+        setErrorMessage(
+          error instanceof Error
+            ? `${error.message} Open the file in a new tab or download it directly.`
+            : 'The in-app PDF renderer could not load the document. Open the file in a new tab or download it directly.',
+        );
+      });
+
+    return () => {
+      disposed = true;
+      const loadingTask = loadingTaskRef.current;
+      loadingTaskRef.current = null;
+      if (loadingTask) {
+        void loadingTask.destroy();
+      }
+      const pdf = pdfRef.current;
+      pdfRef.current = null;
+      pdfPromiseRef.current = null;
+      if (pdf) {
+        void pdf.destroy();
+      }
     };
   }, []);
 
@@ -102,27 +194,33 @@ function PdfCanvasViewer({ handleDownload }: { handleDownload: () => void }) {
     const container = containerRef.current;
     if (!container || viewerWidth <= 0) return;
 
+    const targetWidth = Math.max(320, viewerWidth - 32);
+    if (lastRenderedWidthRef.current !== 0 && Math.abs(lastRenderedWidthRef.current - targetWidth) < 24) {
+      return;
+    }
+
     let cancelled = false;
+    const renderSequence = renderSequenceRef.current + 1;
+    renderSequenceRef.current = renderSequence;
+
     const render = async () => {
-      setStatus('loading');
+      const shouldShowLoader = container.childElementCount === 0;
+      if (shouldShowLoader) {
+        setStatus('loading');
+      }
       setErrorMessage(
         'The in-app PDF renderer could not load the document. Open the file in a new tab or download it directly.',
       );
-      container.innerHTML = '';
 
       try {
-        const task = getDocument({
-          url: recruiterProfile.cv.fileUrl,
-          useWorkerFetch: false,
-        });
-        const pdf = await task.promise;
-        if (cancelled) {
-          await pdf.destroy();
-          return;
+        const pdf = await loadPdf();
+        if (!pdf) {
+          throw new Error('The in-app PDF renderer could not load the document.');
         }
 
+        if (cancelled || renderSequence !== renderSequenceRef.current) return;
+
         const fragment = document.createDocumentFragment();
-        const targetWidth = Math.max(320, viewerWidth - 32);
 
         for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
           const page = await pdf.getPage(pageNumber);
@@ -148,20 +246,19 @@ function PdfCanvasViewer({ handleDownload }: { handleDownload: () => void }) {
           context.setTransform(outputScale, 0, 0, outputScale, 0, 0);
 
           await page.render({ canvas, canvasContext: context, viewport }).promise;
+          if (cancelled || renderSequence !== renderSequenceRef.current) return;
+
           pageFrame.appendChild(canvas);
           fragment.appendChild(pageFrame);
         }
 
-        if (cancelled) {
-          await pdf.destroy();
-          return;
-        }
+        if (cancelled || renderSequence !== renderSequenceRef.current) return;
 
         container.replaceChildren(fragment);
+        lastRenderedWidthRef.current = targetWidth;
         setStatus('ready');
-        await pdf.destroy();
       } catch (error) {
-        if (cancelled) return;
+        if (cancelled || renderSequence !== renderSequenceRef.current) return;
         setStatus('error');
         setErrorMessage(
           error instanceof Error
