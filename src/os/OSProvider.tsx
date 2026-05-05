@@ -23,10 +23,16 @@ interface OSContextValue {
 
 const OSContext = createContext<OSContextValue | null>(null);
 
-export function OSProvider({ children }: { children: ReactNode }) {
+export function OSProvider({
+  children,
+  defaultOpenApps = DEFAULT_OPEN_APPS,
+}: {
+  children: ReactNode;
+  defaultOpenApps?: AppId[];
+}) {
   const [state, dispatch] = useReducer(
     osReducer,
-    DEFAULT_OPEN_APPS,
+    defaultOpenApps,
     createInitialOSState,
   );
 

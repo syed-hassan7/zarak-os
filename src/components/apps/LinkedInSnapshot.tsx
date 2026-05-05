@@ -21,7 +21,7 @@ export default function LinkedInSnapshot() {
     <div className="relative flex h-full flex-col overflow-y-auto bg-os-bg/70 custom-scrollbar">
       <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-[#0a66c2]/[0.10] via-transparent to-os-accent/[0.06]" />
 
-      <div className="relative z-10 flex-1 p-7">
+      <div className="relative z-10 flex-1 p-4 sm:p-7">
         <div className="mx-auto flex max-w-6xl flex-col gap-5">
           <header className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 backdrop-blur-xl">
             <div className="h-28 bg-linear-to-r from-[#0a66c2]/45 via-[#157ad8]/35 to-os-accent/[0.24]" />

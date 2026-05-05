@@ -14,7 +14,7 @@ export default function About() {
     <div className="relative flex h-full flex-col overflow-y-auto bg-os-bg/70 font-sans custom-scrollbar">
       <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/[0.04] via-transparent to-os-accent/[0.045]" />
 
-      <div className="relative border-b border-white/10 bg-white/[0.045] px-8 py-7 backdrop-blur-xl">
+      <div className="relative border-b border-white/10 bg-white/[0.045] px-5 py-6 sm:px-8 sm:py-7 backdrop-blur-xl">
         <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/12 bg-white/[0.07] shadow-lg shadow-black/15">
               <Terminal className="h-5 w-5 text-os-accent" />
@@ -26,7 +26,7 @@ export default function About() {
           </div>
         </div>
 
-      <div className="relative z-10 flex-1 space-y-7 p-8">
+      <div className="relative z-10 flex-1 space-y-6 p-5 sm:space-y-7 sm:p-8">
         <section className="rounded-2xl border border-white/10 bg-white/[0.045] p-5 shadow-xl shadow-black/10">
           <div className="mb-5 flex items-center justify-between gap-4">
             <h2 className="text-sm font-semibold text-os-text-pri">Identity details</h2>

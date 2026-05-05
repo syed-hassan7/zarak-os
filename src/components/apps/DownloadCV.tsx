@@ -204,7 +204,7 @@ export default function DownloadCV() {
     <div className="relative flex h-full flex-col overflow-hidden bg-os-bg/70">
       <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/[0.04] via-transparent to-os-warn/[0.04]" />
 
-      <div className="relative flex h-full flex-col overflow-y-auto p-7 custom-scrollbar">
+      <div className="relative flex h-full flex-col overflow-y-auto p-4 sm:p-7 custom-scrollbar">
         <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-5">
           <header className="rounded-3xl border border-white/10 bg-white/[0.045] p-5 shadow-xl shadow-black/10 backdrop-blur-xl">
             <div className="flex items-center justify-between gap-4">

@@ -3,12 +3,15 @@ import { AnimatePresence } from 'motion/react';
 import LoginScreen from './components/LoginScreen';
 import Desktop from './components/Desktop';
 import DigitalBackground from './components/DigitalBackground';
+import { useExperienceMode } from './utils/deviceExperience';
 
 type OSState = 'LOGIN' | 'DESKTOP';
 
 export default function App() {
   const [osState, setOsState] = useState<OSState>('LOGIN');
   const [showDesktopBackground, setShowDesktopBackground] = useState(false);
+  const experienceMode = useExperienceMode();
+  const isMobileExperience = experienceMode === 'mobile';
 
   useEffect(() => {
     if (osState !== 'DESKTOP') {
@@ -27,10 +30,14 @@ export default function App() {
       <div className="crt-flicker" />
       <AnimatePresence mode="wait">
         {osState === 'LOGIN' && (
-          <LoginScreen key="login" onLogin={() => setOsState('DESKTOP')} />
+          <LoginScreen
+            key="login"
+            isMobileExperience={isMobileExperience}
+            onLogin={() => setOsState('DESKTOP')}
+          />
         )}
         {osState === 'DESKTOP' && (
-          <Desktop key="desktop" />
+          <Desktop key="desktop" experienceMode={experienceMode} />
         )}
       </AnimatePresence>
     </div>

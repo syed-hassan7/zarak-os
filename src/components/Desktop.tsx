@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import Terminal from './apps/Terminal';
 import AegisBuddyPrototype from './shell/AegisBuddyPrototype';
 import DesktopBackgroundLayer from './shell/DesktopBackgroundLayer';
 import { DesktopAppearanceProvider, useDesktopAppearance } from './shell/DesktopAppearance';
@@ -7,12 +6,14 @@ import DesktopSurface from './shell/DesktopSurface';
 import FloatingAskZarak from './shell/FloatingAskZarak';
 import FloatingDock from './shell/FloatingDock';
 import MenuBar from './shell/MenuBar';
+import MobileShell from './shell/MobileShell';
 import MissionControl from './shell/MissionControl';
 import Spotlight from './shell/Spotlight';
 import WindowManager from './shell/WindowManager';
 import { APP_REGISTRY, getAppDefinition } from '../os/appRegistry';
 import { OSProvider, useOS } from '../os/OSProvider';
 import type { CommandDefinition } from '../os/commandRegistry';
+import type { ExperienceMode } from '../utils/deviceExperience';
 
 const SHOW_AEGIS_PROTOTYPE = true;
 
@@ -26,17 +27,28 @@ function hasOsModifier(event: KeyboardEvent): boolean {
   return event.metaKey || event.ctrlKey || event.altKey;
 }
 
-export default function Desktop(props: { key?: string } = {}) {
+export default function Desktop({
+  experienceMode = 'desktop',
+  ...props
+}: {
+  key?: string;
+  experienceMode?: ExperienceMode;
+} = {}) {
   return (
-    <OSProvider>
+    <OSProvider defaultOpenApps={experienceMode === 'mobile' ? [] : undefined}>
       <DesktopAppearanceProvider>
-        <DesktopShell {...props} />
+        <DesktopShell experienceMode={experienceMode} {...props} />
       </DesktopAppearanceProvider>
     </OSProvider>
   );
 }
 
-function DesktopShell(_props: { key?: string } = {}) {
+function DesktopShell({
+  experienceMode = 'desktop',
+}: {
+  key?: string;
+  experienceMode?: ExperienceMode;
+} = {}) {
   const {
     state: { openApps, activeApp, minimizedApps, zOrder, windowLayouts },
     openApp,
@@ -46,17 +58,10 @@ function DesktopShell(_props: { key?: string } = {}) {
     closeApp,
     updateWindowLayout,
   } = useOS();
-  const [isMobile, setIsMobile] = useState(false);
   const [isSpotlightOpen, setIsSpotlightOpen] = useState(false);
   const [isMissionControlOpen, setIsMissionControlOpen] = useState(false);
   const { backgroundId } = useDesktopAppearance();
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  const isMobileExperience = experienceMode === 'mobile';
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -122,18 +127,7 @@ function DesktopShell(_props: { key?: string } = {}) {
     openApp(command.appId);
   };
 
-  if (isMobile) {
-    return (
-      <div className="absolute inset-0 bg-os-bg flex flex-col p-4">
-        <div className="text-os-text-sec text-[12px] mb-4 border-b border-os-border pb-2">
-          // szh_os — best experienced on desktop. terminal mode active.
-        </div>
-        <div className="flex-1 overflow-hidden border border-os-border">
-          <Terminal isMobile />
-        </div>
-      </div>
-    );
-  }
+  if (isMobileExperience) return <MobileShell backgroundId={backgroundId} />;
 
   const activeAppLabel = activeApp ? getAppDefinition(activeApp).label : 'desktop';
 

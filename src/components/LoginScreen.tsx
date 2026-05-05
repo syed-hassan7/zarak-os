@@ -3,8 +3,12 @@ import { motion } from 'motion/react';
 import { Fingerprint, LockKeyhole, ShieldCheck, UserRound, Wifi } from 'lucide-react';
 import { recruiterProfile } from '../data/recruiterProfile';
 
-export default function LoginScreen(props: { onLogin: () => void; key?: string }) {
-  const { onLogin } = props;
+export default function LoginScreen(props: {
+  onLogin: () => void;
+  key?: string;
+  isMobileExperience?: boolean;
+}) {
+  const { onLogin, isMobileExperience = false } = props;
   const [time, setTime] = useState(new Date());
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -91,7 +95,13 @@ export default function LoginScreen(props: { onLogin: () => void; key?: string }
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.12),transparent_42%),linear-gradient(180deg,rgba(5,7,10,0.14),rgba(5,7,10,0.84))]" />
       <div className="absolute inset-0 backdrop-blur-[1px]" />
 
-      <header className="relative z-10 flex items-start justify-between p-5 text-os-text-pri">
+      <header
+        className={`relative z-10 flex items-start justify-between text-os-text-pri ${
+          isMobileExperience
+            ? 'px-4 pb-3 pt-[calc(var(--safe-area-top)+0.9rem)]'
+            : 'p-5'
+        }`}
+      >
         <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.055] px-3 py-2 shadow-lg shadow-black/10 backdrop-blur-2xl">
           <img src="/logo.svg" alt="ZARAK_OS Logo" className="h-5 w-5 object-contain opacity-90" />
           <div>
@@ -108,26 +118,44 @@ export default function LoginScreen(props: { onLogin: () => void; key?: string }
         </div>
       </header>
 
-      <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-5 pb-12 pt-2">
+      <main
+        className={`relative z-10 flex flex-1 flex-col items-center px-5 ${
+          isMobileExperience
+            ? 'justify-start pb-[calc(var(--safe-area-bottom)+1.5rem)] pt-7'
+            : 'justify-center pb-12 pt-2'
+        }`}
+      >
         <motion.div
           initial={{ y: 18, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.12, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-7 text-center"
+          className={`${isMobileExperience ? 'mb-5 mt-3 text-center' : 'mb-7 text-center'}`}
         >
-          <div className="text-[56px] font-semibold leading-none tracking-normal text-os-text-pri sm:text-[72px]">
+          <div
+            className={`font-semibold leading-none tracking-normal text-os-text-pri ${
+              isMobileExperience ? 'text-[48px]' : 'text-[56px] sm:text-[72px]'
+            }`}
+          >
             {formattedTime}
           </div>
-          <div className="mt-3 text-sm font-medium text-os-text-sec/85">{formattedDate}</div>
+          <div className={`${isMobileExperience ? 'mt-2 text-[13px]' : 'mt-3 text-sm'} font-medium text-os-text-sec/85`}>
+            {formattedDate}
+          </div>
         </motion.div>
 
         <motion.section
           initial={{ y: 18, opacity: 0, scale: 0.985 }}
           animate={{ y: 0, opacity: 1, scale: 1 }}
           transition={{ delay: 0.22, duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
-          className="w-full max-w-[430px] overflow-hidden rounded-[28px] border border-white/14 bg-white/[0.09] shadow-2xl shadow-black/35 ring-1 ring-white/10 backdrop-blur-2xl"
+          className={`w-full overflow-hidden border border-white/14 bg-white/[0.09] shadow-2xl shadow-black/35 ring-1 ring-white/10 backdrop-blur-2xl ${
+            isMobileExperience ? 'max-w-[420px] rounded-[26px]' : 'max-w-[430px] rounded-[28px]'
+          }`}
         >
-          <div className="flex flex-col items-center border-b border-white/10 bg-white/[0.04] px-7 pb-6 pt-7 text-center">
+          <div
+            className={`flex flex-col items-center border-b border-white/10 bg-white/[0.04] text-center ${
+              isMobileExperience ? 'px-6 pb-5 pt-6' : 'px-7 pb-6 pt-7'
+            }`}
+          >
             <div className="relative mb-4">
               <div className="flex h-20 w-20 items-center justify-center rounded-3xl border border-white/14 bg-os-bg/38 text-os-text-pri shadow-xl shadow-black/20">
                 <UserRound className="h-8 w-8" strokeWidth={1.5} />
@@ -142,7 +170,7 @@ export default function LoginScreen(props: { onLogin: () => void; key?: string }
             </p>
           </div>
 
-          <div className="space-y-5 px-7 py-6">
+          <div className={`${isMobileExperience ? 'space-y-4 px-6 py-5' : 'space-y-5 px-7 py-6'}`}>
             <div className="space-y-2">
               <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.18em] text-os-text-sec/70">
                 <span>Access credential</span>
@@ -194,7 +222,13 @@ export default function LoginScreen(props: { onLogin: () => void; key?: string }
         </motion.section>
       </main>
 
-      <footer className="relative z-10 flex items-center justify-between gap-4 px-5 pb-5 text-[10px] uppercase tracking-[0.16em] text-os-text-sec/55">
+      <footer
+        className={`relative z-10 flex items-center justify-between gap-4 uppercase tracking-[0.16em] text-os-text-sec/55 ${
+          isMobileExperience
+            ? 'px-4 pb-[calc(var(--safe-area-bottom)+0.8rem)] text-[9px]'
+            : 'px-5 pb-5 text-[10px]'
+        }`}
+      >
         <span>Property of {recruiterProfile.name}</span>
         <span className="font-mono">AES-256 GCM</span>
       </footer>

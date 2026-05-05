@@ -3,7 +3,7 @@ import { recruiterProfile } from '../../data/recruiterProfile';
 
 export default function ContactInfo() {
   return (
-    <div className="flex h-full flex-col overflow-y-auto bg-os-bg/65 p-7 custom-scrollbar">
+    <div className="flex h-full flex-col overflow-y-auto bg-os-bg/65 p-4 sm:p-7 custom-scrollbar">
       <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-5">
         <header className="rounded-3xl border border-white/10 bg-white/[0.045] p-5 shadow-xl shadow-black/10 backdrop-blur-xl">
           <div className="flex items-center justify-between gap-4">
