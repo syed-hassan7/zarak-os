@@ -8,6 +8,7 @@ export const APP_IDS = [
   'contact',
   'cv',
   'linkedin',
+  'backdrop',
   'ask-zarak',
 ] as const;
 

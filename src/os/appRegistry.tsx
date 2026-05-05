@@ -4,6 +4,7 @@ import {
   Cpu,
   FileDown,
   FileText,
+  Image,
   Linkedin,
   MessageSquare,
   Radar,
@@ -14,6 +15,7 @@ import type { AppDefinition, AppId } from './types';
 
 const About = lazy(() => import('../components/apps/About'));
 const AskZarak = lazy(() => import('../components/apps/AskZarak'));
+const BackgroundStudio = lazy(() => import('../components/apps/BackgroundStudio'));
 const ContactInfo = lazy(() => import('../components/apps/ContactInfo'));
 const DownloadCV = lazy(() => import('../components/apps/DownloadCV'));
 const LinkedInSnapshot = lazy(() => import('../components/apps/LinkedInSnapshot'));
@@ -83,6 +85,16 @@ export const APP_REGISTRY = [
     searchKeywords: ['linkedin', 'profile', 'snapshot', 'network', 'recruiter', 'experience', 'career', 'work', 'jobs'],
   },
   {
+    id: 'backdrop',
+    label: 'backdrop.sys',
+    icon: Image,
+    component: BackgroundStudio,
+    defaultWindowSize: { width: 860, height: 620 },
+    minimumWindowSize: { width: 560, height: 420 },
+    dockVisible: true,
+    searchKeywords: ['background', 'wallpaper', 'desktop', 'appearance', 'theme', 'backdrop'],
+  },
+  {
     id: 'about',
     label: 'about.txt',
     icon: FileText,
@@ -94,13 +106,13 @@ export const APP_REGISTRY = [
   },
   {
     id: 'ask-zarak',
-    label: 'ask-zarak.app',
+    label: 'syed-llm.app',
     icon: Bot,
     component: AskZarak,
     defaultWindowSize: { width: 760, height: 620 },
     minimumWindowSize: { width: 520, height: 420 },
     dockVisible: false,
-    searchKeywords: ['ask', 'zarak', 'assistant', 'chat', 'portfolio', 'hire', 'recruiter', 'qa'],
+    searchKeywords: ['ask', 'zarak', 'assistant', 'chat', 'portfolio', 'hire', 'recruiter', 'qa', 'syed', 'llm'],
   },
 ] satisfies AppDefinition[];
 

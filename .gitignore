@@ -17,3 +17,7 @@ coverage/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Local prototype work
+/src/components/shell/RockyBuddyPrototype.tsx
+/summary.md

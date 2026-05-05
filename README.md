@@ -1,27 +1,30 @@
-# ZARAK_OS // KERNEL_V2.6.1
+# ZARAK_OS // KERNEL_V2.7
 
-A high-fidelity, immersive "Cyber-Noir" portfolio operating system built for **Syed Zarak Hassan**. This project simulates a terminal-driven, retro-futuristic desktop environment seamlessly embedded into a full 3D interactive hacker workspace to showcase professional experience, skills, and projects in the field of Compliance and Information Security.
+ZARAK_OS is a high-fidelity cyber-noir portfolio operating system for **Syed Zarak Hassan**. It combines a custom desktop shell, recruiter-facing portfolio apps, a deterministic local assistant, and a full 3D workstation scene to present experience, projects, and security/GRC work as a product surface rather than a static website.
 
-## 🌑 Overview
+## Overview
 
-ZARAK_OS is more than a portfolio; it's a digital experience featuring a custom window manager, functional terminal, and interactive 3D desktop. It abandons generic web patterns for a technical, "specialist tool" cyber-noir aesthetic inspired by classic terminal interfaces.
+The project is split between two presentation layers:
 
-### Key Features
+- **3D environment**: the immersive workstation scene built with Three.js / React Three Fiber.
+- **OS shell**: the flat desktop UI rendered on top, including windows, dock, Spotlight, Mission Control, Aegis-M, and desktop backdrop controls.
 
-- **3D Desk Environment**: A fully immersive, procedurally lit 3D hacker workspace constructed with Three.js and React Three Fiber.
-- **Secure Login**: A themed authentication screen with biometric session tracking.
-- **Window Manager**: Fully draggable, minimizable, resizable, and stackable windows with session layout persistence.
-- **Functional Terminal**: Custom command-line interface with commands like `ls`, `help`, `open`, and `ssh`.
-- **ask-zarak.app**: Local, source-limited portfolio assistant. No API, no backend, no hallucinated claims — answers are matched deterministically against a verified knowledge base with typewriter streaming, confidence badges, and follow-up suggestions.
-- **Recruiter Review Apps**: Native in-OS `CV.app` and `linkedin-experience.app` windows for resume review and LinkedIn snapshot browsing.
-- **In-App CV Rendering**: PDF.js-powered CV preview with download and open-in-tab fallbacks when browser PDF plugins are blocked.
-- **LinkedIn Experience Snapshot**: Static recruiter-friendly LinkedIn profile and experience view with a direct connect CTA.
-- **Spotlight + Mission Control**: Keyboard-first shell interactions for app search, launch, and overview.
-- **Dynamic Dock**: App icons appear in the dock only while open or minimized; animated enter/exit via Framer Motion spring transitions.
-- **Quick Commands**: Menu bar shortcut reference panel surfacing all keyboard shortcuts (`⌘K`, `F3`, `⌘H`, `⌘Q`).
-- **Digital Background**: A dynamic, canvas-based animated grid that reacts to the system state.
-- **Cyber-Noir Aesthetic**: A deep navy and electric teal color palette with CRT scanline overlays and subtle digital glows.
-- **Responsive Design**: Optimized for desktop use while maintaining a stable "terminal mode" for mobile devices.
+The result is a portfolio that behaves more like a small operating system than a brochure site.
+
+## Current Features
+
+- **3D desk environment**: immersive workstation scene with the desktop shell projected into it.
+- **Custom OS shell**: draggable, minimizable, resizable, stackable windows with dock, menu bar, Spotlight, and Mission Control flows.
+- **Terminal-first identity**: a functional `terminal.app` with portfolio-specific commands and shell-style presentation.
+- **Syed-LLM (`syed-llm.app`)**: local, source-limited portfolio assistant with no API or backend. Answers are produced from verified local content only, with typewriter streaming, sources, and action shortcuts.
+- **Aegis-M ambient companion**: a shell-local desktop buddy with hover/click lines, passive thoughts, reduced-motion support, and context-aware recruiter/security/product copy.
+- **Backdrop Studio (`backdrop.sys`)**: shell-only background switcher for animated desktop presets, including the restored original shell look. Changes persist locally in the browser and do not touch the 3D scene.
+- **Recruiter review apps**: native in-OS `CV.app`, `linkedin-experience.app`, `about.txt`, `contact.ssh`, `skills.app`, and `venderscope.browser`.
+- **In-app CV rendering**: PDF.js-powered CV preview with download and open-in-tab fallbacks.
+- **Keyboard-first navigation**: `⌘/Ctrl/Alt + K` Spotlight, `F3` / modifier + `ArrowUp` Mission Control, plus minimize/quit shortcuts.
+- **Dock and shell motion**: small-surface motion design built with `motion/react`, respecting reduced-motion preferences.
+- **Cyber-noir visual system**: dark shell chrome, scanlines, cyan/violet accents, subtle glow, and layered backdrop treatments.
+- **Desktop-first responsive behavior**: full shell on desktop, terminal-mode fallback on smaller screens.
 
 ## 🛠️ Tech Stack
 
@@ -29,7 +32,7 @@ ZARAK_OS is more than a portfolio; it's a digital experience featuring a custom 
 - **Build Tool**: [Vite](https://vitejs.dev/)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS 4.0](https://tailwindcss.com/)
-- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Animations**: [Motion](https://motion.dev/)
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Interactivity**: [React Draggable](https://github.com/react-grid-layout/react-draggable)
 - **Document Rendering**: [PDF.js](https://mozilla.github.io/pdf.js/)
@@ -47,12 +50,13 @@ src/
 │   ├── types.ts        # AssistantAnswer, AssistantKnowledgeEntry types
 │   └── knowledge.generated.ts  # Auto-generated from content/zarak-brain/
 ├── components/
-│   ├── apps/           # Recruiter-facing apps, terminal, and portfolio modules
-│   ├── shell/          # Dock, menu bar, Spotlight, Mission Control, window manager
+│   ├── apps/           # Recruiter-facing apps, terminal, Syed-LLM, backdrop studio
+│   ├── shell/          # Dock, menu bar, Spotlight, Mission Control, Aegis-M, shell appearance
 │   ├── three/          # 3D scene components
 │   ├── Desktop.tsx     # Main shell composition
 │   ├── LoginScreen.tsx # Secure entry sequence
 │   └── Window.tsx      # Draggable window wrapper
+├── data/               # Recruiter content, Aegis lines, ambient thoughts
 ├── os/                 # App registry, command registry, reducer, provider, types
 ├── constants.ts        # Terminal command output
 ├── Scene3D.tsx         # Primary 3D orchestration layer
@@ -64,6 +68,17 @@ scripts/
 tests/
 └── e2e/                # Playwright end-to-end test suite
 ```
+
+## Key Shell Surfaces
+
+- [`src/components/Desktop.tsx`](src/components/Desktop.tsx): shell composition and background provider mount.
+- [`src/components/shell/AegisBuddyPrototype.tsx`](src/components/shell/AegisBuddyPrototype.tsx): active Aegis-M implementation.
+- [`src/components/apps/AskZarak.tsx`](src/components/apps/AskZarak.tsx): Syed-LLM window UI.
+- [`src/components/shell/FloatingAskZarak.tsx`](src/components/shell/FloatingAskZarak.tsx): Syed-LLM launcher orb.
+- [`src/components/apps/BackgroundStudio.tsx`](src/components/apps/BackgroundStudio.tsx): backdrop selection app.
+- [`src/components/shell/DesktopAppearance.tsx`](src/components/shell/DesktopAppearance.tsx): local shell appearance state and persistence.
+- [`src/components/shell/DesktopBackgroundLayer.tsx`](src/components/shell/DesktopBackgroundLayer.tsx): animated shell-only background renderer.
+- [`src/os/appRegistry.tsx`](src/os/appRegistry.tsx): visible app registration and labels.
 
 ## 🚀 Getting Started
 
@@ -104,12 +119,17 @@ npm run build
 ```
 The output will be in the `dist/` directory.
 
-## 🛡️ Security Audits
+## Validation
 
-This project is designed with a "Security First" mindset. The UI reflects GRC (Governance, Risk, and Compliance) principles. You can run the following to check for type safety:
+Type and build validation:
 ```bash
 npm run lint
+npm run build
 ```
+
+`npm run build` also regenerates the assistant knowledge bundle from `content/zarak-brain/`.
+
+## 🛡️ Testing
 
 For end-to-end validation:
 ```bash
@@ -120,6 +140,12 @@ If your local machine struggles with parallel browser workers, a serial run is a
 ```bash
 npm run test:e2e -- --workers=1
 ```
+
+## Notes
+
+- `syed-llm.app` is the visible product name; the historical internal app id remains `ask-zarak` to avoid unnecessary shell-state churn.
+- Desktop backdrop changes are intentionally scoped to the flat shell layer and do not modify the 3D scene, lighting, or projection surfaces.
+- Aegis-M is currently an ambient shell companion only. It does not launch apps or replace the Syed-LLM assistant flow.
 
 ## 📄 License
 

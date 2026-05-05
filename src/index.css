@@ -62,6 +62,30 @@
   50% { background: rgba(45, 212, 191, 0.1); }
 }
 
+@keyframes aegis-breathe {
+  0%, 100% {
+    opacity: 0.42;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.64;
+    transform: scale(1.04);
+  }
+}
+
+.aegis-prototype-glow {
+  animation: aegis-breathe 3.8s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aegis-prototype-glow {
+    animation: none;
+    opacity: 0.5;
+    transform: none;
+  }
+}
+
 .hover-glow:hover {
   background: rgba(45, 212, 191, 0.1);
   border-color: rgba(45, 212, 191, 0.3);

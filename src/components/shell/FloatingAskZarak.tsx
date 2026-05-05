@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'motion/react';
-import { BrainCircuit } from 'lucide-react';
+import { Bot } from 'lucide-react';
 
 interface FloatingAskZarakProps {
   onOpen: () => void;
@@ -27,8 +27,8 @@ export default function FloatingAskZarak({ onOpen }: FloatingAskZarakProps) {
     <div className="absolute bottom-5 right-5 z-40">
       <motion.button
         type="button"
-        aria-label="Ask Zarak"
-        title="Ask Zarak"
+        aria-label="Syed-LLM"
+        title="Syed-LLM"
         onClick={onOpen}
         variants={shouldReduceMotion ? undefined : buttonVariants}
         initial="rest"
@@ -44,9 +44,9 @@ export default function FloatingAskZarak({ onOpen }: FloatingAskZarakProps) {
           />
         )}
         <span className="absolute inset-0 rounded-full bg-cyan-400/8 animate-pulse motion-reduce:animate-none" />
-        <BrainCircuit size={26} strokeWidth={1.5} />
+        <Bot size={26} strokeWidth={1.5} />
         <span className="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap rounded-lg border border-white/14 bg-os-bg/95 px-2.5 py-1 text-[11px] text-os-text-pri opacity-0 shadow-lg transition-opacity duration-100 group-hover:opacity-100 motion-reduce:transition-none">
-          Ask Zarak
+          Syed-LLM
         </span>
       </motion.button>
     </div>

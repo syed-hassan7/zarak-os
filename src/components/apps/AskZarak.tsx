@@ -129,7 +129,7 @@ export default function AskZarak() {
           <div>
             <div className="flex items-center gap-2 text-sm font-semibold tracking-wide text-cyan-200">
               <Bot className="h-4 w-4" />
-              ask-zarak.app
+              syed-llm.app
             </div>
             <p className="mt-1 text-xs text-slate-400">
               Local, source-limited portfolio assistant. No API. No backend. No hallucinated claims.
@@ -302,7 +302,7 @@ export default function AskZarak() {
           <button
             type="submit"
             className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-300 text-slate-950 transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 motion-reduce:hover:scale-100 motion-reduce:transition-none"
-            aria-label="Ask"
+            aria-label="Submit Syed-LLM question"
           >
             <Send className="h-4 w-4" />
           </button>

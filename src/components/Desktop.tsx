@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import Terminal from './apps/Terminal';
+import AegisBuddyPrototype from './shell/AegisBuddyPrototype';
+import DesktopBackgroundLayer from './shell/DesktopBackgroundLayer';
+import { DesktopAppearanceProvider, useDesktopAppearance } from './shell/DesktopAppearance';
 import DesktopSurface from './shell/DesktopSurface';
 import FloatingAskZarak from './shell/FloatingAskZarak';
 import FloatingDock from './shell/FloatingDock';
@@ -10,6 +13,8 @@ import WindowManager from './shell/WindowManager';
 import { APP_REGISTRY, getAppDefinition } from '../os/appRegistry';
 import { OSProvider, useOS } from '../os/OSProvider';
 import type { CommandDefinition } from '../os/commandRegistry';
+
+const SHOW_AEGIS_PROTOTYPE = true;
 
 function isEditableTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
@@ -24,7 +29,9 @@ function hasOsModifier(event: KeyboardEvent): boolean {
 export default function Desktop(props: { key?: string } = {}) {
   return (
     <OSProvider>
-      <DesktopShell {...props} />
+      <DesktopAppearanceProvider>
+        <DesktopShell {...props} />
+      </DesktopAppearanceProvider>
     </OSProvider>
   );
 }
@@ -42,6 +49,7 @@ function DesktopShell(_props: { key?: string } = {}) {
   const [isMobile, setIsMobile] = useState(false);
   const [isSpotlightOpen, setIsSpotlightOpen] = useState(false);
   const [isMissionControlOpen, setIsMissionControlOpen] = useState(false);
+  const { backgroundId } = useDesktopAppearance();
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -131,7 +139,7 @@ function DesktopShell(_props: { key?: string } = {}) {
 
   return (
     <div className="absolute inset-0 bg-transparent overflow-hidden">
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(13,17,23,0.34)_0%,rgba(5,7,10,0)_42%,rgba(5,7,10,0.52)_100%)]" />
+      <DesktopBackgroundLayer backgroundId={backgroundId} />
       <div className="absolute inset-0 scanlines z-10 opacity-35" />
 
       <MenuBar
@@ -165,6 +173,12 @@ function DesktopShell(_props: { key?: string } = {}) {
         minimizedApps={minimizedApps}
         onToggleApp={toggleApp}
       />
+      {SHOW_AEGIS_PROTOTYPE && (
+        <AegisBuddyPrototype
+          activeApp={activeApp}
+          pauseAmbientMotion={isSpotlightOpen || isMissionControlOpen}
+        />
+      )}
       <FloatingAskZarak onOpen={() => toggleApp('ask-zarak')} />
       <Spotlight
         isOpen={isSpotlightOpen}
