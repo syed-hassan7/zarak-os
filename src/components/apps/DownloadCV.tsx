@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Download, ExternalLink, FileDown, FileText, LoaderCircle, ShieldCheck } from 'lucide-react';
 import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist';
 import { recruiterProfile } from '../../data/recruiterProfile';
+import type { AppComponentProps } from '../../os/types';
 
 if (typeof window !== 'undefined' && 'Worker' in window && !GlobalWorkerOptions.workerPort) {
   GlobalWorkerOptions.workerPort = new Worker(
@@ -190,7 +191,7 @@ function PdfCanvasViewer({ handleDownload }: { handleDownload: () => void }) {
   );
 }
 
-export default function DownloadCV() {
+export default function DownloadCV({ isMobile = false }: AppComponentProps) {
   const handleDownload = () => {
     const link = document.createElement('a');
     link.href = recruiterProfile.cv.fileUrl;
@@ -204,10 +205,10 @@ export default function DownloadCV() {
     <div className="relative flex h-full flex-col overflow-hidden bg-os-bg/70">
       <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/[0.04] via-transparent to-os-warn/[0.04]" />
 
-      <div className="relative flex h-full flex-col overflow-y-auto p-4 sm:p-7 custom-scrollbar">
-        <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-5">
-          <header className="rounded-3xl border border-white/10 bg-white/[0.045] p-5 shadow-xl shadow-black/10 backdrop-blur-xl">
-            <div className="flex items-center justify-between gap-4">
+      <div className={`relative flex h-full flex-col overflow-y-auto custom-scrollbar ${isMobile ? 'p-4' : 'p-4 sm:p-7'}`}>
+        <div className={`mx-auto flex w-full max-w-7xl flex-1 flex-col ${isMobile ? 'gap-4' : 'gap-5'}`}>
+          <header className={`rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 backdrop-blur-xl ${isMobile ? 'p-4' : 'p-5'}`}>
+            <div className={`flex gap-4 ${isMobile ? 'flex-col' : 'items-center justify-between'}`}>
               <div className="flex min-w-0 items-center gap-4">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-os-warn/20 bg-os-warn/[0.08] text-os-warn">
                   <FileDown className="h-5 w-5" />
@@ -221,26 +222,26 @@ export default function DownloadCV() {
                   </h2>
                 </div>
               </div>
-              <div className="hidden items-center gap-2 rounded-full border border-os-accent/15 bg-os-accent/[0.055] px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-os-accent/85 sm:flex">
+              <div className={`items-center gap-2 rounded-full border border-os-accent/15 bg-os-accent/[0.055] px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-os-accent/85 ${isMobile ? 'inline-flex self-start' : 'hidden sm:flex'}`}>
                 <ShieldCheck className="h-3.5 w-3.5" />
                 <span>native preview</span>
               </div>
             </div>
           </header>
 
-          <section className="grid min-h-0 flex-1 gap-5 xl:grid-cols-[1.45fr_0.85fr]">
-            <div className="flex min-h-[420px] flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10">
-              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-5 py-4">
+          <section className={`grid min-h-0 flex-1 ${isMobile ? 'gap-4' : 'gap-5 xl:grid-cols-[1.45fr_0.85fr]'}`}>
+            <div className={`flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 ${isMobile ? 'min-h-[320px]' : 'min-h-[420px]'}`}>
+              <div className={`flex flex-wrap items-center justify-between gap-3 border-b border-white/10 ${isMobile ? 'px-4 py-3' : 'px-5 py-4'}`}>
                 <div className="min-w-0">
                   <p className="text-[10px] uppercase tracking-[0.22em] text-os-text-sec/55">Embedded review</p>
                   <h3 className="mt-1 truncate text-lg font-semibold text-os-text-pri">{recruiterProfile.cv.fileName}</h3>
                 </div>
-                <div className="flex flex-wrap items-center gap-2">
+                <div className={`flex flex-wrap items-center gap-2 ${isMobile ? 'w-full' : ''}`}>
                   <a
                     href={recruiterProfile.cv.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.055] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-os-text-pri transition-colors hover:border-white/18 hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-os-bg"
+                    className={`inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.055] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-os-text-pri transition-colors hover:border-white/18 hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-os-bg ${isMobile ? 'flex-1' : ''}`}
                   >
                     <ExternalLink size={14} />
                     <span>Open in new tab</span>
@@ -248,7 +249,7 @@ export default function DownloadCV() {
                   <button
                     type="button"
                     onClick={handleDownload}
-                    className="inline-flex items-center gap-2 rounded-xl border border-os-warn/20 bg-os-warn px-4 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-os-bg shadow-lg shadow-os-warn/10 transition-[filter,box-shadow] duration-100 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-os-warn/70 focus-visible:ring-offset-2 focus-visible:ring-offset-os-bg motion-reduce:transition-none"
+                    className={`inline-flex items-center justify-center gap-2 rounded-xl border border-os-warn/20 bg-os-warn px-4 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-os-bg shadow-lg shadow-os-warn/10 transition-[filter,box-shadow] duration-100 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-os-warn/70 focus-visible:ring-offset-2 focus-visible:ring-offset-os-bg motion-reduce:transition-none ${isMobile ? 'flex-1' : ''}`}
                   >
                     <Download size={14} />
                     <span>Download PDF</span>
@@ -256,16 +257,16 @@ export default function DownloadCV() {
                 </div>
               </div>
 
-              <div className="min-h-0 flex-1 p-4">
+              <div className={`min-h-0 flex-1 ${isMobile ? 'p-3' : 'p-4'}`}>
                 <div className="h-full overflow-hidden rounded-[1.65rem] border border-black/10 bg-[#dbe2ea] shadow-inner shadow-black/10">
                   <PdfCanvasViewer handleDownload={handleDownload} />
                 </div>
               </div>
             </div>
 
-            <aside className="flex flex-col gap-5">
-              <section className="rounded-3xl border border-white/10 bg-os-surface/45 p-6 shadow-xl shadow-black/10">
-                <div className="border-b border-white/10 pb-5">
+            <aside className={`flex flex-col ${isMobile ? 'gap-4' : 'gap-5'}`}>
+              <section className={`rounded-3xl border border-white/10 bg-os-surface/45 shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}>
+                <div className="border-b border-white/10 pb-4 sm:pb-5">
                   <p className="text-[10px] uppercase tracking-[0.22em] text-os-text-sec/55">Document details</p>
                   <h3 className="mt-2 break-all text-lg font-semibold text-os-text-pri">{recruiterProfile.cv.fileName}</h3>
                   <p className="mt-3 text-sm leading-6 text-os-text-sec">
@@ -273,7 +274,7 @@ export default function DownloadCV() {
                   </p>
                 </div>
 
-                <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+                <div className={`mt-5 grid gap-3 ${isMobile ? 'grid-cols-2' : 'sm:grid-cols-2 xl:grid-cols-1'}`}>
                   <div className="rounded-2xl border border-white/8 bg-white/[0.035] p-4">
                     <div className="text-[10px] uppercase tracking-[0.2em] text-os-text-sec/55">Format</div>
                     <div className="mt-2 font-mono text-sm text-os-text-pri">{recruiterProfile.cv.formatLabel}</div>
@@ -289,7 +290,7 @@ export default function DownloadCV() {
                 </div>
               </section>
 
-              <section className="rounded-3xl border border-white/10 bg-white/[0.045] p-6 shadow-xl shadow-black/10">
+              <section className={`rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}>
                 <p className="text-[10px] uppercase tracking-[0.22em] text-os-text-sec/55">Fallback paths</p>
                 <p className="mt-3 text-sm leading-6 text-os-text-pri/82">
                   If the embedded viewer is blocked by browser policy, the same local PDF is still accessible through the two direct actions below.

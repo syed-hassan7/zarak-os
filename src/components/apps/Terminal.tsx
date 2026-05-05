@@ -129,6 +129,23 @@ export default function Terminal({ isMobile, onOpenApp }: TerminalProps) {
 
       <div className="flex-1 overflow-hidden p-4">
         <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-os-bg/78 shadow-inner shadow-black/20">
+          {isMobile && (
+            <div className="border-b border-white/10 bg-white/[0.03] px-4 py-3">
+              <div className="text-[10px] uppercase tracking-[0.18em] text-os-text-sec/55">Quick commands</div>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {['help', 'whoami', 'open about.txt'].map((cmd) => (
+                  <button
+                    key={cmd}
+                    type="button"
+                    onClick={() => setInput(cmd)}
+                    className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[11px] text-os-text-pri/82"
+                  >
+                    {cmd}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
           <div
             ref={scrollRef}
             className="flex-1 overflow-y-auto px-4 py-4 custom-scrollbar"

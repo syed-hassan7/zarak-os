@@ -4,7 +4,7 @@ import { answerQuestion, STARTER_QUESTIONS } from '../../assistant/answerEngine'
 import { ACTION_LABELS, runAssistantAction } from '../../assistant/actions';
 import type { AssistantAnswer } from '../../assistant/types';
 import { useOS } from '../../os/OSProvider';
-import type { AppId } from '../../os/types';
+import type { AppComponentProps, AppId } from '../../os/types';
 import { isAppId } from '../../os/types';
 
 interface ChatMessage {
@@ -14,8 +14,9 @@ interface ChatMessage {
   answer?: AssistantAnswer;
 }
 
+const MOBILE_TOPICS = ['Background', 'Projects', 'CV', 'Contact'];
 
-export default function AskZarak() {
+export default function AskZarak({ isMobile = false }: AppComponentProps) {
   const { openApp, toggleApp, minimizeApp, state } = useOS();
   const [query, setQuery] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -124,7 +125,7 @@ export default function AskZarak() {
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-white/[0.03] text-slate-100">
-      <header className="border-b border-white/10 bg-white/[0.045] px-5 py-4">
+      <header className={`border-b border-white/10 bg-white/[0.045] ${isMobile ? 'px-4 py-3.5' : 'px-5 py-4'}`}>
         <div className="flex items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 text-sm font-semibold tracking-wide text-cyan-200">
@@ -139,7 +140,7 @@ export default function AskZarak() {
         </div>
       </header>
 
-      <main ref={scrollAreaRef} className="min-h-0 flex-1 overflow-y-auto px-5 py-5 custom-scrollbar">
+      <main ref={scrollAreaRef} className={`min-h-0 flex-1 overflow-y-auto custom-scrollbar ${isMobile ? 'px-4 py-4' : 'px-5 py-5'}`}>
         {hasUserMessages ? (
           <div className="mb-4 flex flex-wrap gap-2">
             {STARTER_QUESTIONS.map((starter) => (
@@ -164,7 +165,7 @@ export default function AskZarak() {
                 key={starter}
                 type="button"
                 onClick={() => ask(starter)}
-                className="rounded-2xl border border-white/10 bg-white/[0.045] px-4 py-3 text-left text-xs text-slate-300 transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-white/[0.08] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60 motion-reduce:hover:translate-y-0 motion-reduce:transition-none"
+                className={`rounded-2xl border border-white/10 bg-white/[0.045] text-left text-xs text-slate-300 transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-white/[0.08] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60 motion-reduce:hover:translate-y-0 motion-reduce:transition-none ${isMobile ? 'px-3.5 py-3' : 'px-4 py-3'}`}
               >
                 <span className="mb-1 flex items-center gap-2 text-cyan-200">
                   <Sparkles className="h-3.5 w-3.5" />
@@ -173,6 +174,25 @@ export default function AskZarak() {
                 {starter}
               </button>
             ))}
+          </section>
+        )}
+
+        {!hasUserMessages && isMobile && (
+          <section className="mb-4 rounded-2xl border border-white/10 bg-black/20 p-4">
+            <div className="text-[10px] uppercase tracking-[0.2em] text-slate-500">Verified coverage</div>
+            <p className="mt-2 text-sm leading-6 text-slate-300">
+              Source-limited answers from local portfolio data only. Fastest paths:
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {MOBILE_TOPICS.map((topic) => (
+                <span
+                  key={topic}
+                  className="rounded-full border border-cyan-300/12 bg-cyan-300/8 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-cyan-200"
+                >
+                  {topic}
+                </span>
+              ))}
+            </div>
           </section>
         )}
 
@@ -197,8 +217,8 @@ export default function AskZarak() {
                 key={message.id}
                 className={
                   message.role === 'user'
-                    ? 'ml-auto max-w-[78%] rounded-2xl bg-cyan-300/12 px-4 py-3 text-sm text-cyan-50'
-                    : 'max-w-[88%] rounded-3xl border border-white/10 bg-black/20 px-4 py-4 text-sm text-slate-200 shadow-2xl shadow-black/20'
+                    ? `ml-auto rounded-2xl bg-cyan-300/12 px-4 py-3 text-sm text-cyan-50 ${isMobile ? 'max-w-[88%]' : 'max-w-[78%]'}`
+                    : `rounded-3xl border border-white/10 bg-black/20 px-4 py-4 text-sm text-slate-200 shadow-2xl shadow-black/20 ${isMobile ? 'max-w-full' : 'max-w-[88%]'}`
                 }
               >
                 {message.role === 'assistant' && message.answer ? (
@@ -290,7 +310,12 @@ export default function AskZarak() {
         <div className="h-4" />
       </main>
 
-      <form onSubmit={onSubmit} className="border-t border-white/10 bg-black/20 p-4">
+      <form
+        onSubmit={onSubmit}
+        className={`border-t border-white/10 bg-black/20 ${
+          isMobile ? 'px-4 pb-[calc(var(--safe-area-bottom)+0.8rem)] pt-3' : 'p-4'
+        }`}
+      >
         <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.055] px-4 py-3">
           <input
             ref={inputRef}

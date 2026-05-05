@@ -8,6 +8,7 @@ import {
   Users,
 } from 'lucide-react';
 import { motion } from 'motion/react';
+import type { AppComponentProps } from '../../os/types';
 import {
   certifications,
   educationHistory,
@@ -16,28 +17,28 @@ import {
   recruiterProfile,
 } from '../../data/recruiterProfile';
 
-export default function LinkedInSnapshot() {
+export default function LinkedInSnapshot({ isMobile = false }: AppComponentProps) {
   return (
     <div className="relative flex h-full flex-col overflow-y-auto bg-os-bg/70 custom-scrollbar">
       <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-[#0a66c2]/[0.10] via-transparent to-os-accent/[0.06]" />
 
-      <div className="relative z-10 flex-1 p-4 sm:p-7">
-        <div className="mx-auto flex max-w-6xl flex-col gap-5">
+      <div className={`relative z-10 flex-1 ${isMobile ? 'p-4' : 'p-4 sm:p-7'}`}>
+        <div className={`mx-auto flex max-w-6xl flex-col ${isMobile ? 'gap-4' : 'gap-5'}`}>
           <header className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 backdrop-blur-xl">
-            <div className="h-28 bg-linear-to-r from-[#0a66c2]/45 via-[#157ad8]/35 to-os-accent/[0.24]" />
-            <div className="px-6 pb-6">
-              <div className="-mt-8 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div className={`${isMobile ? 'h-20' : 'h-28'} bg-linear-to-r from-[#0a66c2]/45 via-[#157ad8]/35 to-os-accent/[0.24]`} />
+            <div className={isMobile ? 'px-4 pb-4' : 'px-6 pb-6'}>
+              <div className={`${isMobile ? '-mt-6 gap-4' : '-mt-8 gap-5 lg:flex-row lg:items-end lg:justify-between'} flex flex-col`}>
                 <div className="flex min-w-0 gap-4">
-                  <div className="h-24 w-24 shrink-0 overflow-hidden rounded-[1.7rem] border border-white/12 bg-os-bg/90 shadow-xl shadow-black/25">
+                  <div className={`${isMobile ? 'h-20 w-20 rounded-[1.35rem]' : 'h-24 w-24 rounded-[1.7rem]'} shrink-0 overflow-hidden border border-white/12 bg-os-bg/90 shadow-xl shadow-black/25`}>
                     <img
                       src={recruiterProfile.profileImageUrl}
                       alt={recruiterProfile.name}
                       className="h-full w-full object-cover object-center"
                     />
                   </div>
-                  <div className="min-w-0 pt-3">
+                  <div className={`min-w-0 ${isMobile ? 'pt-2' : 'pt-3'}`}>
                     <div className="flex flex-wrap items-center gap-2">
-                      <h1 className="truncate text-2xl font-semibold tracking-tight text-os-text-pri">
+                      <h1 className={`truncate font-semibold tracking-tight text-os-text-pri ${isMobile ? 'text-xl' : 'text-2xl'}`}>
                         {recruiterProfile.name}
                       </h1>
                       <span className="rounded-full border border-white/10 bg-white/[0.06] px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-os-text-sec">
@@ -61,7 +62,7 @@ export default function LinkedInSnapshot() {
                   </div>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3">
+                <div className={`flex flex-wrap items-center gap-3 ${isMobile ? 'pt-1' : ''}`}>
                   <span className="rounded-full border border-[#0a66c2]/20 bg-[#0a66c2]/[0.12] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8bc2ff]">
                     Static profile snapshot
                   </span>
@@ -79,12 +80,12 @@ export default function LinkedInSnapshot() {
             </div>
           </header>
 
-          <div className="grid gap-5 xl:grid-cols-[1.18fr_0.82fr]">
-            <div className="space-y-5">
+          <div className={`grid ${isMobile ? 'gap-4' : 'gap-5 xl:grid-cols-[1.18fr_0.82fr]'}`}>
+            <div className={isMobile ? 'space-y-4' : 'space-y-5'}>
               <motion.section
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="rounded-3xl border border-white/10 bg-os-surface/45 p-6 shadow-xl shadow-black/10"
+                className={`rounded-3xl border border-white/10 bg-os-surface/45 shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}
               >
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
                   <div>
@@ -114,7 +115,7 @@ export default function LinkedInSnapshot() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.04 }}
-                className="rounded-3xl border border-white/10 bg-white/[0.045] p-6 shadow-xl shadow-black/10"
+                className={`rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}
               >
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="h-4 w-4 text-os-accent" />
@@ -129,7 +130,7 @@ export default function LinkedInSnapshot() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.08 }}
-                className="rounded-3xl border border-white/10 bg-white/[0.045] p-6 shadow-xl shadow-black/10"
+                className={`rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}
               >
                 <div className="mb-5 flex items-center gap-2">
                   <BriefcaseBusiness className="h-4 w-4 text-os-accent" />
@@ -158,12 +159,12 @@ export default function LinkedInSnapshot() {
               </motion.section>
             </div>
 
-            <div className="space-y-5">
+            <div className={isMobile ? 'space-y-4' : 'space-y-5'}>
               <motion.section
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.12 }}
-                className="rounded-3xl border border-white/10 bg-os-surface/45 p-6 shadow-xl shadow-black/10"
+                className={`rounded-3xl border border-white/10 bg-os-surface/45 shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}
               >
                 <div className="mb-4 flex items-center gap-2">
                   <GraduationCap className="h-4 w-4 text-os-accent" />
@@ -185,7 +186,7 @@ export default function LinkedInSnapshot() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.16 }}
-                className="rounded-3xl border border-white/10 bg-white/[0.045] p-6 shadow-xl shadow-black/10"
+                className={`rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}
               >
                 <div className="mb-4 flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-os-accent" />
@@ -207,7 +208,7 @@ export default function LinkedInSnapshot() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="rounded-3xl border border-white/10 bg-white/[0.045] p-6 shadow-xl shadow-black/10"
+                className={`rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}
               >
                 <div className="mb-4 flex items-center gap-2">
                   <ShieldCheck className="h-4 w-4 text-os-accent" />
@@ -226,7 +227,7 @@ export default function LinkedInSnapshot() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.24 }}
-                className="rounded-3xl border border-white/10 bg-[#0a66c2]/[0.08] p-6 shadow-xl shadow-black/10"
+                className={`rounded-3xl border border-white/10 bg-[#0a66c2]/[0.08] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}
               >
                 <p className="text-[10px] uppercase tracking-[0.22em] text-[#8bc2ff]/80">Snapshot note</p>
                 <p className="mt-3 text-sm leading-6 text-os-text-pri/82">

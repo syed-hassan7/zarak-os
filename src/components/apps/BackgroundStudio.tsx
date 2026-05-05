@@ -1,5 +1,6 @@
 import { Check, Image as ImageIcon, Sparkles } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
+import type { AppComponentProps } from '../../os/types';
 import {
   useDesktopAppearance,
 } from '../shell/DesktopAppearance';
@@ -59,7 +60,7 @@ function PreviewFrame({ backgroundId }: { backgroundId: DesktopBackgroundId }) {
   );
 }
 
-export default function BackgroundStudio() {
+export default function BackgroundStudio({ isMobile = false }: AppComponentProps) {
   const { backgroundId, setBackgroundId } = useDesktopAppearance();
   const shouldReduceMotion = useReducedMotion();
   const activePreset = DESKTOP_BACKGROUND_PRESETS.find((preset) => preset.id === backgroundId)!;
@@ -68,7 +69,7 @@ export default function BackgroundStudio() {
     <div className="relative flex h-full flex-col overflow-y-auto bg-os-bg/72 custom-scrollbar">
       <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/[0.04] via-transparent to-os-accent/[0.04]" />
 
-      <header className="relative border-b border-white/10 bg-white/[0.04] px-6 py-5 backdrop-blur-xl min-[1920px]:px-8 min-[1920px]:py-6">
+      <header className={`relative border-b border-white/10 bg-white/[0.04] backdrop-blur-xl ${isMobile ? 'px-4 py-4' : 'px-6 py-5 min-[1920px]:px-8 min-[1920px]:py-6'}`}>
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex min-w-0 items-center gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-cyan-300/18 bg-cyan-300/[0.08] shadow-lg shadow-black/15">
@@ -87,8 +88,8 @@ export default function BackgroundStudio() {
         </div>
       </header>
 
-      <div className="relative z-10 flex-1 space-y-4 p-6 min-[1920px]:space-y-5 min-[1920px]:p-8">
-        <section className="grid gap-4 rounded-3xl border border-white/10 bg-white/[0.045] p-4 shadow-xl shadow-black/10 min-[1920px]:p-5 lg:grid-cols-[minmax(0,1fr)_17rem]">
+      <div className={`relative z-10 flex-1 ${isMobile ? 'space-y-4 p-4' : 'space-y-4 p-6 min-[1920px]:space-y-5 min-[1920px]:p-8'}`}>
+        <section className={`grid gap-4 rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-4 min-[1920px]:p-5 lg:grid-cols-[minmax(0,1fr)_17rem]'}`}>
           <div className="min-w-0">
             <h2 className="text-sm font-semibold text-os-text-pri">Shell backdrop presets</h2>
             <p className="mt-2 max-w-3xl text-[13px] leading-6 text-os-text-pri/76 min-[1920px]:text-sm">
@@ -108,7 +109,7 @@ export default function BackgroundStudio() {
           </div>
         </section>
 
-        <section className="grid gap-3 md:grid-cols-2">
+        <section className={`grid gap-3 ${isMobile ? 'grid-cols-1' : 'md:grid-cols-2'}`}>
           {DESKTOP_BACKGROUND_PRESETS.map((preset, index) => {
             const isActive = preset.id === backgroundId;
             const isDefault = preset.id === 'shell-default';
@@ -121,7 +122,7 @@ export default function BackgroundStudio() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={shouldReduceMotion ? { duration: 0 } : { delay: index * 0.05, duration: 0.22 }}
                 onClick={() => setBackgroundId(preset.id)}
-                className={`group rounded-3xl border p-3.5 text-left shadow-xl shadow-black/10 transition-[transform,border-color,background-color,box-shadow] duration-150 ease-out motion-reduce:transition-none min-[1920px]:p-4 ${
+                className={`group rounded-3xl border p-3.5 text-left shadow-xl shadow-black/10 transition-[transform,border-color,background-color,box-shadow] duration-150 ease-out motion-reduce:transition-none ${isMobile ? '' : 'min-[1920px]:p-4'} ${
                   isActive
                     ? 'border-cyan-300/30 bg-cyan-300/[0.07] ring-1 ring-cyan-300/18'
                     : 'border-white/10 bg-white/[0.045] hover:-translate-y-0.5 hover:border-white/18 hover:bg-white/[0.07] motion-reduce:hover:translate-y-0'
