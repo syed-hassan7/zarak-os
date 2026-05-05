@@ -13,7 +13,7 @@ The result is a portfolio that behaves more like a small operating system than a
 
 ## Current Features
 
-- **3D desk environment**: immersive workstation scene with the desktop shell projected into it.
+- **3D desk environment**: immersive workstation scene with the desktop shell projected into it and a carefully tuned final desktop framing.
 - **Custom OS shell**: draggable, minimizable, resizable, stackable windows with dock, menu bar, Spotlight, and Mission Control flows.
 - **Terminal-first identity**: a functional `terminal.app` with portfolio-specific commands and shell-style presentation.
 - **Syed-LLM (`syed-llm.app`)**: local, source-limited portfolio assistant with no API or backend. Answers are produced from verified local content only, with typewriter streaming, sources, and action shortcuts.
@@ -24,7 +24,7 @@ The result is a portfolio that behaves more like a small operating system than a
 - **Keyboard-first navigation**: `⌘/Ctrl/Alt + K` Spotlight, `F3` / modifier + `ArrowUp` Mission Control, plus minimize/quit shortcuts.
 - **Dock and shell motion**: small-surface motion design built with `motion/react`, respecting reduced-motion preferences.
 - **Cyber-noir visual system**: dark shell chrome, scanlines, cyan/violet accents, subtle glow, and layered backdrop treatments.
-- **Desktop-first responsive behavior**: full shell on desktop, terminal-mode fallback on smaller screens.
+- **Dual experience mode**: full desktop shell inside the 3D monitor on desktop, and a dedicated touch-first mobile shell on smaller devices.
 
 ## 🛠️ Tech Stack
 
@@ -78,6 +78,7 @@ tests/
 - [`src/components/apps/BackgroundStudio.tsx`](src/components/apps/BackgroundStudio.tsx): backdrop selection app.
 - [`src/components/shell/DesktopAppearance.tsx`](src/components/shell/DesktopAppearance.tsx): local shell appearance state and persistence.
 - [`src/components/shell/DesktopBackgroundLayer.tsx`](src/components/shell/DesktopBackgroundLayer.tsx): animated shell-only background renderer.
+- [`src/components/shell/MobileShell.tsx`](src/components/shell/MobileShell.tsx): dedicated touch-first mobile OS experience.
 - [`src/os/appRegistry.tsx`](src/os/appRegistry.tsx): visible app registration and labels.
 
 ## 🚀 Getting Started
@@ -145,6 +146,7 @@ npm run test:e2e -- --workers=1
 
 - `syed-llm.app` is the visible product name; the historical internal app id remains `ask-zarak` to avoid unnecessary shell-state churn.
 - Desktop backdrop changes are intentionally scoped to the flat shell layer and do not modify the 3D scene, lighting, or projection surfaces.
+- Desktop 3D framing and monitor projection are coupled in `Scene3D.tsx`; camera/view changes must keep the final monitor overlay alignment intact.
 - Aegis-M is currently an ambient shell companion only. It does not launch apps or replace the Syed-LLM assistant flow.
 
 ## 📄 License

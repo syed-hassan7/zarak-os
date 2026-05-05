@@ -9,9 +9,12 @@ import SceneLoader from './components/three/SceneLoader';
 import App from './App';
 
 // ── Constants ──
-const CAM_START  = new THREE.Vector3(0, 5.5, 8);
-const CAM_END    = new THREE.Vector3(0, 2.08, 2.2);
-const CAM_TARGET = new THREE.Vector3(0, 1.9, -0.5);
+const CAM_START = new THREE.Vector3(0, 5.5, 8);
+const CAM_FLY_END = new THREE.Vector3(0, 2.08, 2.2);
+const CAM_FLY_TARGET = new THREE.Vector3(0, 1.9, -0.5);
+const CAM_STABLE = new THREE.Vector3(0, 2.12, 2.18);
+const CAM_STABLE_TARGET = new THREE.Vector3(0, 1.94, -0.5);
+const FINAL_FRAME_BLEND_START = 0.9;
 
 // Monitor corners in world-space (exact inner bezel edges from DeskScene geometry)
 const MON_TL = new THREE.Vector3(-1.48, 2.87, -0.48);
@@ -23,10 +26,15 @@ const MON_BR = new THREE.Vector3( 1.48, 1.23, -0.48);
  * - scaleX, scaleY: how much to shrink full-viewport content to fit
  * - vpWidth, vpHeight: viewport size for the inner content wrapper
  */
-function computeMonitorRect(vpW: number, vpH: number) {
+function computeMonitorRect(
+  vpW: number,
+  vpH: number,
+  cameraPosition = CAM_STABLE,
+  cameraTarget = CAM_STABLE_TARGET,
+) {
   const cam = new THREE.PerspectiveCamera(42, vpW / vpH, 0.1, 50);
-  cam.position.copy(CAM_END);
-  cam.lookAt(CAM_TARGET);
+  cam.position.copy(cameraPosition);
+  cam.lookAt(cameraTarget);
   cam.updateMatrixWorld();
   cam.updateProjectionMatrix();
 
@@ -67,25 +75,43 @@ function CameraAnimator({
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
   const startTime = useRef<number | null>(null);
   const fired = useRef(false);
+  const currentTarget = useRef(CAM_FLY_TARGET.clone());
+  const workingPosition = useRef(new THREE.Vector3());
 
   useFrame(({ clock }) => {
     if (!cameraRef.current) return;
-    cameraRef.current.lookAt(CAM_TARGET);
 
-    if (!isReady || fired.current) return;
+    if (!isReady) return;
 
     if (startTime.current === null) {
       startTime.current = clock.getElapsedTime();
       cameraRef.current.position.copy(CAM_START);
+      currentTarget.current.copy(CAM_FLY_TARGET);
     }
 
-    const t = Math.min((clock.getElapsedTime() - startTime.current) / 1.55, 1);
-    cameraRef.current.position.lerpVectors(CAM_START, CAM_END, 1 - Math.pow(1 - t, 3));
+    if (!fired.current) {
+      const t = Math.min((clock.getElapsedTime() - startTime.current) / 1.55, 1);
+      const easedT = 1 - Math.pow(1 - t, 3);
+      workingPosition.current.lerpVectors(CAM_START, CAM_FLY_END, easedT);
+      currentTarget.current.copy(CAM_FLY_TARGET);
 
-    if (t >= 1) {
-      fired.current = true;
-      onComplete();
+      if (t >= FINAL_FRAME_BLEND_START) {
+        const blendT = (t - FINAL_FRAME_BLEND_START) / (1 - FINAL_FRAME_BLEND_START);
+        const easedBlendT = blendT * blendT * (3 - 2 * blendT);
+        workingPosition.current.lerp(CAM_STABLE, easedBlendT);
+        currentTarget.current.lerp(CAM_STABLE_TARGET, easedBlendT);
+      }
+
+      cameraRef.current.position.copy(workingPosition.current);
+      cameraRef.current.lookAt(currentTarget.current);
+
+      if (t >= 1) {
+        fired.current = true;
+        onComplete();
+      }
+      return;
     }
+    cameraRef.current.lookAt(currentTarget.current);
   });
 
   return (
