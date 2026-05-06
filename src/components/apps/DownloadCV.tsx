@@ -5,11 +5,11 @@ import type { PDFDocumentLoadingTask, PDFDocumentProxy } from 'pdfjs-dist';
 import { recruiterProfile } from '../../data/recruiterProfile';
 import type { AppComponentProps } from '../../os/types';
 
-if (typeof window !== 'undefined' && 'Worker' in window && !GlobalWorkerOptions.workerPort) {
-  GlobalWorkerOptions.workerPort = new Worker(
-    new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url),
-    { type: 'module' },
-  );
+if (typeof window !== 'undefined' && !GlobalWorkerOptions.workerSrc) {
+  GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/build/pdf.worker.min.mjs',
+    import.meta.url,
+  ).toString();
 }
 
 function PdfLoadingState() {

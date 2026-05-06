@@ -1,4 +1,4 @@
-import { type ElementType, useEffect, useMemo, useState } from 'react';
+import { Component, type ElementType, type ReactNode, Suspense, useEffect, useMemo, useState } from 'react';
 import {
   ArrowLeft,
   Clock3,
@@ -14,6 +14,7 @@ import type { AppDefinition, AppIconProps, AppId } from '../../os/types';
 import { useOS } from '../../os/OSProvider';
 import DesktopBackgroundLayer from './DesktopBackgroundLayer';
 import type { DesktopBackgroundId } from './desktopBackgroundPresets';
+import WindowLoadingFallback from './WindowLoadingFallback';
 
 const MOBILE_FEATURED_APP_IDS: AppId[] = ['cv', 'linkedin', 'contact', 'venderscope'];
 const MOBILE_LAUNCH_ORDER: AppId[] = [
@@ -69,6 +70,47 @@ const MOBILE_APP_COPY: Record<AppId, { eyebrow: string; description: string }> =
 
 interface MobileShellProps {
   backgroundId: DesktopBackgroundId;
+}
+
+class MobileAppErrorBoundary extends Component<
+  { appId: AppId; children: ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { appId: AppId; children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error) {
+    console.error(`[MobileShell] App "${this.props.appId}" crashed:`, error);
+  }
+
+  componentDidUpdate(previousProps: { appId: AppId }) {
+    if (previousProps.appId !== this.props.appId && this.state.hasError) {
+      this.setState({ hasError: false });
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex h-full items-center justify-center bg-os-bg/80 p-6 text-center">
+          <div className="w-full max-w-xs rounded-[24px] border border-white/10 bg-white/[0.055] p-5 shadow-2xl shadow-black/25">
+            <p className="text-sm font-semibold text-red-300">App failed to render</p>
+            <p className="mt-2 text-xs leading-5 text-os-text-sec">
+              Close and reopen this app to retry without leaving the mobile shell.
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
 }
 
 function formatClock(time: Date): string {
@@ -144,44 +186,45 @@ export default function MobileShell({ backgroundId }: MobileShellProps) {
       <div className="absolute inset-0 scanlines z-10 opacity-20" />
 
       <div className="absolute inset-0 z-20 overflow-y-auto custom-scrollbar">
-        <div className="mx-auto flex min-h-full w-full max-w-screen-sm flex-col px-4 pb-[calc(var(--safe-area-bottom)+7rem)] pt-[calc(var(--safe-area-top)+1rem)]">
-          <header className="rounded-[28px] border border-white/10 bg-white/[0.055] px-4 py-4 shadow-xl shadow-black/20 backdrop-blur-2xl">
-            <div className="flex items-center justify-between gap-4">
-              <div className="min-w-0">
-                <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-os-accent/90">
-                  <img src="/logo.svg" alt="ZARAK_OS" className="h-4 w-4 object-contain opacity-90" />
-                  <span>ZARAK_OS mobile</span>
+        <div className="mx-auto flex min-h-full w-full max-w-screen-sm flex-col px-3 pb-[calc(var(--safe-area-bottom)+5.75rem)] pt-[calc(var(--safe-area-top)+0.75rem)]">
+          <header className="rounded-[24px] border border-white/10 bg-white/[0.055] px-3.5 py-3 shadow-xl shadow-black/20 backdrop-blur-2xl">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex min-w-0 items-center gap-2.5">
+                <img src="/logo.svg" alt="ZARAK_OS" className="h-5 w-5 shrink-0 object-contain opacity-90" />
+                <div className="min-w-0">
+                  <div className="truncate text-[11px] font-semibold uppercase tracking-[0.18em] text-os-accent/90">
+                    ZARAK_OS mobile
+                  </div>
+                  <div className="mt-0.5 truncate text-xs text-os-text-sec/75">
+                    Recruiter touch shell
+                  </div>
                 </div>
-                <p className="mt-2 text-sm leading-6 text-os-text-pri/84">
-                  Recruiter-first touch interface. The desktop shell stays intact; mobile gets a
-                  purpose-built launcher.
-                </p>
               </div>
               <div className="shrink-0 rounded-2xl border border-white/10 bg-os-bg/45 px-3 py-2 text-right shadow-lg shadow-black/15">
-                <div className="text-lg font-semibold leading-none text-os-text-pri">{formatClock(time)}</div>
-                <div className="mt-1 text-[10px] uppercase tracking-[0.16em] text-os-text-sec/70">
+                <div className="text-base font-semibold leading-none text-os-text-pri">{formatClock(time)}</div>
+                <div className="mt-1 text-[9px] uppercase tracking-[0.14em] text-os-text-sec/70">
                   {formatDate(time)}
                 </div>
               </div>
             </div>
           </header>
 
-          <section className="mt-4 rounded-[32px] border border-white/10 bg-white/[0.05] p-5 shadow-xl shadow-black/15 backdrop-blur-2xl">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.22em] text-os-text-sec/65">
+          <section className="mt-4">
+            <div className="flex items-end justify-between gap-4 px-1">
+              <div className="min-w-0">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-os-text-sec/65">
                   Pocket workstation
                 </p>
-                <h1 className="mt-2 text-[30px] font-semibold leading-[1.05] tracking-tight text-os-text-pri">
-                  Start with the highest-value paths.
+                <h1 className="mt-1.5 text-[24px] font-semibold leading-[1.08] text-os-text-pri">
+                  Start where signal is strongest.
                 </h1>
               </div>
-              <div className="rounded-2xl border border-os-accent/20 bg-os-accent/[0.08] p-3 text-os-accent">
+              <div className="mb-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-os-accent/20 bg-os-accent/[0.08] text-os-accent">
                 <Sparkles className="h-5 w-5" />
               </div>
             </div>
 
-            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="mt-3 grid grid-cols-2 gap-2.5">
               {featuredApps.map((app) => (
                 <FeaturedAppCard key={app.id} app={app} onOpen={() => openOrFocusApp(app.id)} />
               ))}
@@ -222,35 +265,17 @@ export default function MobileShell({ backgroundId }: MobileShellProps) {
               <Grid2x2 className="h-3.5 w-3.5" />
               <span>All apps</span>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-2.5">
               {launcherApps.map((app) => (
-                <button
-                  key={app.id}
-                  type="button"
-                  onClick={() => openOrFocusApp(app.id)}
-                  className="rounded-[26px] border border-white/10 bg-white/[0.05] p-4 text-left shadow-lg shadow-black/10 backdrop-blur-xl"
-                >
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-os-bg/45 text-os-text-pri">
-                    <app.icon size={19} strokeWidth={1.6} />
-                  </div>
-                  <div className="mt-4 text-[10px] uppercase tracking-[0.2em] text-os-text-sec/60">
-                    {MOBILE_APP_COPY[app.id].eyebrow}
-                  </div>
-                  <div className="mt-2 text-sm font-semibold leading-5 text-os-text-pri">
-                    {app.label}
-                  </div>
-                  <p className="mt-2 text-xs leading-5 text-os-text-sec">
-                    {MOBILE_APP_COPY[app.id].description}
-                  </p>
-                </button>
+                <MobileAppRow key={app.id} app={app} onOpen={() => openOrFocusApp(app.id)} />
               ))}
             </div>
           </section>
         </div>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 px-4 pb-[calc(var(--safe-area-bottom)+1rem)]">
-        <div className="mx-auto grid max-w-screen-sm grid-cols-3 gap-3 rounded-[28px] border border-white/10 bg-os-bg/82 p-3 shadow-2xl shadow-black/30 backdrop-blur-2xl">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 px-3 pb-[calc(var(--safe-area-bottom)+0.75rem)]">
+        <div className="mx-auto grid max-w-screen-sm grid-cols-3 gap-2 rounded-[22px] border border-white/10 bg-os-bg/86 p-2 shadow-2xl shadow-black/30 backdrop-blur-2xl">
           <QuickLaunchButton
             icon={Home}
             label="Home"
@@ -281,21 +306,21 @@ export default function MobileShell({ backgroundId }: MobileShellProps) {
           >
             <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-white/[0.04] via-transparent to-os-accent/[0.04]" />
 
-            <header className="relative z-10 flex items-center justify-between gap-3 border-b border-white/10 px-4 pb-3 pt-[calc(var(--safe-area-top)+0.9rem)]">
+            <header className="relative z-10 flex items-center justify-between gap-3 border-b border-white/10 px-3 pb-2.5 pt-[calc(var(--safe-area-top)+0.65rem)]">
               <button
                 type="button"
                 onClick={returnHome}
-                className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.055] text-os-text-pri shadow-lg shadow-black/15"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.055] text-os-text-pri shadow-lg shadow-black/15"
                 aria-label="Return to mobile home"
               >
-                <ArrowLeft className="h-4.5 w-4.5" />
+                <ArrowLeft className="h-4 w-4" />
               </button>
 
               <div className="min-w-0 text-center">
-                <div className="truncate text-sm font-semibold text-os-text-pri">
+                <div className="truncate text-[13px] font-semibold text-os-text-pri">
                   {activeVisibleApp.label}
                 </div>
-                <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-os-text-sec/60">
+                <div className="mt-0.5 text-[9px] uppercase tracking-[0.16em] text-os-text-sec/60">
                   {MOBILE_APP_COPY[activeVisibleApp.id].eyebrow}
                 </div>
               </div>
@@ -303,15 +328,19 @@ export default function MobileShell({ backgroundId }: MobileShellProps) {
               <button
                 type="button"
                 onClick={() => closeApp(activeVisibleApp.id)}
-                className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.055] text-os-text-pri shadow-lg shadow-black/15"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.055] text-os-text-pri shadow-lg shadow-black/15"
                 aria-label={`Close ${activeVisibleApp.label}`}
               >
-                <X className="h-4.5 w-4.5" />
+                <X className="h-4 w-4" />
               </button>
             </header>
 
-            <div className="relative z-10 min-h-0 flex-1 overflow-hidden pb-[calc(var(--safe-area-bottom)+0.5rem)]">
-              <activeVisibleApp.component isMobile onOpenApp={openOrFocusApp} />
+            <div className="relative z-10 min-h-0 flex-1 overflow-hidden pb-[calc(var(--safe-area-bottom)+0.35rem)]">
+              <MobileAppErrorBoundary appId={activeVisibleApp.id}>
+                <Suspense fallback={<WindowLoadingFallback />}>
+                  <activeVisibleApp.component isMobile onOpenApp={openOrFocusApp} />
+                </Suspense>
+              </MobileAppErrorBoundary>
             </div>
           </motion.section>
         ) : null}
@@ -331,19 +360,52 @@ function FeaturedAppCard({
     <button
       type="button"
       onClick={onOpen}
-      className="rounded-[26px] border border-white/10 bg-os-bg/42 p-4 text-left shadow-lg shadow-black/10"
+      className="min-h-[128px] rounded-[22px] border border-white/10 bg-white/[0.05] p-3.5 text-left shadow-lg shadow-black/10 backdrop-blur-xl"
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-white/[0.07] text-os-text-pri">
-          <app.icon size={20} strokeWidth={1.6} />
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/12 bg-os-bg/45 text-os-text-pri">
+          <app.icon size={18} strokeWidth={1.6} />
         </div>
-        <ExternalLink className="mt-1 h-4 w-4 shrink-0 text-os-text-sec/55" />
+        <ExternalLink className="mt-1 h-3.5 w-3.5 shrink-0 text-os-text-sec/55" />
       </div>
-      <div className="mt-4 text-[10px] uppercase tracking-[0.2em] text-os-accent/75">
+      <div className="mt-3 text-[9px] uppercase tracking-[0.16em] text-os-accent/75">
         {MOBILE_APP_COPY[app.id].eyebrow}
       </div>
-      <div className="mt-2 text-base font-semibold tracking-tight text-os-text-pri">{app.label}</div>
-      <p className="mt-2 text-xs leading-5 text-os-text-sec">{MOBILE_APP_COPY[app.id].description}</p>
+      <div className="mt-1.5 text-sm font-semibold leading-5 text-os-text-pri">{app.label}</div>
+    </button>
+  );
+}
+
+function MobileAppRow({
+  app,
+  onOpen,
+}: {
+  app: AppDefinition;
+  onOpen: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      className="flex min-h-[82px] items-center gap-3 rounded-[22px] border border-white/10 bg-white/[0.05] px-3.5 py-3 text-left shadow-lg shadow-black/10 backdrop-blur-xl"
+    >
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/12 bg-os-bg/45 text-os-text-pri">
+        <app.icon size={19} strokeWidth={1.6} />
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center justify-between gap-3">
+          <div className="truncate text-sm font-semibold leading-5 text-os-text-pri">
+            {app.label}
+          </div>
+          <ExternalLink className="h-3.5 w-3.5 shrink-0 text-os-text-sec/45" />
+        </div>
+        <div className="mt-1 text-[9px] uppercase tracking-[0.16em] text-os-accent/70">
+          {MOBILE_APP_COPY[app.id].eyebrow}
+        </div>
+        <p className="mt-1 line-clamp-2 text-[11px] leading-4 text-os-text-sec">
+          {MOBILE_APP_COPY[app.id].description}
+        </p>
+      </div>
     </button>
   );
 }
@@ -361,10 +423,10 @@ function QuickLaunchButton({
     <button
       type="button"
       onClick={onPress}
-      className="pointer-events-auto flex min-h-14 flex-col items-center justify-center gap-1 rounded-2xl border border-white/10 bg-white/[0.055] px-2 py-2 text-os-text-pri shadow-lg shadow-black/10"
+      className="pointer-events-auto flex min-h-12 flex-col items-center justify-center gap-1 rounded-2xl border border-white/10 bg-white/[0.055] px-2 py-1.5 text-os-text-pri shadow-lg shadow-black/10"
     >
       <Icon size={18} strokeWidth={1.6} />
-      <span className="text-[10px] font-medium uppercase tracking-[0.16em] text-os-text-sec/75">
+      <span className="text-[9px] font-medium uppercase tracking-[0.13em] text-os-text-sec/75">
         {label}
       </span>
     </button>

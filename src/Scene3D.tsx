@@ -10,11 +10,8 @@ import App from './App';
 
 // ── Constants ──
 const CAM_START = new THREE.Vector3(0, 5.5, 8);
-const CAM_FLY_END = new THREE.Vector3(0, 2.08, 2.2);
-const CAM_FLY_TARGET = new THREE.Vector3(0, 1.9, -0.5);
-const CAM_STABLE = new THREE.Vector3(0, 2.12, 2.18);
-const CAM_STABLE_TARGET = new THREE.Vector3(0, 1.94, -0.5);
-const FINAL_FRAME_BLEND_START = 0.9;
+const CAM_FINAL = new THREE.Vector3(0, 2.12, 2.18);
+const CAM_FINAL_TARGET = new THREE.Vector3(0, 1.94, -0.5);
 
 // Monitor corners in world-space (exact inner bezel edges from DeskScene geometry)
 const MON_TL = new THREE.Vector3(-1.48, 2.87, -0.48);
@@ -29,8 +26,8 @@ const MON_BR = new THREE.Vector3( 1.48, 1.23, -0.48);
 function computeMonitorRect(
   vpW: number,
   vpH: number,
-  cameraPosition = CAM_STABLE,
-  cameraTarget = CAM_STABLE_TARGET,
+  cameraPosition = CAM_FINAL,
+  cameraTarget = CAM_FINAL_TARGET,
 ) {
   const cam = new THREE.PerspectiveCamera(42, vpW / vpH, 0.1, 50);
   cam.position.copy(cameraPosition);
@@ -75,7 +72,7 @@ function CameraAnimator({
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
   const startTime = useRef<number | null>(null);
   const fired = useRef(false);
-  const currentTarget = useRef(CAM_FLY_TARGET.clone());
+  const currentTarget = useRef(CAM_FINAL_TARGET.clone());
   const workingPosition = useRef(new THREE.Vector3());
 
   useFrame(({ clock }) => {
@@ -86,21 +83,14 @@ function CameraAnimator({
     if (startTime.current === null) {
       startTime.current = clock.getElapsedTime();
       cameraRef.current.position.copy(CAM_START);
-      currentTarget.current.copy(CAM_FLY_TARGET);
+      currentTarget.current.copy(CAM_FINAL_TARGET);
     }
 
     if (!fired.current) {
       const t = Math.min((clock.getElapsedTime() - startTime.current) / 1.55, 1);
       const easedT = 1 - Math.pow(1 - t, 3);
-      workingPosition.current.lerpVectors(CAM_START, CAM_FLY_END, easedT);
-      currentTarget.current.copy(CAM_FLY_TARGET);
-
-      if (t >= FINAL_FRAME_BLEND_START) {
-        const blendT = (t - FINAL_FRAME_BLEND_START) / (1 - FINAL_FRAME_BLEND_START);
-        const easedBlendT = blendT * blendT * (3 - 2 * blendT);
-        workingPosition.current.lerp(CAM_STABLE, easedBlendT);
-        currentTarget.current.lerp(CAM_STABLE_TARGET, easedBlendT);
-      }
+      workingPosition.current.lerpVectors(CAM_START, CAM_FINAL, easedT);
+      currentTarget.current.copy(CAM_FINAL_TARGET);
 
       cameraRef.current.position.copy(workingPosition.current);
       cameraRef.current.lookAt(currentTarget.current);

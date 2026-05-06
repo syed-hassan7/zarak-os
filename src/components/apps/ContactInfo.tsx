@@ -16,7 +16,7 @@ export default function ContactInfo({ isMobile = false }: AppComponentProps) {
                 <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-os-text-sec/70">
                   Communication
                 </p>
-                <h2 className="mt-1 truncate text-2xl font-semibold tracking-tight text-os-text-pri">
+                <h2 className={`mt-1 font-semibold tracking-tight text-os-text-pri ${isMobile ? 'text-xl leading-7' : 'truncate text-2xl'}`}>
                   Initiate Connection
                 </h2>
               </div>
