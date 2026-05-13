@@ -42,7 +42,6 @@ export const APP_REGISTRY = [
     minimumWindowSize: { width: 520, height: 320 },
     dockVisible: true,
     searchKeywords: ['terminal', 'shell', 'commands', 'cli'],
-    defaultOpen: true,
   },
   {
     id: 'venderscope',
@@ -73,6 +72,7 @@ export const APP_REGISTRY = [
     minimumWindowSize: { width: 620, height: 420 },
     dockVisible: true,
     searchKeywords: ['cv', 'resume', 'document', 'pdf', 'viewer', 'download'],
+    defaultOpen: true,
   },
   {
     id: 'linkedin',
