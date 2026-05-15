@@ -19,7 +19,7 @@ export interface RecruiterProfile {
     url: string;
     publicProfile: string;
     handle: string;
-    connections: number;
+    connections: string;
     followers: number;
     openToWork: string;
   };
@@ -89,7 +89,7 @@ export interface CertificationEntry {
 export const recruiterProfile: RecruiterProfile = {
   name: 'Syed Zarak Hassan',
   pronouns: 'He/Him',
-  profileImageUrl: '/thats-me.jpg',
+  profileImageUrl: '/syed-zarak-hassan.png',
   headline: 'Placement Compliance Analyst @ THRIVE',
   currentRoleSummary: 'Compliance Analyst @ Thrive Learning',
   currentStudySummary: 'MSc Cybersecurity, Nottingham Trent University (2026)',
@@ -105,8 +105,8 @@ export const recruiterProfile: RecruiterProfile = {
     url: 'https://www.linkedin.com/in/zarak-hassan7/',
     publicProfile: 'www.linkedin.com/in/zarak-hassan7',
     handle: 'in/zarak-hassan7',
-    connections: 431,
-    followers: 431,
+    connections: '500+',
+    followers: 517,
     openToWork: 'recruiters only',
   },
   aboutSummary:

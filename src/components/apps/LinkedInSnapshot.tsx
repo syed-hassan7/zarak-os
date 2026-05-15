@@ -25,10 +25,22 @@ export default function LinkedInSnapshot({ isMobile = false }: AppComponentProps
       <div className={`relative z-10 flex-1 ${isMobile ? 'p-4' : 'p-4 sm:p-7'}`}>
         <div className={`mx-auto flex max-w-6xl flex-col ${isMobile ? 'gap-4' : 'gap-5'}`}>
           <header className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 backdrop-blur-xl">
-            <div className={`${isMobile ? 'h-20' : 'h-28'} bg-linear-to-r from-[#0a66c2]/45 via-[#157ad8]/35 to-os-accent/[0.24]`} />
-            <div className={isMobile ? 'px-4 pb-4' : 'px-6 pb-6'}>
-              <div className={`${isMobile ? '-mt-6 gap-4' : '-mt-8 gap-5 lg:flex-row lg:items-end lg:justify-between'} flex flex-col`}>
-                <div className="flex min-w-0 gap-4">
+            <div className={`relative z-0 overflow-hidden ${isMobile ? 'h-20' : 'h-28'}`}>
+              <motion.div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    'linear-gradient(120deg, rgba(10,102,194,0.72), rgba(0,119,181,0.52), rgba(45,212,191,0.32), rgba(10,102,194,0.72))',
+                  backgroundSize: '220% 220%',
+                }}
+                animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
+                transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_28%,rgba(255,255,255,0.18),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.06),transparent)]" />
+            </div>
+            <div className={`relative z-10 ${isMobile ? 'px-4 pb-4' : 'px-6 pb-6'}`}>
+              <div className={`${isMobile ? 'gap-4' : 'gap-5 lg:grid lg:grid-cols-[minmax(0,1fr)_15.5rem] lg:items-start'} flex flex-col`}>
+                <div className={`flex min-w-0 gap-4 ${isMobile ? '-mt-6' : '-mt-8'}`}>
                   <div className={`${isMobile ? 'h-20 w-20 rounded-[1.35rem]' : 'h-24 w-24 rounded-[1.7rem]'} shrink-0 overflow-hidden border border-white/12 bg-os-bg/90 shadow-xl shadow-black/25`}>
                     <img
                       src={recruiterProfile.profileImageUrl}
@@ -36,7 +48,7 @@ export default function LinkedInSnapshot({ isMobile = false }: AppComponentProps
                       className="h-full w-full object-cover object-center"
                     />
                   </div>
-                  <div className={`min-w-0 ${isMobile ? 'pt-2' : 'pt-3'}`}>
+                  <div className={`min-w-0 ${isMobile ? 'pt-8' : 'pt-10'}`}>
                     <div className="flex flex-wrap items-center gap-2">
                       <h1 className={`truncate font-semibold tracking-tight text-os-text-pri ${isMobile ? 'text-xl' : 'text-2xl'}`}>
                         {recruiterProfile.name}
@@ -62,15 +74,15 @@ export default function LinkedInSnapshot({ isMobile = false }: AppComponentProps
                   </div>
                 </div>
 
-                <div className={`flex flex-wrap items-center gap-3 ${isMobile ? 'pt-1' : ''}`}>
-                  <span className="rounded-full border border-[#0a66c2]/20 bg-[#0a66c2]/[0.12] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8bc2ff]">
+                <div className={`flex w-full flex-col gap-3 ${isMobile ? 'pt-1' : 'pt-6 lg:w-[15.5rem]'}`}>
+                  <span className="flex h-10 w-full items-center justify-center rounded-xl border border-[#0a66c2]/20 bg-[#0a66c2]/[0.12] px-3 text-center text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8bc2ff]">
                     Static profile snapshot
                   </span>
                   <a
                     href={recruiterProfile.linkedIn.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-xl border border-[#0a66c2]/25 bg-[#0a66c2] px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white shadow-lg shadow-[#0a66c2]/25 transition-[filter,box-shadow] duration-100 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8bc2ff] focus-visible:ring-offset-2 focus-visible:ring-offset-os-bg"
+                    className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#0a66c2]/25 bg-[#0a66c2] px-5 text-xs font-bold uppercase tracking-[0.16em] text-white shadow-lg shadow-[#0a66c2]/25 transition-[filter,box-shadow] duration-100 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8bc2ff] focus-visible:ring-offset-2 focus-visible:ring-offset-os-bg"
                   >
                     <ExternalLink className="h-4 w-4" />
                     <span>Connect on LinkedIn</span>

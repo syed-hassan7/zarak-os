@@ -30,34 +30,7 @@ function PreviewFrame({ backgroundId }: { backgroundId: DesktopBackgroundId }) {
     );
   }
 
-  if (backgroundId === 'aurora-drift') {
-    return (
-      <div className="relative h-full w-full overflow-hidden rounded-[1rem] bg-[linear-gradient(180deg,#081019_0%,#05070A_100%)]">
-        <div className="absolute -left-3 top-4 h-16 w-24 rounded-full bg-cyan-300/22 blur-2xl" />
-        <div className="absolute right-0 top-3 h-16 w-20 rounded-full bg-violet-400/18 blur-2xl" />
-        <div className="absolute left-1/3 top-2 h-20 w-8 rounded-full bg-cyan-300/10 blur-xl" />
-      </div>
-    );
-  }
-
-  if (backgroundId === 'grid-signal') {
-    return (
-      <div className="relative h-full w-full overflow-hidden rounded-[1rem] bg-[linear-gradient(180deg,#07101A_0%,#04070D_100%)]">
-        <div className="absolute inset-0 opacity-20 [background-image:radial-gradient(#344155_1px,transparent_1px)] [background-size:12px_12px]" />
-        <div className="absolute left-0 top-6 h-8 w-20 bg-cyan-300/18 blur-xl" />
-        <div className="absolute inset-x-2 top-5 h-px bg-gradient-to-r from-transparent via-violet-300/40 to-transparent" />
-      </div>
-    );
-  }
-
-  return (
-    <div className="relative h-full w-full overflow-hidden rounded-[1rem] bg-[radial-gradient(circle_at_50%_50%,#111925_0%,#05070A_70%)]">
-      <div className="absolute left-3 top-2 h-12 w-12 rounded-full bg-cyan-300/16 blur-2xl" />
-      <div className="absolute bottom-1 right-2 h-14 w-16 rounded-full bg-violet-400/18 blur-2xl" />
-      <div className="absolute inset-y-2 left-4 w-px bg-cyan-300/25" />
-      <div className="absolute inset-y-2 right-4 w-px bg-violet-300/22" />
-    </div>
-  );
+  return null;
 }
 
 export default function BackgroundStudio({ isMobile = false }: AppComponentProps) {
@@ -93,7 +66,7 @@ export default function BackgroundStudio({ isMobile = false }: AppComponentProps
           <div className="min-w-0">
             <h2 className="text-sm font-semibold text-os-text-pri">Shell backdrop presets</h2>
             <p className="mt-2 max-w-3xl text-[13px] leading-6 text-os-text-pri/76 min-[1920px]:text-sm">
-              Restore the original desktop look or swap in a new shell-only wallpaper. Changes apply instantly here and stay saved in this browser.
+              Restore the original desktop look or switch to the one alternate shell backdrop currently good enough to ship. Changes apply instantly here and stay saved in this browser.
             </p>
           </div>
 
