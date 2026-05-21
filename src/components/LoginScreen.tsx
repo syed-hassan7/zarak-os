@@ -120,7 +120,7 @@ export default function LoginScreen(props: {
         </div>
       </header>
 
-      <main className={`relative z-10 flex flex-1 flex-col px-5 ${isMobileExperience ? 'pb-[calc(var(--safe-area-bottom)+1.25rem)] pt-3' : 'pb-10 pt-0'}`}>
+      <main className={`relative z-10 flex flex-1 flex-col px-5 ${isMobileExperience ? 'overflow-y-auto overscroll-contain pb-[calc(var(--safe-area-bottom)+1.25rem)] pt-3' : 'pb-10 pt-0'}`}>
         <motion.div
           initial={{ y: 18, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -139,7 +139,7 @@ export default function LoginScreen(props: {
           </div>
         </motion.div>
 
-        <div className={`mx-auto grid w-full gap-5 ${isMobileExperience ? 'max-w-[430px] flex-1 items-center' : 'max-w-[980px] items-stretch lg:grid-cols-[minmax(0,1fr)_22rem]'}`}>
+        <div className={`mx-auto grid w-full gap-5 ${isMobileExperience ? 'max-w-[430px]' : 'max-w-[980px] items-stretch lg:grid-cols-[minmax(0,1fr)_22rem]'}`}>
           <motion.section
             initial={{ y: 22, opacity: 0, scale: 0.985 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}

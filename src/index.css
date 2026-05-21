@@ -30,6 +30,18 @@
     height: 100%;
   }
 
+  /* On touch devices, use the visual viewport height so browser chrome
+     (Safari URL bar + bottom toolbar) doesn't hide below-fold content. */
+  @supports (height: 100dvh) {
+    @media (pointer: coarse) {
+      html,
+      body,
+      #root {
+        height: 100dvh;
+      }
+    }
+  }
+
   body {
     @apply bg-os-bg text-os-text-pri font-mono antialiased overflow-hidden selection:bg-os-accent selection:text-os-bg;
     -webkit-text-size-adjust: 100%;
