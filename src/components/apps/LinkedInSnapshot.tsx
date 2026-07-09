@@ -24,7 +24,7 @@ export default function LinkedInSnapshot({ isMobile = false }: AppComponentProps
 
       <div className={`relative z-10 flex-1 ${isMobile ? 'p-4' : 'p-4 sm:p-7'}`}>
         <div className={`mx-auto flex max-w-6xl flex-col ${isMobile ? 'gap-4' : 'gap-5'}`}>
-          <header className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 backdrop-blur-xl">
+          <header className="overflow-hidden rounded-3xl border border-os-accent/12 bg-white/[0.055] shadow-xl shadow-black/10 backdrop-blur-xl saturate-[150%]">
             <div className={`relative z-0 overflow-hidden ${isMobile ? 'h-20' : 'h-28'}`}>
               <motion.div
                 className="absolute inset-0"
@@ -127,7 +127,7 @@ export default function LinkedInSnapshot({ isMobile = false }: AppComponentProps
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.04 }}
-                className={`rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}
+                className={`rounded-3xl border border-white/10 bg-white/[0.055] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}
               >
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="h-4 w-4 text-os-accent" />
@@ -142,7 +142,7 @@ export default function LinkedInSnapshot({ isMobile = false }: AppComponentProps
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.08 }}
-                className={`rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}
+                className={`rounded-3xl border border-white/10 bg-white/[0.055] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}
               >
                 <div className="mb-5 flex items-center gap-2">
                   <BriefcaseBusiness className="h-4 w-4 text-os-accent" />
@@ -198,7 +198,7 @@ export default function LinkedInSnapshot({ isMobile = false }: AppComponentProps
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.16 }}
-                className={`rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}
+                className={`rounded-3xl border border-white/10 bg-white/[0.055] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}
               >
                 <div className="mb-4 flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-os-accent" />
@@ -220,7 +220,7 @@ export default function LinkedInSnapshot({ isMobile = false }: AppComponentProps
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className={`rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}
+                className={`rounded-3xl border border-white/10 bg-white/[0.055] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}
               >
                 <div className="mb-4 flex items-center gap-2">
                   <ShieldCheck className="h-4 w-4 text-os-accent" />

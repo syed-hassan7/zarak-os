@@ -125,7 +125,7 @@ export default function AskZarak({ isMobile = false }: AppComponentProps) {
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-white/[0.03] text-slate-100">
-      <header className={`border-b border-white/10 bg-white/[0.045] ${isMobile ? 'px-4 py-3.5' : 'px-5 py-4'}`}>
+      <header className={`border-b border-os-accent/12 bg-white/[0.055] backdrop-blur-xl saturate-[150%] ${isMobile ? 'px-4 py-3.5' : 'px-5 py-4'}`}>
         <div className="flex items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 text-sm font-semibold tracking-wide text-cyan-200">
@@ -165,7 +165,7 @@ export default function AskZarak({ isMobile = false }: AppComponentProps) {
                 key={starter}
                 type="button"
                 onClick={() => ask(starter)}
-                className={`rounded-2xl border border-white/10 bg-white/[0.045] text-left text-xs text-slate-300 transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-white/[0.08] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60 motion-reduce:hover:translate-y-0 motion-reduce:transition-none ${isMobile ? 'px-3.5 py-3' : 'px-4 py-3'}`}
+                className={`rounded-2xl border border-white/10 bg-white/[0.055] text-left text-xs text-slate-300 transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-white/[0.08] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60 motion-reduce:hover:translate-y-0 motion-reduce:transition-none ${isMobile ? 'px-3.5 py-3' : 'px-4 py-3'}`}
               >
                 <span className="mb-1 flex items-center gap-2 text-cyan-200">
                   <Sparkles className="h-3.5 w-3.5" />
@@ -326,7 +326,7 @@ export default function AskZarak({ isMobile = false }: AppComponentProps) {
           />
           <button
             type="submit"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-300 text-slate-950 transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 motion-reduce:hover:scale-100 motion-reduce:transition-none"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-300 text-slate-950 shadow-[0_0_16px_rgba(45,212,191,0.3)] transition-transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 motion-reduce:hover:scale-100 motion-reduce:transition-none"
             aria-label="Submit Syed-LLM question"
           >
             <Send className="h-4 w-4" />

@@ -5,7 +5,7 @@ export default function Experience() {
   return (
     <div className="h-full overflow-y-auto bg-os-bg/65 p-7 custom-scrollbar">
       <div className="mx-auto max-w-4xl space-y-7">
-        <header className="rounded-3xl border border-white/10 bg-white/[0.045] p-6 shadow-xl shadow-black/10 backdrop-blur-xl">
+        <header className="rounded-3xl border border-os-accent/12 bg-white/[0.055] p-6 shadow-xl shadow-black/10 backdrop-blur-xl saturate-[150%]">
           <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-os-accent/20 bg-os-accent/[0.08]">
               <span className="text-lg font-semibold text-os-accent">01</span>

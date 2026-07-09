@@ -16,7 +16,7 @@ export default function About({ isMobile = false }: AppComponentProps) {
       <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/[0.04] via-transparent to-os-accent/[0.045]" />
 
       <div
-        className={`relative border-b border-white/10 bg-white/[0.045] backdrop-blur-xl ${
+        className={`relative border-b border-os-accent/12 bg-white/[0.055] backdrop-blur-xl saturate-[150%] ${
           isMobile ? 'px-4 py-5' : 'px-5 py-6 sm:px-8 sm:py-7'
         }`}
       >
@@ -41,7 +41,7 @@ export default function About({ isMobile = false }: AppComponentProps) {
         }`}
       >
         <section
-          className={`rounded-2xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 ${
+          className={`rounded-2xl border border-white/10 bg-white/[0.055] shadow-xl shadow-black/10 ${
             isMobile ? 'p-4' : 'p-5'
           }`}
         >
@@ -64,7 +64,7 @@ export default function About({ isMobile = false }: AppComponentProps) {
         </section>
 
         <section
-          className={`rounded-2xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 ${
+          className={`rounded-2xl border border-white/10 bg-white/[0.055] shadow-xl shadow-black/10 ${
             isMobile ? 'p-4' : 'p-5'
           }`}
         >
@@ -121,7 +121,7 @@ export default function About({ isMobile = false }: AppComponentProps) {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.06 }}
-                className={`group transform-gpu rounded-2xl border border-white/10 bg-white/[0.045] shadow-lg shadow-black/10 transition-[transform,background-color,border-color] duration-100 ease-out hover:-translate-y-0.5 hover:border-white/18 hover:bg-white/[0.07] motion-reduce:transition-none motion-reduce:hover:translate-y-0 ${
+                className={`group transform-gpu rounded-2xl border border-white/10 bg-white/[0.055] shadow-lg shadow-black/10 transition-[transform,background-color,border-color] duration-100 ease-out hover:-translate-y-0.5 hover:border-white/18 hover:bg-white/[0.07] motion-reduce:transition-none motion-reduce:hover:translate-y-0 ${
                   isMobile ? 'p-3.5' : 'p-4'
                 }`}
               >

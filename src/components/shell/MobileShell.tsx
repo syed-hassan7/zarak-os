@@ -187,7 +187,7 @@ export default function MobileShell({ backgroundId }: MobileShellProps) {
 
       <div className="absolute inset-0 z-20 overflow-y-auto custom-scrollbar">
         <div className="mx-auto flex min-h-full w-full max-w-screen-sm flex-col px-3 pb-[calc(var(--safe-area-bottom)+5.75rem)] pt-[calc(var(--safe-area-top)+0.75rem)]">
-          <header className="rounded-[24px] border border-white/10 bg-white/[0.055] px-3.5 py-3 shadow-xl shadow-black/20 backdrop-blur-2xl">
+          <header className="rounded-[24px] border border-os-accent/12 bg-white/[0.055] px-3.5 py-3 shadow-xl shadow-black/20 backdrop-blur-2xl saturate-[150%]">
             <div className="flex items-center justify-between gap-3">
               <div className="flex min-w-0 items-center gap-2.5">
                 <img src="/logo.svg" alt="ZARAK_OS" className="h-5 w-5 shrink-0 object-contain opacity-90" />
@@ -275,7 +275,7 @@ export default function MobileShell({ backgroundId }: MobileShellProps) {
       </div>
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 px-3 pb-[calc(var(--safe-area-bottom)+0.75rem)]">
-        <div className="mx-auto grid max-w-screen-sm grid-cols-3 gap-2 rounded-[22px] border border-white/10 bg-os-bg/86 p-2 shadow-2xl shadow-black/30 backdrop-blur-2xl">
+        <div className="mx-auto grid max-w-screen-sm grid-cols-3 gap-2 rounded-[22px] border border-white/10 bg-os-bg/86 p-2 shadow-2xl shadow-black/30 backdrop-blur-2xl saturate-[150%]">
           <QuickLaunchButton
             icon={Home}
             label="Home"
@@ -302,7 +302,7 @@ export default function MobileShell({ backgroundId }: MobileShellProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 24 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute inset-0 z-40 flex flex-col bg-os-bg/94 backdrop-blur-2xl"
+            className="absolute inset-0 z-40 flex flex-col bg-os-bg/94 backdrop-blur-2xl saturate-[150%]"
           >
             <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-white/[0.04] via-transparent to-os-accent/[0.04]" />
 
@@ -360,7 +360,7 @@ function FeaturedAppCard({
     <button
       type="button"
       onClick={onOpen}
-      className="min-h-[128px] rounded-[22px] border border-white/10 bg-white/[0.05] p-3.5 text-left shadow-lg shadow-black/10 backdrop-blur-xl"
+      className="min-h-[128px] rounded-[22px] border border-white/10 bg-white/[0.05] p-3.5 text-left shadow-lg shadow-black/10 backdrop-blur-xl saturate-[130%]"
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/12 bg-os-bg/45 text-os-text-pri">
@@ -387,7 +387,7 @@ function MobileAppRow({
     <button
       type="button"
       onClick={onOpen}
-      className="flex min-h-[82px] items-center gap-3 rounded-[22px] border border-white/10 bg-white/[0.05] px-3.5 py-3 text-left shadow-lg shadow-black/10 backdrop-blur-xl"
+      className="flex min-h-[82px] items-center gap-3 rounded-[22px] border border-white/10 bg-white/[0.05] px-3.5 py-3 text-left shadow-lg shadow-black/10 backdrop-blur-xl saturate-[130%]"
     >
       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/12 bg-os-bg/45 text-os-text-pri">
         <app.icon size={19} strokeWidth={1.6} />

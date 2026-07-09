@@ -167,7 +167,7 @@ export default function LoginScreen(props: {
                   <div className="rounded-2xl border border-white/10 bg-white/[0.045] px-3.5 py-3">
                     <div className="text-[9px] uppercase tracking-[0.16em] text-os-text-sec/65">Target lanes</div>
                     <div className="mt-1 whitespace-nowrap text-xs font-semibold leading-4 text-os-text-pri">
-                      Security + Customer Support
+                      Security + Automation
                     </div>
                   </div>
                 </div>

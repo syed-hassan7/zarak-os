@@ -135,7 +135,7 @@ export default function Spotlight({
             role="dialog"
             aria-modal="true"
             aria-labelledby="spotlight-title"
-            className="w-full max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-os-bg/86 shadow-2xl shadow-black/55 ring-1 ring-os-accent/15 backdrop-blur-2xl"
+            className="w-full max-w-2xl overflow-hidden rounded-2xl border border-os-accent/20 bg-os-bg/86 shadow-2xl shadow-black/55 ring-1 ring-os-accent/15 backdrop-blur-3xl saturate-[170%]"
             initial={shouldReduceMotion ? false : { y: -10, scale: 0.98 }}
             animate={{ y: 0, scale: 1 }}
             exit={shouldReduceMotion ? { opacity: 0 } : { y: -8, scale: 0.98, opacity: 0 }}
@@ -192,7 +192,7 @@ export default function Spotlight({
                             }}
                             className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left outline-none transition-colors duration-100 motion-reduce:transition-none ${
                               isSelected
-                                ? 'bg-os-accent/12 text-os-text-pri ring-1 ring-os-accent/20'
+                                ? 'bg-os-accent/12 text-os-text-pri ring-1 ring-os-accent/25 shadow-[inset_0_1px_0_rgba(45,212,191,0.15)]'
                                 : 'text-os-text-sec hover:bg-white/5 hover:text-os-text-pri'
                             }`}
                           >

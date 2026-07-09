@@ -20,7 +20,7 @@ export default function Skills({ isMobile = false }: AppComponentProps) {
 
   return (
     <div className={`flex h-full flex-col overflow-y-auto bg-os-bg/65 custom-scrollbar ${isMobile ? 'p-4' : 'p-7'}`}>
-      <header className={`mb-4 rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 backdrop-blur-xl ${isMobile ? 'p-4' : 'p-5'}`}>
+      <header className={`mb-4 rounded-3xl border border-os-accent/12 bg-white/[0.055] shadow-xl shadow-black/10 backdrop-blur-xl saturate-[150%] ${isMobile ? 'p-4' : 'p-5'}`}>
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-os-text-sec/70">Capability map</p>
@@ -34,7 +34,7 @@ export default function Skills({ isMobile = false }: AppComponentProps) {
 
       <div className={`grid flex-1 ${isMobile ? 'gap-4' : 'min-h-[360px] gap-5 lg:grid-cols-[1.35fr_0.9fr]'}`}>
         {isMobile && (
-          <section className="rounded-3xl border border-white/10 bg-white/[0.045] p-4 shadow-xl shadow-black/10">
+          <section className="rounded-3xl border border-white/10 bg-white/[0.055] p-4 shadow-xl shadow-black/10">
             <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-4">
               <div className="flex items-center gap-2">
                 <Shield className="h-4 w-4 text-os-accent" />
@@ -95,7 +95,7 @@ export default function Skills({ isMobile = false }: AppComponentProps) {
         </section>
 
         {!isMobile && (
-        <section className="rounded-3xl border border-white/10 bg-white/[0.045] p-5 shadow-xl shadow-black/10">
+        <section className="rounded-3xl border border-white/10 bg-white/[0.055] p-5 shadow-xl shadow-black/10">
           <div className="mb-5 flex items-center justify-between border-b border-white/10 pb-4">
             <div className="flex items-center gap-2">
               <Shield className="h-4 w-4 text-os-accent" />

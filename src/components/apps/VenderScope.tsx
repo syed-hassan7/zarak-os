@@ -7,7 +7,7 @@ export default function VenderScope({ isMobile = false }: AppComponentProps) {
   return (
     <div className="flex h-full flex-col overflow-hidden bg-os-bg/65">
       <div
-        className={`shrink-0 border-b border-white/10 bg-white/[0.045] backdrop-blur-xl ${
+        className={`shrink-0 border-b border-os-accent/12 bg-white/[0.055] backdrop-blur-xl saturate-[150%] ${
           isMobile ? 'px-3 py-3' : 'flex h-12 items-center gap-3 px-4'
         }`}
       >
@@ -41,7 +41,7 @@ export default function VenderScope({ isMobile = false }: AppComponentProps) {
       <div className={`flex-1 overflow-y-auto custom-scrollbar ${isMobile ? 'p-4' : 'p-7'}`}>
         <div className={`mx-auto flex min-h-full max-w-4xl flex-col ${isMobile ? 'justify-start gap-4' : 'justify-center gap-5'}`}>
           {isMobile && (
-            <section className="rounded-3xl border border-white/10 bg-white/[0.045] p-4 shadow-xl shadow-black/10">
+            <section className="rounded-3xl border border-white/10 bg-white/[0.055] p-4 shadow-xl shadow-black/10">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.22em] text-os-text-sec/55">
@@ -110,7 +110,7 @@ export default function VenderScope({ isMobile = false }: AppComponentProps) {
                     <div className="h-3 w-3/5 rounded-full bg-white/8" />
                     <div className="mt-6 grid grid-cols-3 gap-3">
                       <div className={`${isMobile ? 'h-16' : 'h-20'} rounded-2xl border border-os-accent/12 bg-os-accent/[0.055]`} />
-                      <div className={`${isMobile ? 'h-16' : 'h-20'} rounded-2xl border border-white/8 bg-white/[0.045]`} />
+                      <div className={`${isMobile ? 'h-16' : 'h-20'} rounded-2xl border border-white/8 bg-white/[0.055]`} />
                       <div className={`${isMobile ? 'h-16' : 'h-20'} rounded-2xl border border-white/8 bg-white/[0.035]`} />
                     </div>
                   </div>
@@ -120,7 +120,7 @@ export default function VenderScope({ isMobile = false }: AppComponentProps) {
                     <div className="space-y-2">
                       <div className="h-8 rounded-xl bg-white/[0.055]" />
                       <div className="h-8 rounded-xl bg-os-accent/[0.075]" />
-                      <div className="h-8 rounded-xl bg-white/[0.045]" />
+                      <div className="h-8 rounded-xl bg-white/[0.055]" />
                     </div>
                   </div>
                 </div>

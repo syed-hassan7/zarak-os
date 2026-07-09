@@ -6,7 +6,7 @@ export default function ContactInfo({ isMobile = false }: AppComponentProps) {
   return (
     <div className={`flex h-full flex-col overflow-y-auto bg-os-bg/65 custom-scrollbar ${isMobile ? 'p-4' : 'p-4 sm:p-7'}`}>
       <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-4 sm:gap-5">
-        <header className={`rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 backdrop-blur-xl ${isMobile ? 'p-4' : 'p-5'}`}>
+        <header className={`rounded-3xl border border-os-accent/12 bg-white/[0.055] shadow-xl shadow-black/10 backdrop-blur-xl saturate-[150%] ${isMobile ? 'p-4' : 'p-5'}`}>
           <div className={`flex gap-4 ${isMobile ? 'flex-col' : 'items-center justify-between'}`}>
             <div className="flex min-w-0 items-center gap-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-os-accent/20 bg-os-accent/[0.08] text-os-accent">
@@ -60,7 +60,7 @@ export default function ContactInfo({ isMobile = false }: AppComponentProps) {
             </a>
           </div>
 
-          <aside className={`rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-5'}`}>
+          <aside className={`rounded-3xl border border-white/10 bg-white/[0.055] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-5'}`}>
             <div className="mb-5 flex items-center gap-2 border-b border-white/10 pb-4">
               <ShieldCheck className="h-4 w-4 text-os-accent" />
               <span className="text-sm font-semibold text-os-text-pri">Connection status</span>

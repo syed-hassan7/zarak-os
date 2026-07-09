@@ -97,7 +97,7 @@ export default function MissionControl({
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) onClose();
           }}
-          className="absolute inset-0 z-50 overflow-hidden bg-os-bg/42 px-6 pt-16 pb-28 backdrop-blur-xl outline-none"
+          className="absolute inset-0 z-50 overflow-hidden bg-os-bg/48 px-6 pt-16 pb-28 backdrop-blur-xl saturate-[130%] outline-none"
           initial={shouldReduceMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0 }}
@@ -141,8 +141,8 @@ export default function MissionControl({
                       }}
                       className={`group flex min-h-56 flex-col rounded-3xl border p-3 text-left outline-none backdrop-blur-2xl transition-[border-color,box-shadow,transform,background-color] duration-150 motion-reduce:transition-none ${
                         isSelected
-                          ? 'border-white/28 bg-white/12 shadow-2xl shadow-black/40 ring-1 ring-os-accent/30'
-                          : 'border-white/12 bg-white/7 shadow-xl shadow-black/25 hover:border-white/22 hover:bg-white/10'
+                          ? 'border-os-accent/30 bg-white/12 shadow-2xl shadow-black/40 ring-1 ring-os-accent/30 glass-glow-active backdrop-blur-2xl saturate-[160%]'
+                          : 'border-white/12 bg-white/7 shadow-xl shadow-black/25 hover:border-white/22 hover:bg-white/10 backdrop-blur-2xl saturate-[150%]'
                       }`}
                       initial={shouldReduceMotion ? false : { y: 18, scale: 0.96, opacity: 0 }}
                       animate={{ y: 0, scale: 1, opacity: 1 }}

@@ -106,7 +106,7 @@ export const recruiterProfile: RecruiterProfile = {
     publicProfile: 'www.linkedin.com/in/zarak-hassan7',
     handle: 'in/zarak-hassan7',
     connections: '500+',
-    followers: 517,
+    followers: 770,
     openToWork: 'recruiters only',
   },
   aboutSummary:

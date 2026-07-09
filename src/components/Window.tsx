@@ -282,7 +282,7 @@ export default function Window(props: WindowProps) {
           isDragging || resizeDirection
             ? ''
             : isActive
-              ? 'border-white/22 bg-os-bg/88 ring-1 ring-white/12 shadow-2xl shadow-black/45'
+              ? 'border-white/22 bg-os-bg/88 ring-1 ring-white/12 shadow-2xl shadow-black/45 glass-glow-active'
               : 'border-white/10 bg-os-bg/70 opacity-90 shadow-xl shadow-black/30'
         } ${isDragging ? 'bg-os-bg/84' : ''} ${resizeDirection ? 'bg-os-bg/86' : ''}`}
         style={{
@@ -296,9 +296,9 @@ export default function Window(props: WindowProps) {
         onMouseDownCapture={onFocus}
       >
         {/* Titlebar */}
-        <div className={`h-10 min-[1920px]:h-12 border-b flex items-center px-4 window-handle cursor-move select-none ${
+        <div className={`h-10 min-[1920px]:h-12 border-b flex items-center px-4 window-handle cursor-move select-none backdrop-blur-xl saturate-[160%] ${
           isActive
-            ? 'border-white/12 bg-white/[0.075]'
+            ? 'border-os-accent/15 bg-white/[0.085]'
             : 'border-white/8 bg-white/[0.045]'
         }`}>
           <div className="flex gap-2 w-20">
@@ -306,19 +306,19 @@ export default function Window(props: WindowProps) {
               onClick={(e) => { e.stopPropagation(); onClose(); }}
               title="Close"
               aria-label="Close window"
-              className="w-3 h-3 min-[1920px]:w-3.5 min-[1920px]:h-3.5 rounded-full bg-[#ED6A5E] hover:brightness-110 transition-[filter,box-shadow] duration-100 border border-[#CE5347] shadow-sm shadow-black/20 outline-none focus-visible:ring-2 focus-visible:ring-os-text-pri/70 focus-visible:ring-offset-2 focus-visible:ring-offset-os-chrome motion-reduce:transition-none"
+              className="w-3 h-3 min-[1920px]:w-3.5 min-[1920px]:h-3.5 rounded-full bg-[#ED6A5E] hover:brightness-110 transition-[filter,box-shadow] duration-100 border border-[#CE5347] shadow-[0_0_6px_rgba(237,106,94,0.4)] outline-none focus-visible:ring-2 focus-visible:ring-os-text-pri/70 focus-visible:ring-offset-2 focus-visible:ring-offset-os-chrome motion-reduce:transition-none"
             />
             <button
               onClick={(e) => { e.stopPropagation(); onMinimize(); }}
               title="Minimize"
               aria-label="Minimize window"
-              className="w-3 h-3 min-[1920px]:w-3.5 min-[1920px]:h-3.5 rounded-full bg-[#F5BF4F] hover:brightness-110 transition-[filter,box-shadow] duration-100 border border-[#D6A243] shadow-sm shadow-black/20 outline-none focus-visible:ring-2 focus-visible:ring-os-text-pri/70 focus-visible:ring-offset-2 focus-visible:ring-offset-os-chrome motion-reduce:transition-none"
+              className="w-3 h-3 min-[1920px]:w-3.5 min-[1920px]:h-3.5 rounded-full bg-[#F5BF4F] hover:brightness-110 transition-[filter,box-shadow] duration-100 border border-[#D6A243] shadow-[0_0_6px_rgba(245,191,79,0.35)] outline-none focus-visible:ring-2 focus-visible:ring-os-text-pri/70 focus-visible:ring-offset-2 focus-visible:ring-offset-os-chrome motion-reduce:transition-none"
             />
             <button
               onClick={(e) => { e.stopPropagation(); handleMaximizeToggle(); }}
               title="Maximize"
               aria-label="Maximize window"
-              className="w-3 h-3 min-[1920px]:w-3.5 min-[1920px]:h-3.5 rounded-full bg-[#62C554] hover:brightness-110 transition-[filter,box-shadow] duration-100 border border-[#58A942] shadow-sm shadow-black/20 outline-none focus-visible:ring-2 focus-visible:ring-os-text-pri/70 focus-visible:ring-offset-2 focus-visible:ring-offset-os-chrome motion-reduce:transition-none"
+              className="w-3 h-3 min-[1920px]:w-3.5 min-[1920px]:h-3.5 rounded-full bg-[#62C554] hover:brightness-110 transition-[filter,box-shadow] duration-100 border border-[#58A942] shadow-[0_0_6px_rgba(98,197,84,0.35)] outline-none focus-visible:ring-2 focus-visible:ring-os-text-pri/70 focus-visible:ring-offset-2 focus-visible:ring-offset-os-chrome motion-reduce:transition-none"
             />
           </div>
           <div className={`flex-1 text-center text-[11px] min-[1920px]:text-[13px] font-mono tracking-widest uppercase ${

@@ -110,7 +110,7 @@ export default function Terminal({ isMobile, onOpenApp }: TerminalProps) {
   return (
     <div className="flex h-full flex-col overflow-hidden bg-os-bg/65 font-mono text-[13px]">
       {!isMobile && (
-        <div className="flex h-12 shrink-0 items-center justify-between border-b border-white/10 bg-white/[0.045] px-4 backdrop-blur-xl">
+        <div className="flex h-12 shrink-0 items-center justify-between border-b border-os-accent/12 bg-white/[0.055] px-4 backdrop-blur-xl saturate-[150%]">
           <div className="flex min-w-0 items-center gap-3">
             <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-os-accent/20 bg-os-accent/[0.08] text-os-accent">
               <TerminalIcon size={15} strokeWidth={1.8} />
@@ -170,7 +170,7 @@ export default function Terminal({ isMobile, onOpenApp }: TerminalProps) {
             onSubmit={handleCommand}
             className="flex min-h-12 items-center gap-2 border-t border-white/10 bg-white/[0.035] px-4"
           >
-            <ChevronRight size={15} className="shrink-0 text-os-accent" />
+            <ChevronRight size={15} className="shrink-0 text-os-accent drop-shadow-[0_0_4px_rgba(45,212,191,0.7)]" />
             <input
               autoFocus={!isMobile}
               type="text"

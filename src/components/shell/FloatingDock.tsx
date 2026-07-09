@@ -24,7 +24,8 @@ export default function FloatingDock({
       <motion.nav
         layout
         aria-label="Application dock"
-        className="flex items-end gap-2 rounded-[24px] border border-white/14 bg-white/[0.105] px-3 py-2.5 shadow-2xl shadow-black/35 backdrop-blur-2xl ring-1 ring-white/10"
+        className="flex items-end gap-2 rounded-[24px] border border-white/14 bg-white/[0.105] px-3 py-2.5 shadow-2xl shadow-black/35 backdrop-blur-2xl saturate-[180%] ring-1 ring-white/10 liquid-glass-cyan"
+        style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.10), inset 0 -1px 0 rgba(45,212,191,0.08), 0 20px 60px rgba(0,0,0,0.5)' }}
       >
         <AnimatePresence initial={false}>
           {dockApps.map((app) => {
@@ -47,8 +48,8 @@ export default function FloatingDock({
                 onClick={() => onToggleApp(app.id)}
                 className={`group relative flex h-12 w-12 min-[1920px]:h-14 min-[1920px]:w-14 transform-gpu items-center justify-center rounded-[18px] min-[1920px]:rounded-[20px] border transition-[transform,background-color,border-color,color] duration-100 ease-out will-change-transform motion-reduce:transition-none ${
                   isActive
-                    ? 'border-white/25 bg-white/18 text-os-text-pri shadow-xl shadow-black/25'
-                    : 'border-white/10 bg-white/[0.08] text-os-text-sec hover:-translate-y-1 hover:border-white/22 hover:bg-white/14 hover:text-os-text-pri motion-reduce:hover:translate-y-0'
+                    ? 'border-white/25 bg-white/18 text-os-text-pri shadow-[0_0_20px_rgba(45,212,191,0.15),0_8px_24px_rgba(0,0,0,0.3)]'
+                    : 'border-white/10 bg-white/[0.08] text-os-text-sec hover:-translate-y-1 hover:border-white/22 hover:bg-white/14 hover:text-os-text-pri hover:shadow-[0_0_12px_rgba(45,212,191,0.10)] motion-reduce:hover:translate-y-0'
                 } outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-os-bg`}
               >
                 <app.icon size={24} strokeWidth={1.5} className="min-[1920px]:w-7 min-[1920px]:h-7" />

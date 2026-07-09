@@ -42,7 +42,7 @@ export default function BackgroundStudio({ isMobile = false }: AppComponentProps
     <div className="relative flex h-full flex-col overflow-y-auto bg-os-bg/72 custom-scrollbar">
       <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-white/[0.04] via-transparent to-os-accent/[0.04]" />
 
-      <header className={`relative border-b border-white/10 bg-white/[0.04] backdrop-blur-xl ${isMobile ? 'px-4 py-4' : 'px-6 py-5 min-[1920px]:px-8 min-[1920px]:py-6'}`}>
+      <header className={`relative border-b border-os-accent/12 bg-white/[0.055] backdrop-blur-xl saturate-[150%] ${isMobile ? 'px-4 py-4' : 'px-6 py-5 min-[1920px]:px-8 min-[1920px]:py-6'}`}>
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex min-w-0 items-center gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-cyan-300/18 bg-cyan-300/[0.08] shadow-lg shadow-black/15">
@@ -54,7 +54,7 @@ export default function BackgroundStudio({ isMobile = false }: AppComponentProps
             </div>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-right">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.055] px-3.5 py-2.5 text-right">
             <div className="text-[10px] uppercase tracking-[0.2em] text-os-text-sec/65">Active preset</div>
             <div className="mt-1 text-sm font-semibold text-os-text-pri">{activePreset.label}</div>
           </div>

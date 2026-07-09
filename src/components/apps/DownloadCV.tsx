@@ -15,7 +15,7 @@ if (typeof window !== 'undefined' && !GlobalWorkerOptions.workerSrc) {
 function PdfLoadingState() {
   return (
     <div className="flex h-full min-h-[340px] items-center justify-center bg-os-bg/94 p-6">
-      <div className="w-full max-w-xl rounded-[2rem] border border-white/10 bg-white/[0.045] p-8 text-center shadow-2xl shadow-black/20">
+      <div className="w-full max-w-xl rounded-[2rem] border border-white/10 bg-white/[0.055] p-8 text-center shadow-2xl shadow-black/20">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-3xl border border-os-accent/15 bg-os-accent/[0.08] text-os-accent">
           <LoaderCircle className="h-6 w-6 animate-spin" />
         </div>
@@ -37,7 +37,7 @@ function PdfUnavailableState({
 }) {
   return (
     <div className="flex h-full min-h-[340px] items-center justify-center bg-os-bg/94 p-6">
-      <div className="w-full max-w-xl rounded-[2rem] border border-white/10 bg-white/[0.045] p-8 text-center shadow-2xl shadow-black/20">
+      <div className="w-full max-w-xl rounded-[2rem] border border-white/10 bg-white/[0.055] p-8 text-center shadow-2xl shadow-black/20">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-3xl border border-os-warn/15 bg-os-warn/[0.08] text-os-warn">
           <FileText className="h-6 w-6" />
         </div>
@@ -304,7 +304,7 @@ export default function DownloadCV({ isMobile = false }: AppComponentProps) {
 
       <div className={`relative flex h-full flex-col overflow-y-auto custom-scrollbar ${isMobile ? 'p-4' : 'p-4 sm:p-7'}`}>
         <div className={`mx-auto flex w-full max-w-7xl flex-1 flex-col ${isMobile ? 'gap-4' : 'gap-5'}`}>
-          <header className={`rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 backdrop-blur-xl ${isMobile ? 'p-4' : 'p-5'}`}>
+          <header className={`rounded-3xl border border-os-accent/12 bg-white/[0.055] shadow-xl shadow-black/10 backdrop-blur-xl saturate-[150%] ${isMobile ? 'p-4' : 'p-5'}`}>
             <div className={`flex gap-4 ${isMobile ? 'flex-col' : 'items-center justify-between'}`}>
               <div className="flex min-w-0 items-center gap-4">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-os-warn/20 bg-os-warn/[0.08] text-os-warn">
@@ -327,7 +327,7 @@ export default function DownloadCV({ isMobile = false }: AppComponentProps) {
           </header>
 
           <section className={`grid min-h-0 flex-1 ${isMobile ? 'gap-4' : 'gap-5 xl:grid-cols-[1.45fr_0.85fr]'}`}>
-            <div className={`flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 ${isMobile ? 'min-h-[320px]' : 'min-h-[420px]'}`}>
+            <div className={`flex flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.055] shadow-xl shadow-black/10 ${isMobile ? 'min-h-[320px]' : 'min-h-[420px]'}`}>
               <div className={`flex flex-wrap items-center justify-between gap-3 border-b border-white/10 ${isMobile ? 'px-4 py-3' : 'px-5 py-4'}`}>
                 <div className="min-w-0">
                   <p className="text-[10px] uppercase tracking-[0.22em] text-os-text-sec/55">Embedded review</p>
@@ -387,7 +387,7 @@ export default function DownloadCV({ isMobile = false }: AppComponentProps) {
                 </div>
               </section>
 
-              <section className={`rounded-3xl border border-white/10 bg-white/[0.045] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}>
+              <section className={`rounded-3xl border border-white/10 bg-white/[0.055] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}>
                 <p className="text-[10px] uppercase tracking-[0.22em] text-os-text-sec/55">Fallback paths</p>
                 <p className="mt-3 text-sm leading-6 text-os-text-pri/82">
                   If the embedded viewer is blocked by browser policy, the same local PDF is still accessible through the two direct actions below.
