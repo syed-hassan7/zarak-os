@@ -1,19 +1,21 @@
 # ZARAK_OS // KERNEL_V2.7
 
-ZARAK_OS is a high-fidelity cyber-noir portfolio operating system for **Syed Zarak Hassan**. It combines a custom desktop shell, recruiter-facing portfolio apps, a deterministic local assistant, and a full 3D workstation scene to present experience, projects, and security/GRC work as a product surface rather than a static website.
+ZARAK_OS is a high-fidelity cyber-noir portfolio operating system for **Syed Zarak Hassan**. It combines a custom desktop shell, recruiter-facing portfolio apps, a deterministic local assistant, and a full 3D MacBook scene to present experience, projects, and security/GRC work as a product surface rather than a static website.
+
+![ZARAK_OS Preview](docs/preview.png)
 
 ## Overview
 
 The project is split between two presentation layers:
 
-- **3D environment**: the immersive workstation scene built with Three.js / React Three Fiber.
+- **3D environment**: an immersive 3D MacBook model built with Three.js / React Three Fiber — animated GIF hinge sticker (Nyan Cat), backlit keyboard with custom canvas-painted icon row, and a projected OS shell screen.
 - **OS shell**: the flat desktop UI rendered on top, including windows, dock, Spotlight, Mission Control, Aegis-M, and desktop backdrop controls.
 
 The result is a portfolio that behaves more like a small operating system than a brochure site.
 
 ## Current Features
 
-- **3D desk environment**: immersive workstation scene with the desktop shell projected into it and a carefully tuned final desktop framing.
+- **3D MacBook scene**: custom Three.js model with a backlit keyboard (14-key fn row, per-key emissive glow), hinge brand strip, animated Nyan Cat GIF sticker, and a screen that projects the live OS shell.
 - **Custom OS shell**: draggable, minimizable, resizable, stackable windows with dock, menu bar, Spotlight, and Mission Control flows.
 - **Terminal-first identity**: a functional `terminal.app` with portfolio-specific commands and shell-style presentation.
 - **Syed-LLM (`syed-llm.app`)**: local, source-limited portfolio assistant with no API or backend. Answers are produced from verified local content only, with typewriter streaming, sources, and action shortcuts.
@@ -24,9 +26,9 @@ The result is a portfolio that behaves more like a small operating system than a
 - **Keyboard-first navigation**: `⌘/Ctrl/Alt + K` Spotlight, `F3` / modifier + `ArrowUp` Mission Control, plus minimize/quit shortcuts.
 - **Dock and shell motion**: small-surface motion design built with `motion/react`, respecting reduced-motion preferences.
 - **Cyber-noir visual system**: dark shell chrome, scanlines, cyan/violet accents, subtle glow, and layered backdrop treatments.
-- **Dual experience mode**: full desktop shell inside the 3D monitor on desktop, and a dedicated touch-first mobile shell on smaller devices.
+- **Dual experience mode**: full desktop shell inside the 3D MacBook on desktop, and a dedicated touch-first mobile shell on smaller devices.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Framework**: [React 19](https://react.dev/)
 - **Build Tool**: [Vite](https://vitejs.dev/)
@@ -37,9 +39,10 @@ The result is a portfolio that behaves more like a small operating system than a
 - **Interactivity**: [React Draggable](https://github.com/react-grid-layout/react-draggable)
 - **Document Rendering**: [PDF.js](https://mozilla.github.io/pdf.js/)
 - **Testing**: [Playwright](https://playwright.dev/)
-- **Graphics**: [Three.js](https://threejs.org/) & HTML5 Canvas API
+- **3D Graphics**: [Three.js](https://threejs.org/) + [React Three Fiber](https://docs.pmnd.rs/react-three-fiber) + HTML5 Canvas API
+- **GIF Decoding**: [gifuct-js](https://github.com/matt-way/gifuct-js) (manual frame decode for Nyan Cat animation)
 
-## 📂 Project Structure
+## Project Structure
 
 ```text
 src/
@@ -52,7 +55,7 @@ src/
 ├── components/
 │   ├── apps/           # Recruiter-facing apps, terminal, Syed-LLM, backdrop studio
 │   ├── shell/          # Dock, menu bar, Spotlight, Mission Control, Aegis-M, shell appearance
-│   ├── three/          # 3D scene components
+│   ├── three/          # 3D scene components (MacBookScene, GroundEnvironment)
 │   ├── Desktop.tsx     # Main shell composition
 │   ├── LoginScreen.tsx # Secure entry sequence
 │   └── Window.tsx      # Draggable window wrapper
@@ -72,6 +75,7 @@ tests/
 ## Key Shell Surfaces
 
 - [`src/components/Desktop.tsx`](src/components/Desktop.tsx): shell composition and background provider mount.
+- [`src/components/three/MacBookScene.tsx`](src/components/three/MacBookScene.tsx): 3D MacBook model, keyboard canvas textures, Nyan Cat GIF animation.
 - [`src/components/shell/AegisBuddyPrototype.tsx`](src/components/shell/AegisBuddyPrototype.tsx): active Aegis-M implementation.
 - [`src/components/apps/AskZarak.tsx`](src/components/apps/AskZarak.tsx): Syed-LLM window UI.
 - [`src/components/shell/FloatingAskZarak.tsx`](src/components/shell/FloatingAskZarak.tsx): Syed-LLM launcher orb.
@@ -81,9 +85,7 @@ tests/
 - [`src/components/shell/MobileShell.tsx`](src/components/shell/MobileShell.tsx): dedicated touch-first mobile OS experience.
 - [`src/os/appRegistry.tsx`](src/os/appRegistry.tsx): visible app registration and labels.
 
-## 🚀 Getting Started
-
-To run this project locally in your IDE (like VS Code or Antigravity), follow these steps:
+## Getting Started
 
 ### Prerequisites
 
@@ -92,9 +94,9 @@ To run this project locally in your IDE (like VS Code or Antigravity), follow th
 
 ### Installation
 
-1. **Clone the repository** (or download the source):
+1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/zarak-os.git
+   git clone https://github.com/syed-hassan7/zarak-os.git
    cd zarak-os
    ```
 
@@ -114,15 +116,13 @@ To run this project locally in your IDE (like VS Code or Antigravity), follow th
 
 ### Building for Production
 
-To create a production-ready build:
 ```bash
 npm run build
 ```
-The output will be in the `dist/` directory.
+Output goes to `dist/`.
 
 ## Validation
 
-Type and build validation:
 ```bash
 npm run lint
 npm run build
@@ -130,26 +130,26 @@ npm run build
 
 `npm run build` also regenerates the assistant knowledge bundle from `content/zarak-brain/`.
 
-## 🛡️ Testing
+## Testing
 
-For end-to-end validation:
 ```bash
 npm run test:e2e
 ```
 
-If your local machine struggles with parallel browser workers, a serial run is available:
+Serial run (lower resource usage):
 ```bash
 npm run test:e2e -- --workers=1
 ```
 
 ## Notes
 
-- `syed-llm.app` is the visible product name; the historical internal app id remains `ask-zarak` to avoid unnecessary shell-state churn.
-- Desktop backdrop changes are intentionally scoped to the flat shell layer and do not modify the 3D scene, lighting, or projection surfaces.
-- Desktop 3D framing and monitor projection are coupled in `Scene3D.tsx`; camera/view changes must keep the final monitor overlay alignment intact.
-- Aegis-M is currently an ambient shell companion only. It does not launch apps or replace the Syed-LLM assistant flow.
+- `syed-llm.app` is the visible product name; the internal app id remains `ask-zarak` to avoid unnecessary shell-state churn.
+- Desktop backdrop changes are scoped to the flat shell layer and do not modify the 3D scene, lighting, or projection surfaces.
+- 3D framing and screen projection are coupled in `Scene3D.tsx`; camera changes must keep the final MacBook screen overlay alignment intact.
+- Aegis-M is a shell companion only — it does not launch apps or replace the Syed-LLM assistant flow.
+- MacBook keyboard canvas textures use `generateMipmaps=false` + `LinearFilter` to prevent blur at the steep (~53°) camera viewing angle.
 
-## 📄 License
+## License
 
 This project is the professional portfolio of Syed Zarak Hassan. All rights reserved.
 
