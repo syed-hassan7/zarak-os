@@ -24,13 +24,15 @@ export interface RecruiterProfile {
     openToWork: string;
   };
   aboutSummary: string;
-  cv: {
+  cvs: {
+    id: string;
+    label: string;
     fileName: string;
     fileUrl: string;
     previewUrl: string;
     formatLabel: string;
     fileSizeLabel: string;
-  };
+  }[];
 }
 
 export interface ExperienceTimelineEntry {
@@ -89,7 +91,7 @@ export interface CertificationEntry {
 export const recruiterProfile: RecruiterProfile = {
   name: 'Syed Zarak Hassan',
   pronouns: 'He/Him',
-  profileImageUrl: '/syed-zarak-hassan.png',
+  profileImageUrl: '/syed-zarak-hassan-v2.png',
   headline: 'Placement Compliance Analyst @ THRIVE',
   currentRoleSummary: 'Compliance Analyst @ Thrive Learning',
   currentStudySummary: 'MSc Cybersecurity, Nottingham Trent University (2026)',
@@ -106,18 +108,31 @@ export const recruiterProfile: RecruiterProfile = {
     publicProfile: 'www.linkedin.com/in/zarak-hassan7',
     handle: 'in/zarak-hassan7',
     connections: '500+',
-    followers: 770,
+    followers: 813,
     openToWork: 'recruiters only',
   },
   aboutSummary:
     'Compliance and Information Security professional with hands-on experience across ISO 27001, ISO 9001, Cyber Essentials, and vendor risk management. Owned third-party risk across 50+ vendors, supported audit readiness, reduced DPA approval time by 70%, and contributed to deal wins by translating security requirements into clear responses.',
-  cv: {
-    fileName: 'Syed_Zarak_Hassan_CV_2026.pdf',
-    fileUrl: '/Syed_Zarak_Hassan_CV_2026.pdf',
-    previewUrl: '/Syed_Zarak_Hassan_CV_2026.pdf#view=FitH',
-    formatLabel: 'PDF / A4',
-    fileSizeLabel: '116.3 KB',
-  },
+  cvs: [
+    {
+      id: 'grc',
+      label: 'GRC & Security',
+      fileName: 'Syed_Zarak_Hassan_CV_GRC_2026.pdf',
+      fileUrl: '/Syed_Zarak_Hassan_CV_GRC_2026.pdf',
+      previewUrl: '/Syed_Zarak_Hassan_CV_GRC_2026.pdf#view=FitH',
+      formatLabel: 'PDF / A4',
+      fileSizeLabel: '116.3 KB',
+    },
+    {
+      id: 'ops',
+      label: 'Operations & RevOps',
+      fileName: 'Syed_Zarak_Hassan_CV_Ops_2026.pdf',
+      fileUrl: '/Syed_Zarak_Hassan_CV_Ops_2026.pdf',
+      previewUrl: '/Syed_Zarak_Hassan_CV_Ops_2026.pdf#view=FitH',
+      formatLabel: 'PDF / A4',
+      fileSizeLabel: '119.1 KB',
+    }
+  ],
 };
 
 export const experienceTimeline: ExperienceTimelineEntry[] = [

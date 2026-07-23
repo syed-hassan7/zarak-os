@@ -31,9 +31,11 @@ function PdfLoadingState() {
 function PdfUnavailableState({
   handleDownload,
   reason,
+  fileUrl,
 }: {
   handleDownload: () => void;
   reason: string;
+  fileUrl: string;
 }) {
   return (
     <div className="flex h-full min-h-[340px] items-center justify-center bg-os-bg/94 p-6">
@@ -45,7 +47,7 @@ function PdfUnavailableState({
         <p className="mt-3 text-sm leading-6 text-os-text-sec">{reason}</p>
         <div className="mt-6 flex flex-col items-stretch justify-center gap-3 sm:flex-row">
           <a
-            href={recruiterProfile.cv.fileUrl}
+            href={fileUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-os-bg px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-os-text-pri"
@@ -67,7 +69,7 @@ function PdfUnavailableState({
   );
 }
 
-function PdfCanvasViewer({ handleDownload }: { handleDownload: () => void }) {
+function PdfCanvasViewer({ handleDownload, fileUrl }: { handleDownload: () => void; fileUrl: string }) {
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [viewerWidth, setViewerWidth] = useState(0);
@@ -92,7 +94,7 @@ function PdfCanvasViewer({ handleDownload }: { handleDownload: () => void }) {
     }
 
     const task = getDocument({
-      url: recruiterProfile.cv.fileUrl,
+      url: fileUrl,
       useWorkerFetch: false,
     });
 
@@ -276,7 +278,7 @@ function PdfCanvasViewer({ handleDownload }: { handleDownload: () => void }) {
 
   return (
     <div ref={viewportRef} className="relative h-full min-h-[340px]">
-      {status === 'error' ? <PdfUnavailableState handleDownload={handleDownload} reason={errorMessage} /> : null}
+      {status === 'error' ? <PdfUnavailableState handleDownload={handleDownload} reason={errorMessage} fileUrl={fileUrl} /> : null}
       {status !== 'error' ? (
         <div
           ref={containerRef}
@@ -289,10 +291,13 @@ function PdfCanvasViewer({ handleDownload }: { handleDownload: () => void }) {
 }
 
 export default function DownloadCV({ isMobile = false }: AppComponentProps) {
+  const [activeCvId, setActiveCvId] = useState(recruiterProfile.cvs[0].id);
+  const activeCv = recruiterProfile.cvs.find(cv => cv.id === activeCvId) || recruiterProfile.cvs[0];
+
   const handleDownload = () => {
     const link = document.createElement('a');
-    link.href = recruiterProfile.cv.fileUrl;
-    link.download = recruiterProfile.cv.fileName;
+    link.href = activeCv.fileUrl;
+    link.download = activeCv.fileName;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -319,7 +324,18 @@ export default function DownloadCV({ isMobile = false }: AppComponentProps) {
                   </h2>
                 </div>
               </div>
-              <div className={`items-center gap-2 rounded-full border border-os-accent/15 bg-os-accent/[0.055] px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-os-accent/85 ${isMobile ? 'inline-flex self-start' : 'hidden sm:flex'}`}>
+              <div className={`flex items-center gap-1 rounded-xl border border-white/10 bg-black/20 p-1 ${isMobile ? 'w-full' : ''}`}>
+                {recruiterProfile.cvs.map((cv) => (
+                  <button
+                    key={cv.id}
+                    onClick={() => setActiveCvId(cv.id)}
+                    className={`flex-1 sm:flex-none rounded-lg px-4 py-2 sm:py-1.5 text-xs font-semibold transition-all ${activeCvId === cv.id ? 'bg-os-accent text-os-bg shadow-sm' : 'text-os-text-sec hover:text-os-text-pri hover:bg-white/5'}`}
+                  >
+                    {cv.label}
+                  </button>
+                ))}
+              </div>
+              <div className={`items-center gap-2 rounded-full border border-os-accent/15 bg-os-accent/[0.055] px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-os-accent/85 ${isMobile ? 'hidden' : 'hidden sm:flex'}`}>
                 <ShieldCheck className="h-3.5 w-3.5" />
                 <span>native preview</span>
               </div>
@@ -331,11 +347,11 @@ export default function DownloadCV({ isMobile = false }: AppComponentProps) {
               <div className={`flex flex-wrap items-center justify-between gap-3 border-b border-white/10 ${isMobile ? 'px-4 py-3' : 'px-5 py-4'}`}>
                 <div className="min-w-0">
                   <p className="text-[10px] uppercase tracking-[0.22em] text-os-text-sec/55">Embedded review</p>
-                  <h3 className="mt-1 truncate text-lg font-semibold text-os-text-pri">{recruiterProfile.cv.fileName}</h3>
+                  <h3 className="mt-1 truncate text-lg font-semibold text-os-text-pri">{activeCv.fileName}</h3>
                 </div>
                 <div className={`flex flex-wrap items-center gap-2 ${isMobile ? 'w-full' : ''}`}>
                   <a
-                    href={recruiterProfile.cv.fileUrl}
+                    href={activeCv.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.055] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-os-text-pri transition-colors hover:border-white/18 hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-os-bg ${isMobile ? 'flex-1' : ''}`}
@@ -356,7 +372,7 @@ export default function DownloadCV({ isMobile = false }: AppComponentProps) {
 
               <div className={`min-h-0 flex-1 ${isMobile ? 'p-3' : 'p-4'}`}>
                 <div className="h-full overflow-hidden rounded-[1.65rem] border border-black/10 bg-[#dbe2ea] shadow-inner shadow-black/10">
-                  <PdfCanvasViewer handleDownload={handleDownload} />
+                  <PdfCanvasViewer key={activeCv.id} handleDownload={handleDownload} fileUrl={activeCv.fileUrl} />
                 </div>
               </div>
             </div>
@@ -365,7 +381,7 @@ export default function DownloadCV({ isMobile = false }: AppComponentProps) {
               <section className={`rounded-3xl border border-white/10 bg-os-surface/45 shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}>
                 <div className="border-b border-white/10 pb-4 sm:pb-5">
                   <p className="text-[10px] uppercase tracking-[0.22em] text-os-text-sec/55">Document details</p>
-                  <h3 className="mt-2 break-all text-lg font-semibold text-os-text-pri">{recruiterProfile.cv.fileName}</h3>
+                  <h3 className="mt-2 break-all text-lg font-semibold text-os-text-pri">{activeCv.fileName}</h3>
                   <p className="mt-3 text-sm leading-6 text-os-text-sec">
                     Recruiter-friendly PDF review lives directly inside the OS window, with download and full-tab fallback preserved.
                   </p>
@@ -374,11 +390,11 @@ export default function DownloadCV({ isMobile = false }: AppComponentProps) {
                 <div className={`mt-5 grid gap-3 ${isMobile ? 'grid-cols-2' : 'sm:grid-cols-2 xl:grid-cols-1'}`}>
                   <div className="rounded-2xl border border-white/8 bg-white/[0.035] p-4">
                     <div className="text-[10px] uppercase tracking-[0.2em] text-os-text-sec/55">Format</div>
-                    <div className="mt-2 font-mono text-sm text-os-text-pri">{recruiterProfile.cv.formatLabel}</div>
+                    <div className="mt-2 font-mono text-sm text-os-text-pri">{activeCv.formatLabel}</div>
                   </div>
                   <div className="rounded-2xl border border-white/8 bg-white/[0.035] p-4">
                     <div className="text-[10px] uppercase tracking-[0.2em] text-os-text-sec/55">File size</div>
-                    <div className="mt-2 font-mono text-sm text-os-text-pri">{recruiterProfile.cv.fileSizeLabel}</div>
+                    <div className="mt-2 font-mono text-sm text-os-text-pri">{activeCv.fileSizeLabel}</div>
                   </div>
                   <div className="rounded-2xl border border-os-accent/15 bg-os-accent/[0.055] p-4">
                     <div className="text-[10px] uppercase tracking-[0.2em] text-os-accent/70">Viewer mode</div>
@@ -394,7 +410,7 @@ export default function DownloadCV({ isMobile = false }: AppComponentProps) {
                 </p>
                 <div className="mt-5 space-y-3">
                   <a
-                    href={recruiterProfile.cv.fileUrl}
+                    href={activeCv.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-4 transition-colors hover:border-white/18 hover:bg-white/[0.07]"
