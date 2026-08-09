@@ -7,10 +7,12 @@ export interface AssistantActionContext {
 
 export const ASSISTANT_EXTERNAL_LINKS = {
   linkedin: "https://www.linkedin.com/in/zarak-hassan7/",
-  github: "https://github.com/darkyzowo",
+  github: "https://github.com/syed-hassan7",
   venderscope: "https://venderscope.vercel.app/",
   portfolio: "https://zarak-os.vercel.app/",
   cv: "/Syed_Zarak_Hassan_CV_2026.pdf",
+  claudeHarness: "https://github.com/syed-hassan7/claude-harness",
+  redTeamDesk: "https://github.com/syed-hassan7/red-team-desk",
 };
 
 export const ASSISTANT_EMAIL = "syedzrk1000@gmail.com";
@@ -21,6 +23,8 @@ export const ACTION_LABELS: Record<AssistantActionId, string> = {
   "open-contact": "Open Contact",
   "open-venderscope": "Open VenderScope",
   "open-github": "Open GitHub",
+  "open-claude-harness": "Open claude-harness",
+  "open-red-team-desk": "Open red-team-desk",
   "copy-email": "Copy Email",
 };
 
@@ -40,6 +44,12 @@ export async function runAssistantAction(actionId: string, context: AssistantAct
       return;
     case "open-github":
       window.open(ASSISTANT_EXTERNAL_LINKS.github, "_blank", "noopener,noreferrer");
+      return;
+    case "open-claude-harness":
+      window.open(ASSISTANT_EXTERNAL_LINKS.claudeHarness, "_blank", "noopener,noreferrer");
+      return;
+    case "open-red-team-desk":
+      window.open(ASSISTANT_EXTERNAL_LINKS.redTeamDesk, "_blank", "noopener,noreferrer");
       return;
     case "copy-email":
       if (context.copyText) {

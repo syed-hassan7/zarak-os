@@ -10,4 +10,4 @@ actions: [open-cv, open-linkedin, open-contact]
 
 Zarak brings a customer-first technical background. At Thrive Learning, he supports stakeholders across procurement, business teams, customer assurance, due diligence, and pre-sales-style RFI/security responses. He translates dense technical requirements into clear next steps for people who need to act on them.
 
-At Nexique Design Labs, he owned 15+ client accounts end-to-end across onboarding, requirements gathering, execution, and client relationship management. He built onboarding workflows from scratch, trained a five-person team, and maintained near-100% client satisfaction.
+At Nexique Design Labs, he co-founded the studio and ran it as Lead PM, owning 15+ client accounts end-to-end across onboarding, requirements gathering, execution, and client relationship management. He built onboarding workflows from scratch, trained a five-person team, and maintained near-100% client satisfaction.

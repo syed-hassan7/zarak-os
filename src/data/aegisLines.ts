@@ -73,6 +73,7 @@ export const AEGIS_LINES: readonly AegisLine[] = [
   { id: 'terminal-default-open', text: 'Terminal stays close for a reason.', categories: ['terminal', 'builder'] },
   { id: 'terminal-plain-text', text: 'Plain text still wins arguments.', categories: ['terminal', 'security'] },
   { id: 'terminal-crisp', text: 'Shell energy. Recruiter-safe presentation.', categories: ['terminal', 'recruiter'] },
+  { id: 'terminal-not-everything-in-help', text: "Not everything's in `help`. Operators dig a little.", categories: ['terminal', 'playful'] },
 
   { id: 'venderscope-audit-friction', text: 'VenderScope came from annual audit fatigue.', categories: ['venderscope', 'security', 'projects'] },
   { id: 'venderscope-risk-visible', text: 'Making vendor risk visible was the point.', categories: ['venderscope', 'security'] },

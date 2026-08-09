@@ -11,6 +11,8 @@ export type AssistantActionId =
   | "open-contact"
   | "open-venderscope"
   | "open-github"
+  | "open-claude-harness"
+  | "open-red-team-desk"
   | "copy-email";
 
 export type AssistantConfidence = "verified" | "partial" | "unknown";

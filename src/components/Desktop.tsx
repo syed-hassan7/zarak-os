@@ -170,6 +170,7 @@ function DesktopShell({
       {SHOW_AEGIS_PROTOTYPE && (
         <AegisBuddyPrototype
           activeApp={activeApp}
+          openApps={openApps}
           pauseAmbientMotion={isSpotlightOpen || isMissionControlOpen}
         />
       )}

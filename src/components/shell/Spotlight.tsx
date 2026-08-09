@@ -1,8 +1,9 @@
-import { Search, Terminal as TerminalIcon } from 'lucide-react';
+import { Bot, Search, Terminal as TerminalIcon } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { COMMAND_REGISTRY, type CommandDefinition } from '../../os/commandRegistry';
 import { getAppDefinition } from '../../os/appRegistry';
+import { setPendingQuery } from '../../assistant/pendingQuery';
 import type { AppId } from '../../os/types';
 
 interface SpotlightProps {
@@ -64,7 +65,11 @@ export default function Spotlight({
   }, [normalizedQuery]);
   const groupedResults = useMemo(() => getGroupedResults(results), [results]);
   const activeCommand = results[selectedIndex];
-  const activeOptionId = activeCommand ? `spotlight-option-${activeCommand.id}` : undefined;
+  const activeOptionId = activeCommand
+    ? `spotlight-option-${activeCommand.id}`
+    : normalizedQuery
+      ? 'spotlight-option-ask-syed-llm'
+      : undefined;
 
   useEffect(() => {
     if (!isOpen) {
@@ -86,7 +91,26 @@ export default function Spotlight({
     setSelectedIndex(0);
   }, [normalizedQuery]);
 
+  const runAskAssistant = () => {
+    const trimmedQuery = query.trim();
+    if (!trimmedQuery) return;
+    setPendingQuery(trimmedQuery);
+    onRunCommand({
+      id: 'ask-syed-llm',
+      label: 'syed-llm.app',
+      detail: trimmedQuery,
+      appId: 'ask-zarak',
+      keywords: [],
+      group: 'Apps',
+    });
+    onClose();
+  };
+
   const runSelectedCommand = () => {
+    if (results.length === 0) {
+      runAskAssistant();
+      return;
+    }
     const command = results[selectedIndex];
     if (!command) return;
     onRunCommand(command);
@@ -220,6 +244,24 @@ export default function Spotlight({
                     </div>
                   ))}
                 </div>
+              ) : normalizedQuery ? (
+                <button
+                  id="spotlight-option-ask-syed-llm"
+                  role="option"
+                  aria-selected="true"
+                  type="button"
+                  onClick={runAskAssistant}
+                  className="flex w-full items-center gap-3 rounded-xl bg-os-accent/12 px-3 py-3 text-left text-os-text-pri outline-none ring-1 ring-os-accent/25 shadow-[inset_0_1px_0_rgba(45,212,191,0.15)]"
+                >
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-os-accent/35 bg-os-accent/12 text-os-accent">
+                    <Bot size={17} strokeWidth={1.7} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-[13px] font-medium">Ask Syed-LLM</div>
+                    <div className="truncate text-[11px] text-os-text-sec/70">&ldquo;{query}&rdquo;</div>
+                  </div>
+                  <div className="text-[10px] uppercase tracking-widest text-os-text-sec/55">Open app</div>
+                </button>
               ) : (
                 <div role="status" className="flex h-32 items-center justify-center text-[12px] text-os-text-sec/65">
                   No command found.

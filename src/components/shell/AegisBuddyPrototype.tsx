@@ -6,6 +6,7 @@ import {
   type AegisAmbientThought,
 } from '../../data/aegisAmbientThoughts';
 import {
+  AEGIS_CONTEXT_CATEGORY_MAP,
   AEGIS_LINES,
   type AegisLine,
   getAegisPreferredCategories,
@@ -14,6 +15,7 @@ import type { AppId } from '../../os/types';
 
 interface AegisBuddyPrototypeProps {
   activeApp: AppId | null;
+  openApps: AppId[];
   pauseAmbientMotion: boolean;
 }
 
@@ -103,6 +105,7 @@ function pickNextAmbientThought(
 
 export default function AegisBuddyPrototype({
   activeApp,
+  openApps,
   pauseAmbientMotion,
 }: AegisBuddyPrototypeProps) {
   const shouldReduceMotion = useReducedMotion();
@@ -120,6 +123,8 @@ export default function AegisBuddyPrototype({
   const currentThoughtRef = useRef<AegisAmbientThought | null>(currentThought);
   const isMountedRef = useRef(true);
   const lastActiveAppRef = useRef<AppId | null>(activeApp);
+  const prevOpenAppsRef = useRef<AppId[]>(openApps);
+  const hasShownTerminalHintRef = useRef(false);
   const shownLineIdsRef = useRef<Set<string>>(new Set([AEGIS_LINES[0].id]));
   const shownThoughtIdsRef = useRef<Set<string>>(new Set());
   const thinkTimeoutRef = useRef<number | null>(null);
@@ -242,6 +247,39 @@ export default function AegisBuddyPrototype({
     const nextLine = pickNextAegisLine(activeApp, shownLineIdsRef.current, currentLine.id);
     setCurrentLine(nextLine);
   }, [activeApp, currentLine.id, isLineVisible, mode]);
+
+  useEffect(() => {
+    const newlyOpenedApp = openApps.find((id) => !prevOpenAppsRef.current.includes(id));
+    prevOpenAppsRef.current = openApps;
+
+    if (!newlyOpenedApp || !(newlyOpenedApp in AEGIS_CONTEXT_CATEGORY_MAP)) return;
+    if (hoverRef.current || focusRef.current) return;
+
+    registerAegisInteraction();
+    const terminalHint = AEGIS_LINES.find((line) => line.id === 'terminal-not-everything-in-help');
+    const shouldShowTerminalHint =
+      newlyOpenedApp === 'terminal' && !hasShownTerminalHintRef.current && terminalHint;
+    const nextLine = shouldShowTerminalHint
+      ? terminalHint
+      : pickNextAegisLine(newlyOpenedApp, shownLineIdsRef.current, currentLine.id);
+    if (shouldShowTerminalHint) {
+      hasShownTerminalHintRef.current = true;
+      shownLineIdsRef.current.add(nextLine.id);
+    }
+    setCurrentLine(nextLine);
+    showLineTemporarily(2600);
+
+    if (shouldReduceMotion) {
+      setMode('sleeping');
+      return;
+    }
+
+    clearTimeoutRef(thinkTimeoutRef);
+    setMode('thinking');
+    thinkTimeoutRef.current = window.setTimeout(() => {
+      syncAmbientMode();
+    }, 1200);
+  }, [openApps]);
 
   useEffect(() => {
     isMountedRef.current = true;

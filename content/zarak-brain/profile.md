@@ -16,5 +16,5 @@ Core positioning: Compliance and Information Security professional with hands-on
 Contact:
 - Email: syedzrk1000@gmail.com
 - LinkedIn: https://www.linkedin.com/in/zarak-hassan7/
-- GitHub: https://github.com/darkyzowo
+- GitHub: https://github.com/syed-hassan7
 - Portfolio: https://zarak-os.vercel.app/

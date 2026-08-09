@@ -5,7 +5,7 @@ import type { AppComponentProps } from '../../os/types';
 
 export default function About({ isMobile = false }: AppComponentProps) {
   const links = [
-    { label: 'GitHub', value: 'github.com/darkyzowo', url: 'https://github.com/darkyzowo', icon: Github },
+    { label: 'GitHub', value: 'github.com/syed-hassan7', url: 'https://github.com/syed-hassan7', icon: Github },
     { label: 'LinkedIn', value: recruiterProfile.linkedIn.handle, url: recruiterProfile.linkedIn.url, icon: Linkedin },
     { label: 'Tool', value: 'venderscope.vercel.app', url: 'https://venderscope.vercel.app', icon: AppWindow },
     { label: 'Email', value: recruiterProfile.email, url: `mailto:${recruiterProfile.email}`, icon: Mail },

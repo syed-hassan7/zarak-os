@@ -11,7 +11,7 @@ actions: [open-contact, open-linkedin, copy-email]
 Best ways to contact Zarak:
 - Email: syedzrk1000@gmail.com
 - LinkedIn: https://www.linkedin.com/in/zarak-hassan7/
-- GitHub: https://github.com/darkyzowo
+- GitHub: https://github.com/syed-hassan7
 - Portfolio: https://zarak-os.vercel.app/
 
 Open Contact.app, LinkedIn.app, or CV.app using the buttons below for the most direct route.

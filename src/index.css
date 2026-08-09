@@ -70,6 +70,16 @@
   50% { opacity: 0; }
 }
 
+.animate-blink-caret {
+  animation: blink 1s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-blink-caret {
+    animation: none;
+  }
+}
+
 @keyframes flicker {
   0% { opacity: 0.97; }
   5% { opacity: 0.95; }
@@ -148,6 +158,39 @@
   0% { opacity: 0.1; }
   50% { opacity: 0.05; }
   100% { opacity: 0.1; }
+}
+
+.glitch-pulse-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(248, 113, 113, 0.12) 0px,
+    rgba(248, 113, 113, 0.12) 2px,
+    rgba(45, 212, 191, 0.08) 2px,
+    rgba(45, 212, 191, 0.08) 4px
+  );
+  animation: glitch-pulse 0.7s ease-out;
+}
+
+@keyframes glitch-pulse {
+  0% { opacity: 0; transform: translateX(0); }
+  8% { opacity: 0.35; transform: translateX(-6px); }
+  16% { opacity: 0.15; transform: translateX(4px); }
+  24% { opacity: 0.4; transform: translateX(-3px); }
+  32% { opacity: 0.1; transform: translateX(2px); }
+  45% { opacity: 0.3; transform: translateX(-2px); }
+  60% { opacity: 0.05; transform: translateX(0); }
+  100% { opacity: 0; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glitch-pulse-overlay {
+    animation: none;
+    display: none;
+  }
 }
 
 /* ─── LIQUID GLASS SYSTEM ─── */

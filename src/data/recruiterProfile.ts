@@ -108,7 +108,7 @@ export const recruiterProfile: RecruiterProfile = {
     publicProfile: 'www.linkedin.com/in/zarak-hassan7',
     handle: 'in/zarak-hassan7',
     connections: '500+',
-    followers: 813,
+    followers: 901,
     openToWork: 'recruiters only',
   },
   aboutSummary:
@@ -166,7 +166,7 @@ export const experienceTimeline: ExperienceTimelineEntry[] = [
     id: 'nexique',
     date: '[2021-09 → 2024-08]',
     company: 'NEXIQUE DESIGN LABS',
-    role: 'Lead Project Manager',
+    role: 'Co-Founder & Lead PM',
     status: 'CLOSED',
     achievements: [
       '15+ client projects delivered end-to-end',
@@ -175,6 +175,7 @@ export const experienceTimeline: ExperienceTimelineEntry[] = [
     ],
     terminalSubtitle: ' Lahore, Pakistan',
     terminalLines: [
+      { text: ' → Co-founded the studio and led it as Lead PM', color: 'secondary' },
       { text: ' → 15+ client projects delivered end-to-end', color: 'secondary' },
       { text: ' → $8,500+ revenue generated, ~100% client satisfaction', color: 'secondary' },
       { text: ' → Led and mentored a 5-person team', color: 'secondary' },

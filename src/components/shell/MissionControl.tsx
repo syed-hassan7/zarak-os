@@ -1,6 +1,6 @@
 import { Monitor } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { type KeyboardEvent, useEffect, useMemo, useState } from 'react';
+import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { getAppDefinition } from '../../os/appRegistry';
 import type { AppId, WindowLayout } from '../../os/types';
 
@@ -36,6 +36,7 @@ export default function MissionControl({
   onFocusApp,
 }: MissionControlProps) {
   const shouldReduceMotion = useReducedMotion();
+  const dialogRef = useRef<HTMLDivElement>(null);
   const windows = useMemo(
     () => getOrderedWindows(openApps, minimizedApps, zOrder),
     [minimizedApps, openApps, zOrder],
@@ -46,6 +47,8 @@ export default function MissionControl({
     if (!isOpen) return;
     const activeIndex = activeApp ? windows.indexOf(activeApp) : -1;
     setSelectedIndex(activeIndex >= 0 ? activeIndex : 0);
+    const focusTimer = window.setTimeout(() => dialogRef.current?.focus(), 0);
+    return () => window.clearTimeout(focusTimer);
   }, [activeApp, isOpen, windows]);
 
   const focusSelectedWindow = () => {
@@ -88,11 +91,11 @@ export default function MissionControl({
     <AnimatePresence>
       {isOpen && (
         <motion.div
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby="mission-control-title"
           tabIndex={-1}
-          autoFocus
           onKeyDown={handleKeyDown}
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) onClose();

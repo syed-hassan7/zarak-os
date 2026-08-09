@@ -62,7 +62,7 @@ export const ASSISTANT_KNOWLEDGE: AssistantKnowledgeEntry[] = [
       "open-linkedin",
       "copy-email"
     ],
-    "body": "Best ways to contact Zarak:\r\n- Email: syedzrk1000@gmail.com\r\n- LinkedIn: https://www.linkedin.com/in/zarak-hassan7/\r\n- GitHub: https://github.com/darkyzowo\r\n- Portfolio: https://zarak-os.vercel.app/\r\n\r\nOpen Contact.app, LinkedIn.app, or CV.app using the buttons below for the most direct route."
+    "body": "Best ways to contact Zarak:\r\n- Email: syedzrk1000@gmail.com\r\n- LinkedIn: https://www.linkedin.com/in/zarak-hassan7/\r\n- GitHub: https://github.com/syed-hassan7\r\n- Portfolio: https://zarak-os.vercel.app/\r\n\r\nOpen Contact.app, LinkedIn.app, or CV.app using the buttons below for the most direct route."
   },
   {
     "id": "customer-success",
@@ -98,7 +98,7 @@ export const ASSISTANT_KNOWLEDGE: AssistantKnowledgeEntry[] = [
       "open-linkedin",
       "open-contact"
     ],
-    "body": "Zarak brings a customer-first technical background. At Thrive Learning, he supports stakeholders across procurement, business teams, customer assurance, due diligence, and pre-sales-style RFI/security responses. He translates dense technical requirements into clear next steps for people who need to act on them.\r\n\r\nAt Nexique Design Labs, he owned 15+ client accounts end-to-end across onboarding, requirements gathering, execution, and client relationship management. He built onboarding workflows from scratch, trained a five-person team, and maintained near-100% client satisfaction."
+    "body": "Zarak brings a customer-first technical background. At Thrive Learning, he supports stakeholders across procurement, business teams, customer assurance, due diligence, and pre-sales-style RFI/security responses. He translates dense technical requirements into clear next steps for people who need to act on them.\r\n\r\nAt Nexique Design Labs, he co-founded the studio and ran it as Lead PM, owning 15+ client accounts end-to-end across onboarding, requirements gathering, execution, and client relationship management. He built onboarding workflows from scratch, trained a five-person team, and maintained near-100% client satisfaction."
   },
   {
     "id": "cv-viewer",
@@ -185,7 +185,34 @@ export const ASSISTANT_KNOWLEDGE: AssistantKnowledgeEntry[] = [
       "open-contact",
       "copy-email"
     ],
-    "body": "Syed Zarak Hassan is a Compliance and Information Security professional based in Nottingham, England, United Kingdom, open to relocation.\r\n\r\nCurrent headline: Placement Compliance Analyst @ THRIVE.\r\n\r\nCore positioning: Compliance and Information Security professional with hands-on experience across ISO 27001, ISO 9001, Cyber Essentials, vendor risk management, endpoint security, audit readiness, customer assurance, technical onboarding, and stakeholder enablement.\r\n\r\nContact:\r\n- Email: syedzrk1000@gmail.com\r\n- LinkedIn: https://www.linkedin.com/in/zarak-hassan7/\r\n- GitHub: https://github.com/darkyzowo\r\n- Portfolio: https://zarak-os.vercel.app/"
+    "body": "Syed Zarak Hassan is a Compliance and Information Security professional based in Nottingham, England, United Kingdom, open to relocation.\r\n\r\nCurrent headline: Placement Compliance Analyst @ THRIVE.\r\n\r\nCore positioning: Compliance and Information Security professional with hands-on experience across ISO 27001, ISO 9001, Cyber Essentials, vendor risk management, endpoint security, audit readiness, customer assurance, technical onboarding, and stakeholder enablement.\r\n\r\nContact:\r\n- Email: syedzrk1000@gmail.com\r\n- LinkedIn: https://www.linkedin.com/in/zarak-hassan7/\r\n- GitHub: https://github.com/syed-hassan7\r\n- Portfolio: https://zarak-os.vercel.app/"
+  },
+  {
+    "id": "claude-harness",
+    "title": "Claude Harness",
+    "tags": [
+      "project",
+      "claude-harness",
+      "ai-agents",
+      "tooling",
+      "automation",
+      "builder"
+    ],
+    "aliases": [
+      "what is claude harness",
+      "ai agent tooling",
+      "claude harness project"
+    ],
+    "sources": [
+      "portfolio",
+      "projects"
+    ],
+    "confidence": "verified",
+    "actions": [
+      "open-claude-harness",
+      "open-contact"
+    ],
+    "body": "Claude Harness is a portable skill-and-rules pack for AI coding agents — advisory, not a state machine. Most agent harnesses try to control the agent with phase gates and edit ceilings; this one assumes a well-briefed agent needs good judgment and a memory that gets smarter instead of bigger, not a cage.\n\nIt ships rules (engineering, design, security invariants), a portable skills catalog, and a self-learning memory layer that turns corrections into durable lessons — after running a criticality check so a wrong correction doesn't get silently encoded as gospel.\n\nMeta detail: this is one of the actual tools involved in building and maintaining this portfolio."
   },
   {
     "id": "contra-ai",
@@ -225,6 +252,8 @@ export const ASSISTANT_KNOWLEDGE: AssistantKnowledgeEntry[] = [
       "venderscope",
       "contraai",
       "zarak-os",
+      "claude-harness",
+      "red-team-desk",
       "react",
       "typescript",
       "build"
@@ -250,7 +279,35 @@ export const ASSISTANT_KNOWLEDGE: AssistantKnowledgeEntry[] = [
       "open-venderscope",
       "open-github"
     ],
-    "body": "Zarak has built three portfolio projects, each solving real operational pain:\r\n\r\n**VenderScope** — A continuous vendor risk intelligence platform. Replaces manual annual vendor audits with live weighted risk scoring across HIBP, NVD/NIST, Shodan, and Companies House. Produces audit-ready PDF reports for ISO 27001 Annex A and Cyber Essentials reviews.\r\n\r\n**ContraAI** — A full-stack AI contract review platform built with Next.js and the Claude API. Born from a real workflow gap around contract handling and review at work.\r\n\r\n**ZARAK_OS** — This portfolio itself. An immersive OS-like web app built with React, TypeScript, Vite, and Three.js, featuring window management, dock, Spotlight, Mission Control, and a 3D workstation environment."
+    "body": "Zarak has built five portfolio projects, each solving real operational pain:\r\n\r\n**VenderScope** — A continuous vendor risk intelligence platform. Replaces manual annual vendor audits with live weighted risk scoring across HIBP, NVD/NIST, Shodan, and Companies House. Produces audit-ready PDF reports for ISO 27001 Annex A and Cyber Essentials reviews.\r\n\r\n**ContraAI** — A full-stack AI contract review platform built with Next.js and the Claude API. Born from a real workflow gap around contract handling and review at work.\r\n\r\n**ZARAK_OS** — This portfolio itself. An immersive OS-like web app built with React, TypeScript, Vite, and Three.js, featuring window management, dock, Spotlight, Mission Control, and a 3D workstation environment.\r\n\r\n**Claude Harness** — A portable skill-and-rules pack for AI coding agents, built on judgment and memory rather than mechanical phase gates. One of the actual tools used to build and maintain this portfolio.\r\n\r\n**Red Team Desk (Sentinel Red)** — A static security and GRC readiness tool: posture score, 10-domain control heatmap, and evidence-gated findings exported as HTML, Markdown, or SARIF."
+  },
+  {
+    "id": "red-team-desk",
+    "title": "Red Team Desk (Sentinel Red)",
+    "tags": [
+      "project",
+      "red-team-desk",
+      "security",
+      "grc",
+      "static-analysis",
+      "compliance"
+    ],
+    "aliases": [
+      "what is red team desk",
+      "sentinel red",
+      "security review tool",
+      "grc readiness tool"
+    ],
+    "sources": [
+      "portfolio",
+      "projects"
+    ],
+    "confidence": "verified",
+    "actions": [
+      "open-red-team-desk",
+      "open-contact"
+    ],
+    "body": "Red Team Desk (skill id `red-team-desk`, product name Sentinel Red) is a static security and GRC readiness tool for apps you own — not a certification, formal audit, or live pen-test. It produces a posture score, a 10-domain control heatmap, and a priority queue of findings with evidence snippets, exported as HTML, Markdown, or SARIF.\n\nIt runs in five modes depending on the situation: a quick PR spot-check, a first full standard review, a strict pre-launch pass, a GRC-heavy posture readout for compliance/board prep, or a diff-scoped review after an authz-touching change. Ethics are hard-coded: own or permissioned code only, static analysis only, never reads secret values."
   },
   {
     "id": "venderscope",
@@ -397,6 +454,6 @@ export const ASSISTANT_KNOWLEDGE: AssistantKnowledgeEntry[] = [
       "open-linkedin",
       "open-contact"
     ],
-    "body": "Hire Zarak if you want someone who combines security/compliance execution with product-building instincts.\r\n\r\nHe has worked across ISO 27001, ISO 9001, Cyber Essentials, vendor risk management, DPA tracking, endpoint security, and customer due diligence. At Thrive Learning, he has owned vendor-risk and compliance workflows across 50+ vendors, supported audit readiness, contributed to deal support through security/RFI responses, and translated technical requirements into clear actions for non-technical stakeholders.\r\n\r\nHe also builds tools from real operational pain. VenderScope came from manual vendor audit friction. ContraAI came from contract-review workflow gaps. ZARAK_OS itself demonstrates React, TypeScript, Three.js, interaction design, and product execution."
+    "body": "Hire Zarak if you want someone who combines security/compliance execution with product-building instincts.\r\n\r\nHe has worked across ISO 27001, ISO 9001, Cyber Essentials, vendor risk management, DPA tracking, endpoint security, and customer due diligence. At Thrive Learning, he has owned vendor-risk and compliance workflows across 50+ vendors, supported audit readiness, contributed to deal support through security/RFI responses, and translated technical requirements into clear actions for non-technical stakeholders.\r\n\r\nHe also builds tools from real operational pain. VenderScope came from manual vendor audit friction. ContraAI came from contract-review workflow gaps. ZARAK_OS itself demonstrates React, TypeScript, Three.js, interaction design, and product execution.\r\n\r\nHe brings Lead PM experience into that work: as Co-Founder & Lead PM at Nexique Design Labs, he delivered 15+ client projects end-to-end and built onboarding workflows from scratch for a 5-person team. That structured, deadline-driven PM discipline now shows up in how he runs vendor-risk workflows, audit timelines, and stakeholder communication at Thrive."
   }
 ] as const;

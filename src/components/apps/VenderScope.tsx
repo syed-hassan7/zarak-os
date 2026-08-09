@@ -1,7 +1,15 @@
 import { ArrowLeft, ArrowRight, ExternalLink, Lock, RotateCw } from 'lucide-react';
+import { Bar, BarChart, LabelList, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import type { AppComponentProps } from '../../os/types';
 
 const VENDERSCOPE_URL = 'https://venderscope.vercel.app';
+
+const MOCK_RISK_CATEGORIES = [
+  { name: 'Breach History', score: 91 },
+  { name: 'Data Exposure', score: 82 },
+  { name: 'Compliance Posture', score: 76 },
+  { name: 'Patch Cadence', score: 64 },
+] as const;
 
 export default function VenderScope({ isMobile = false }: AppComponentProps) {
   return (
@@ -103,25 +111,46 @@ export default function VenderScope({ isMobile = false }: AppComponentProps) {
                   <span className="h-2.5 w-2.5 rounded-full bg-[#62C554]/80" />
                 </div>
 
-                <div className="relative grid gap-5 md:grid-cols-[1.15fr_0.85fr]">
-                  <div className="space-y-4">
-                    <div className="h-4 w-2/3 rounded-full bg-white/14" />
-                    <div className="h-3 w-5/6 rounded-full bg-white/9" />
-                    <div className="h-3 w-3/5 rounded-full bg-white/8" />
-                    <div className="mt-6 grid grid-cols-3 gap-3">
-                      <div className={`${isMobile ? 'h-16' : 'h-20'} rounded-2xl border border-os-accent/12 bg-os-accent/[0.055]`} />
-                      <div className={`${isMobile ? 'h-16' : 'h-20'} rounded-2xl border border-white/8 bg-white/[0.055]`} />
-                      <div className={`${isMobile ? 'h-16' : 'h-20'} rounded-2xl border border-white/8 bg-white/[0.035]`} />
-                    </div>
+                <div className="relative">
+                  <div className="mb-1 flex items-center justify-between gap-3">
+                    <span className="text-sm font-medium text-os-text-pri/90">
+                      Sample vendor: acme-payments-ltd
+                    </span>
+                    <span className="rounded-full border border-os-accent/15 bg-os-accent/[0.06] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.16em] text-os-accent/85">
+                      Illustrative data
+                    </span>
                   </div>
-
-                  <div className="rounded-2xl border border-white/8 bg-os-bg/35 p-4">
-                    <div className="mb-4 h-3 w-1/2 rounded-full bg-white/12" />
-                    <div className="space-y-2">
-                      <div className="h-8 rounded-xl bg-white/[0.055]" />
-                      <div className="h-8 rounded-xl bg-os-accent/[0.075]" />
-                      <div className="h-8 rounded-xl bg-white/[0.055]" />
-                    </div>
+                  <p className="mb-5 text-xs text-os-text-sec/65">
+                    Mock risk score preview — the live tool scores real vendors continuously.
+                  </p>
+                  <div className={isMobile ? 'h-40' : 'h-48'}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart
+                        layout="vertical"
+                        data={[...MOCK_RISK_CATEGORIES]}
+                        margin={{ top: 4, right: 28, bottom: 4, left: 4 }}
+                        barCategoryGap={isMobile ? 10 : 14}
+                      >
+                        <XAxis type="number" domain={[0, 100]} hide />
+                        <YAxis
+                          type="category"
+                          dataKey="name"
+                          width={isMobile ? 96 : 130}
+                          tickLine={false}
+                          axisLine={false}
+                          tick={{ fill: 'rgba(226,232,240,0.65)', fontSize: isMobile ? 10 : 11 }}
+                        />
+                        <Bar dataKey="score" radius={6} fill="#2dd4bf" fillOpacity={0.8} barSize={isMobile ? 12 : 14}>
+                          <LabelList
+                            dataKey="score"
+                            position="right"
+                            fill="rgba(226,232,240,0.85)"
+                            fontSize={isMobile ? 10 : 11}
+                            formatter={(value: number) => `${value}/100`}
+                          />
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
                   </div>
                 </div>
 

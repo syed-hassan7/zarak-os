@@ -2,6 +2,7 @@ import { type FormEvent, type KeyboardEvent, useEffect, useRef, useState } from 
 import { AnimatePresence, motion } from 'motion/react';
 import { ChevronRight, Circle, Terminal as TerminalIcon } from 'lucide-react';
 import { TERMINAL_COMMANDS, TERM_COLORS } from '../../constants';
+import { triggerGlitchPulse } from '../../effects/glitchPulse';
 import { isAppId, type AppId } from '../../os/types';
 
 interface TerminalProps {
@@ -72,6 +73,9 @@ export default function Terminal({ isMobile, onOpenApp }: TerminalProps) {
         }
         if (res.action === 'OPEN_URL' && res.target) {
           window.open(res.target, '_blank', 'noopener,noreferrer');
+        }
+        if (res.action === 'GLITCH') {
+          triggerGlitchPulse();
         }
       });
       setHistory([...newHistory, ...responses]);
