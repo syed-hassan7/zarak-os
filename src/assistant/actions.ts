@@ -13,6 +13,7 @@ export const ASSISTANT_EXTERNAL_LINKS = {
   cv: "/Syed_Zarak_Hassan_CV_2026.pdf",
   claudeHarness: "https://github.com/syed-hassan7/claude-harness",
   redTeamDesk: "https://github.com/syed-hassan7/red-team-desk",
+  maternify: "https://maternify-theta.vercel.app/",
 };
 
 export const ASSISTANT_EMAIL = "syedzrk1000@gmail.com";
@@ -25,6 +26,7 @@ export const ACTION_LABELS: Record<AssistantActionId, string> = {
   "open-github": "Open GitHub",
   "open-claude-harness": "Open claude-harness",
   "open-red-team-desk": "Open red-team-desk",
+  "open-maternify": "Open Maternify",
   "copy-email": "Copy Email",
 };
 
@@ -50,6 +52,9 @@ export async function runAssistantAction(actionId: string, context: AssistantAct
       return;
     case "open-red-team-desk":
       window.open(ASSISTANT_EXTERNAL_LINKS.redTeamDesk, "_blank", "noopener,noreferrer");
+      return;
+    case "open-maternify":
+      window.open(ASSISTANT_EXTERNAL_LINKS.maternify, "_blank", "noopener,noreferrer");
       return;
     case "copy-email":
       if (context.copyText) {

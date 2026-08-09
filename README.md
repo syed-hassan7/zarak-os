@@ -17,8 +17,8 @@ The result is a portfolio that behaves more like a small operating system than a
 
 - **3D MacBook scene**: custom Three.js model with a backlit keyboard (14-key fn row, per-key emissive glow), hinge brand strip, animated Nyan Cat GIF sticker, and a screen that projects the live OS shell.
 - **Custom OS shell**: draggable, minimizable, resizable, stackable windows with dock, menu bar, Spotlight, and Mission Control flows.
-- **Terminal-first identity**: a functional `terminal.app` with portfolio-specific commands and shell-style presentation.
-- **Syed-LLM (`syed-llm.app`)**: local, source-limited portfolio assistant with no API or backend. Answers are produced from verified local content only, with typewriter streaming, sources, and action shortcuts.
+- **Terminal-first identity**: a functional `terminal.app` with portfolio-specific commands, shell-style presentation, and a handful of hidden commands for the curious (`help` leaves a hint).
+- **Syed-LLM (`syed-llm.app`)**: local, source-limited portfolio assistant with no API or backend, rendered as a terminal-query interface rather than a chat widget. Answers are grounded in real portfolio/project data with typewriter streaming, sources, and action shortcuts, and free-text Spotlight queries deep-link straight into it.
 - **Aegis-M ambient companion**: a shell-local desktop buddy with hover/click lines, passive thoughts, reduced-motion support, and context-aware recruiter/security/product copy.
 - **Backdrop Studio (`backdrop.sys`)**: shell-only background switcher for animated desktop presets, including the restored original shell look. Changes persist locally in the browser and do not touch the 3D scene.
 - **Recruiter review apps**: native in-OS `CV.app`, `linkedin-experience.app`, `about.txt`, `contact.ssh`, `skills.app`, and `venderscope.browser`.

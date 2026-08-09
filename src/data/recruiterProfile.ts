@@ -148,6 +148,7 @@ export const experienceTimeline: ExperienceTimelineEntry[] = [
       'ISO 9001 Stage 1 audit: passed — 6 process flows authored',
       '50+ vendor audits managed in Vanta',
       'Delivered RFI response that closed high-value prospect deal',
+      'Identified Shai-Hulud NPM supply chain threat, shipped custom remediation via Iru',
     ],
     terminalSubtitle: ' Fixed-term contract · Nottingham, UK',
     terminalLines: [
@@ -160,6 +161,8 @@ export const experienceTimeline: ExperienceTimelineEntry[] = [
       { text: ' → 50+ vendor audits managed in Vanta', color: 'secondary' },
       { text: ' → Delivered RFI response that closed high-value prospect', color: 'secondary' },
       { text: ' → 75+ application ownership records maintained in Cakewalk', color: 'secondary' },
+      { text: ' → Identified Shai-Hulud NPM supply chain threat', color: 'secondary' },
+      { text: ' engineered custom scan + remediation script, deployed via Iru', color: 'muted' },
     ],
   },
   {
@@ -170,14 +173,14 @@ export const experienceTimeline: ExperienceTimelineEntry[] = [
     status: 'CLOSED',
     achievements: [
       '15+ client projects delivered end-to-end',
-      '$8,500+ revenue generated, ~100% client satisfaction',
+      'Contracts worth $1,500+ each, 98% client satisfaction',
       'Built onboarding workflows for 5-person team',
     ],
     terminalSubtitle: ' Lahore, Pakistan',
     terminalLines: [
       { text: ' → Co-founded the studio and led it as Lead PM', color: 'secondary' },
       { text: ' → 15+ client projects delivered end-to-end', color: 'secondary' },
-      { text: ' → $8,500+ revenue generated, ~100% client satisfaction', color: 'secondary' },
+      { text: ' → Contracts worth $1,500+ each, 98% client satisfaction', color: 'secondary' },
       { text: ' → Led and mentored a 5-person team', color: 'secondary' },
       { text: ' → Built standardised onboarding workflows from scratch', color: 'secondary' },
     ],

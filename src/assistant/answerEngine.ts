@@ -37,6 +37,7 @@ export function answerQuestion(query: string): AssistantAnswer {
 
 export const STARTER_QUESTIONS = [
   "Why should we hire Zarak?",
+  "Tell me about Zarak's experience and background",
   "What security and GRC experience does Zarak have?",
   "What customer-facing experience does Zarak have?",
   "What has Zarak built?",

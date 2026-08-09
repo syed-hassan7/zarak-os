@@ -13,6 +13,7 @@ export type AssistantActionId =
   | "open-github"
   | "open-claude-harness"
   | "open-red-team-desk"
+  | "open-maternify"
   | "copy-email";
 
 export type AssistantConfidence = "verified" | "partial" | "unknown";

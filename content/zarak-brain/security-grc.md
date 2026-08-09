@@ -17,3 +17,4 @@ Notable results:
 - Guided a successful ISO 9001 Stage 1 audit by building six process flows.
 - Led an MDM migration to Kandji for 250+ endpoints with zero downtime.
 - Reduced IT support tickets by 40% after endpoint-management improvements.
+- Identified the Shai-Hulud NPM supply chain threat and engineered a custom scan and remediation script, deployed via Iru to secure the developer fleet immediately — proactive threat detection outside his core compliance remit.

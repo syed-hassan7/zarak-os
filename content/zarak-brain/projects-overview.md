@@ -1,14 +1,14 @@
 ---
 id: projects-overview
 title: Projects Zarak has built
-tags: [projects, built, portfolio, venderscope, contraai, zarak-os, claude-harness, red-team-desk, react, typescript, build]
+tags: [projects, built, portfolio, venderscope, contraai, zarak-os, claude-harness, red-team-desk, maternify, react, typescript, build]
 aliases: [what has zarak built, what has he built, what projects has zarak built, what did zarak build, what projects, things built, what has been built, projects built, projects he built]
 sources: [cv, portfolio, projects]
 confidence: verified
 actions: [open-venderscope, open-github]
 ---
 
-Zarak has built five portfolio projects, each solving real operational pain:
+Zarak has built six portfolio projects, each solving real operational pain:
 
 **VenderScope** — A continuous vendor risk intelligence platform. Replaces manual annual vendor audits with live weighted risk scoring across HIBP, NVD/NIST, Shodan, and Companies House. Produces audit-ready PDF reports for ISO 27001 Annex A and Cyber Essentials reviews.
 
@@ -19,3 +19,5 @@ Zarak has built five portfolio projects, each solving real operational pain:
 **Claude Harness** — A portable skill-and-rules pack for AI coding agents, built on judgment and memory rather than mechanical phase gates. One of the actual tools used to build and maintain this portfolio.
 
 **Red Team Desk (Sentinel Red)** — A static security and GRC readiness tool: posture score, 10-domain control heatmap, and evidence-gated findings exported as HTML, Markdown, or SARIF.
+
+**Maternify** — A multilingual, safety-gated AI maternal advocacy platform, built in 24 hours at the VibeHack London 2026 hackathon (5th place, Health Impact track). Hardcodes a safety gate that routes clinical red-flags straight to 999/triage instead of risking an AI-generated response.
