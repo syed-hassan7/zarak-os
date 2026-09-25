@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { AnimatePresence } from 'motion/react';
+import { AnimatePresence, LayoutGroup } from 'motion/react';
 import LoginScreen from './components/LoginScreen';
 import Desktop from './components/Desktop';
 import DigitalBackground from './components/DigitalBackground';
@@ -28,18 +28,29 @@ export default function App() {
       {showDesktopBackground && <DigitalBackground />}
       <div className="noise-overlay" />
       <div className="crt-flicker" />
-      <AnimatePresence mode="wait">
-        {osState === 'LOGIN' && (
-          <LoginScreen
-            key="login"
-            isMobileExperience={isMobileExperience}
-            onLogin={() => setOsState('DESKTOP')}
-          />
-        )}
-        {osState === 'DESKTOP' && (
-          <Desktop key="desktop" experienceMode={experienceMode} />
-        )}
-      </AnimatePresence>
+      {/*
+        Continuity transition (docs/DESIGN_SYSTEM.md §8/§11): default
+        (sync) AnimatePresence mode keeps LoginScreen mounted during its own
+        exit animation while Desktop mounts underneath, so the shared
+        `os-brand-mark`/`os-brand-wordmark` layoutId elements briefly coexist
+        and motion/react computes a FLIP animation between their two
+        positions — the brand mark visibly glides from the login header into
+        the desktop menu bar instead of the whole screen just crossfading.
+      */}
+      <LayoutGroup>
+        <AnimatePresence>
+          {osState === 'LOGIN' && (
+            <LoginScreen
+              key="login"
+              isMobileExperience={isMobileExperience}
+              onLogin={() => setOsState('DESKTOP')}
+            />
+          )}
+          {osState === 'DESKTOP' && (
+            <Desktop key="desktop" experienceMode={experienceMode} />
+          )}
+        </AnimatePresence>
+      </LayoutGroup>
     </div>
   );
 }

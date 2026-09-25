@@ -18,6 +18,22 @@ import {
   recruiterProfile,
 } from '../../data/recruiterProfile';
 
+function companyInitials(company: string): string {
+  const words = company.split(/\s+/).filter(Boolean);
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+  return (words[0][0] + words[1][0]).toUpperCase();
+}
+
+const COMPANY_BADGE_COLORS: Record<string, string> = {
+  Thrive: 'from-[#0a66c2] to-[#2DD4BF]',
+  'Nexique Design Labs': 'from-[#C084FC] to-[#0a66c2]',
+  'Latoon Music': 'from-[#F5BF4F] to-[#F87171]',
+};
+
+function badgeGradient(company: string): string {
+  return COMPANY_BADGE_COLORS[company] ?? 'from-os-accent to-[#0a66c2]';
+}
+
 export default function LinkedInSnapshot({ isMobile = false }: AppComponentProps) {
   return (
     <div className="relative flex h-full flex-col overflow-y-auto bg-os-bg/70 custom-scrollbar">
@@ -158,12 +174,30 @@ export default function LinkedInSnapshot({ isMobile = false }: AppComponentProps
                         ? 'rounded-2xl border border-os-accent/15 bg-os-accent/[0.055] p-5'
                         : 'rounded-2xl border border-white/10 bg-white/[0.035] p-5'}
                     >
-                      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                        <div>
-                          <h3 className="text-base font-semibold text-os-text-pri">{role.title}</h3>
-                          <p className="mt-1 text-sm text-os-text-sec">{role.company} · {role.employmentType} · {role.dateRange} · {role.workMode}</p>
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="flex min-w-0 gap-3">
+                          <div
+                            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br text-[11px] font-bold tracking-wide text-white shadow-lg shadow-black/20 ${badgeGradient(role.company)}`}
+                            aria-hidden="true"
+                          >
+                            {companyInitials(role.company)}
+                          </div>
+                          <div className="min-w-0">
+                            <h3 className="text-base font-semibold text-os-text-pri">{role.title}</h3>
+                            <p className="mt-1 text-sm text-os-text-sec">
+                              {role.company} · {role.employmentType}
+                            </p>
+                            <p className="mt-0.5 text-xs text-os-text-sec/75">
+                              {role.dateRange}
+                              {role.duration ? ` · ${role.duration}` : ''}
+                            </p>
+                            <p className="mt-0.5 text-xs text-os-text-sec/60">
+                              {role.location ? `${role.location} · ` : ''}
+                              {role.workMode}
+                            </p>
+                          </div>
                         </div>
-                        <span className={`rounded-full border px-3 py-1 text-[10px] uppercase tracking-[0.18em] ${index === 0 ? 'border-white/10 bg-white/[0.08] text-os-accent' : 'border-white/10 bg-white/[0.04] text-os-text-sec'}`}>
+                        <span className={`shrink-0 rounded-full border px-3 py-1 text-[10px] uppercase tracking-[0.18em] ${index === 0 ? 'border-white/10 bg-white/[0.08] text-os-accent' : 'border-white/10 bg-white/[0.04] text-os-text-sec'}`}>
                           {index === 0 ? 'Current' : 'Previous'}
                         </span>
                       </div>

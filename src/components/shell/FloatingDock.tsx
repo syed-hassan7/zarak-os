@@ -24,7 +24,7 @@ export default function FloatingDock({
       <motion.nav
         layout
         aria-label="Application dock"
-        className="flex items-end gap-2 rounded-[24px] border border-white/14 bg-white/[0.105] px-3 py-2.5 shadow-2xl shadow-black/35 backdrop-blur-2xl saturate-[180%] ring-1 ring-white/10 liquid-glass-cyan"
+        className="flex items-end gap-2 rounded-[24px] border border-white/14 bg-white/[0.105] px-3 py-2.5 shadow-2xl shadow-black/35 backdrop-blur-xl saturate-[180%] ring-1 ring-white/10 liquid-glass-cyan"
         style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.10), inset 0 -1px 0 rgba(45,212,191,0.08), 0 20px 60px rgba(0,0,0,0.5)' }}
       >
         <AnimatePresence initial={false}>

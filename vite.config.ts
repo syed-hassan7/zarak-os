@@ -20,5 +20,32 @@ export default defineConfig(() => {
       // Do not modify - file watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
     },
+    build: {
+      // Explicit, not relying on Vite's implicit production default —
+      // a future contributor flipping this on for local debugging and
+      // forgetting to revert would be the only way client-visible source
+      // maps could ever appear; secrets never enter the client bundle in
+      // the first place (Gemini/Upstash creds are edge-function-only env
+      // vars), but pinning this removes the ambiguity entirely.
+      sourcemap: false,
+      // Isolate the heaviest vendor libs into their own async chunks so a
+      // recruiter opening the OS doesn't pay for pdf.js/recharts/three
+      // unless they actually open CV.app / Skills.app, or the 3D intro
+      // renders. See docs/DESIGN_SYSTEM.md §11.
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (!id.includes('node_modules')) return undefined;
+            if (id.includes('pdfjs-dist')) return 'vendor-pdf';
+            if (id.includes('recharts') || id.includes('d3-')) return 'vendor-charts';
+            if (id.includes('three') || id.includes('@react-three')) return 'vendor-three';
+            if (id.includes('gifuct-js')) return 'vendor-gif';
+            if (id.includes('motion')) return 'vendor-motion';
+            return 'vendor';
+          },
+        },
+      },
+      chunkSizeWarningLimit: 700,
+    },
   };
 });

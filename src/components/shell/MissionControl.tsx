@@ -1,6 +1,6 @@
 import { Monitor } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { getAppDefinition } from '../../os/appRegistry';
 import type { AppId, WindowLayout } from '../../os/types';
 
@@ -42,6 +42,10 @@ export default function MissionControl({
     [minimizedApps, openApps, zOrder],
   );
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const selectedIndexRef = useRef(selectedIndex);
+  const windowsRef = useRef(windows);
+  selectedIndexRef.current = selectedIndex;
+  windowsRef.current = windows;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -52,40 +56,53 @@ export default function MissionControl({
   }, [activeApp, isOpen, windows]);
 
   const focusSelectedWindow = () => {
-    const appId = windows[selectedIndex];
+    const currentWindows = windowsRef.current;
+    const appId = currentWindows[selectedIndexRef.current];
     if (!appId) return;
     onFocusApp(appId);
     onClose();
   };
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      onClose();
-      return;
-    }
+  // Key handling lives on a document-level listener (not just the dialog's
+  // own onKeyDown) so a fast F3 -> Enter/Escape isn't swallowed if it fires
+  // before the setTimeout(0) focus transfer above resolves — the same race
+  // fixed for Spotlight's Escape handling.
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleDocumentKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        onClose();
+        return;
+      }
 
-    if (!windows.length) return;
+      const currentWindows = windowsRef.current;
+      if (!currentWindows.length) return;
 
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      focusSelectedWindow();
-      return;
-    }
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        focusSelectedWindow();
+        return;
+      }
 
-    const columnCount = window.innerWidth >= 1024 ? 3 : window.innerWidth >= 640 ? 2 : 1;
-    const nextIndex =
-      event.key === 'ArrowRight' ? selectedIndex + 1 :
-      event.key === 'ArrowLeft' ? selectedIndex - 1 :
-      event.key === 'ArrowDown' ? selectedIndex + columnCount :
-      event.key === 'ArrowUp' ? selectedIndex - columnCount :
-      selectedIndex;
+      const columnCount = window.innerWidth >= 1024 ? 3 : window.innerWidth >= 640 ? 2 : 1;
+      const current = selectedIndexRef.current;
+      const nextIndex =
+        event.key === 'ArrowRight' ? current + 1 :
+        event.key === 'ArrowLeft' ? current - 1 :
+        event.key === 'ArrowDown' ? current + columnCount :
+        event.key === 'ArrowUp' ? current - columnCount :
+        current;
 
-    if (nextIndex !== selectedIndex) {
-      event.preventDefault();
-      setSelectedIndex(Math.min(Math.max(nextIndex, 0), windows.length - 1));
-    }
-  };
+      if (nextIndex !== current) {
+        event.preventDefault();
+        setSelectedIndex(Math.min(Math.max(nextIndex, 0), currentWindows.length - 1));
+      }
+    };
+    document.addEventListener('keydown', handleDocumentKeyDown);
+    return () => document.removeEventListener('keydown', handleDocumentKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, onClose]);
 
   return (
     <AnimatePresence>
@@ -96,7 +113,6 @@ export default function MissionControl({
           aria-modal="true"
           aria-labelledby="mission-control-title"
           tabIndex={-1}
-          onKeyDown={handleKeyDown}
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) onClose();
           }}
@@ -142,10 +158,10 @@ export default function MissionControl({
                         onFocusApp(appId);
                         onClose();
                       }}
-                      className={`group flex min-h-56 flex-col rounded-3xl border p-3 text-left outline-none backdrop-blur-2xl transition-[border-color,box-shadow,transform,background-color] duration-150 motion-reduce:transition-none ${
+                      className={`group flex min-h-56 flex-col rounded-3xl border p-3 text-left outline-none backdrop-blur-xl transition-[border-color,box-shadow,transform,background-color] duration-150 motion-reduce:transition-none ${
                         isSelected
-                          ? 'border-os-accent/30 bg-white/12 shadow-2xl shadow-black/40 ring-1 ring-os-accent/30 glass-glow-active backdrop-blur-2xl saturate-[160%]'
-                          : 'border-white/12 bg-white/7 shadow-xl shadow-black/25 hover:border-white/22 hover:bg-white/10 backdrop-blur-2xl saturate-[150%]'
+                          ? 'border-os-accent/30 bg-white/12 shadow-2xl shadow-black/40 ring-1 ring-os-accent/30 glass-glow-active backdrop-blur-xl saturate-[160%]'
+                          : 'border-white/12 bg-white/7 shadow-xl shadow-black/25 hover:border-white/22 hover:bg-white/10 backdrop-blur-xl saturate-[150%]'
                       }`}
                       initial={shouldReduceMotion ? false : { y: 18, scale: 0.96, opacity: 0 }}
                       animate={{ y: 0, scale: 1, opacity: 1 }}
@@ -194,7 +210,7 @@ export default function MissionControl({
                 })}
               </div>
             ) : (
-              <div className="flex flex-1 items-center justify-center rounded-3xl border border-white/10 bg-white/6 text-center shadow-2xl shadow-black/25 backdrop-blur-2xl">
+              <div className="flex flex-1 items-center justify-center rounded-3xl border border-white/10 bg-white/6 text-center shadow-2xl shadow-black/25 backdrop-blur-xl">
                 <div>
                   <Monitor className="mx-auto mb-3 h-8 w-8 text-os-text-sec/60" />
                   <div className="text-sm text-os-text-pri">No open windows</div>

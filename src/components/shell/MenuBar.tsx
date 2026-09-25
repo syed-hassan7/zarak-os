@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { motion } from 'motion/react';
 import { Activity, Keyboard, PanelsTopLeft, Search, Wifi } from 'lucide-react';
 
 interface MenuBarProps {
@@ -42,18 +43,18 @@ export default function MenuBar({
   }, [isQuickCommandsOpen]);
 
   return (
-    <header className="absolute top-0 left-0 right-0 z-40 h-9 min-[1920px]:h-11 border-b border-cyan-400/8 bg-white/[0.075] shadow-sm shadow-black/20 backdrop-blur-2xl saturate-[150%]">
-      <div className="h-full px-4 flex items-center justify-between text-[12px] min-[1920px]:text-[14px] font-mono text-os-text-sec">
+    <header className="absolute top-0 left-0 right-0 z-40 h-9 min-[1920px]:h-11 border-b border-cyan-400/8 bg-white/[0.075] shadow-sm shadow-black/20 backdrop-blur-xl saturate-[150%]">
+      <div className="h-full px-4 grid grid-cols-[1fr_auto_1fr] items-center text-[12px] min-[1920px]:text-[14px] font-mono text-os-text-sec">
         <div className="flex items-center gap-3 min-w-0">
           <button className="flex items-center gap-2 rounded-md px-1.5 py-1 text-os-text-pri font-semibold tracking-widest outline-none transition-colors hover:bg-white/8 hover:text-white focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-os-bg motion-reduce:transition-none">
-            <img src="/logo.svg" alt="ZARAK_OS" className="w-3.5 h-3.5 object-contain opacity-90" />
-            <span>ZARAK_OS</span>
+            <motion.img layoutId="os-brand-mark" src="/logo.svg" alt="ZARAK_OS" className="w-3.5 h-3.5 object-contain opacity-90" />
+            <motion.span layoutId="os-brand-wordmark">ZARAK_OS</motion.span>
           </button>
           <div className="h-3 w-px bg-white/14" />
           <div className="truncate text-os-text-pri/85 drop-shadow-[0_0_6px_rgba(45,212,191,0.35)]">{activeAppLabel}</div>
         </div>
 
-        <div className="hidden sm:flex items-center gap-4 text-os-text-sec/70">
+        <div className="hidden sm:flex items-center justify-center gap-4 text-os-text-sec/70">
           <div className="flex items-center gap-1.5">
             <Activity size={13} className="text-os-text-sec/80" />
             <span>{openAppCount} PROC</span>

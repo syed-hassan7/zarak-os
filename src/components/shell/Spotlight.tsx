@@ -87,6 +87,21 @@ export default function Spotlight({
     return () => window.clearTimeout(focusTimer);
   }, [isOpen]);
 
+  // Escape must close Spotlight even if it fires before the input-focus
+  // timer above resolves (e.g. a fast Ctrl+K -> Escape) — the input's own
+  // onKeyDown can't catch a keypress that lands on document.body first.
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleDocumentKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        onClose();
+      }
+    };
+    document.addEventListener('keydown', handleDocumentKeyDown);
+    return () => document.removeEventListener('keydown', handleDocumentKeyDown);
+  }, [isOpen, onClose]);
+
   useEffect(() => {
     setSelectedIndex(0);
   }, [normalizedQuery]);

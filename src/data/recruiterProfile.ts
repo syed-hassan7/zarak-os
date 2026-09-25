@@ -34,6 +34,8 @@ export interface RecruiterProfile {
     formatLabel: string;
     fileSizeLabel: string;
     focus: string;
+    tailoredFor: string;
+    keyStats: { label: string; value: string }[];
   }[];
 }
 
@@ -56,7 +58,9 @@ export interface LinkedInExperienceEntry {
   company: string;
   employmentType: string;
   dateRange: string;
+  duration?: string;
   workMode: string;
+  location?: string;
   highlights: string[];
 }
 
@@ -126,6 +130,13 @@ export const recruiterProfile: RecruiterProfile = {
       formatLabel: 'PDF / A4',
       fileSizeLabel: '114.0 KB',
       focus: 'GRC Engineer, Analyst, and Information Security roles.',
+      tailoredFor:
+        'Leads with compliance frameworks and control operations — ISO 27001/9001, SOC 2, GDPR — and separates the Thrive role into Key Achievements vs. day-to-day Responsibilities so an auditor or GRC hiring manager can scan ownership at a glance.',
+      keyStats: [
+        { label: 'Vendors owned', value: '50+ in Vanta' },
+        { label: 'DPA/contract cycle', value: '-70% approval time' },
+        { label: 'Frameworks', value: 'ISO 27001 · SOC 2 · GDPR' },
+      ],
     },
     {
       id: 'fde',
@@ -137,6 +148,13 @@ export const recruiterProfile: RecruiterProfile = {
       formatLabel: 'PDF / A4',
       fileSizeLabel: '116.5 KB',
       focus: 'AI-native internal tools, n8n workflows, and production deployment.',
+      tailoredFor:
+        'Leads with the build: ContraAI and the Thrive Content Audit Tool shipped to production and adopted as company standard, plus a dedicated n8n pre-sales automation suite (57% faster bid cycles) — framed for an FDE screen that wants to see shipped systems, not just process ownership.',
+      keyStats: [
+        { label: 'Bid cycle (n8n suite)', value: '-57% turnaround' },
+        { label: 'Endpoints migrated', value: '250+, zero downtime' },
+        { label: 'Stack', value: 'Next.js · Claude API · n8n' },
+      ],
     },
     {
       id: 'gtm',
@@ -148,6 +166,13 @@ export const recruiterProfile: RecruiterProfile = {
       formatLabel: 'PDF / A4',
       fileSizeLabel: '105.8 KB',
       focus: 'GTM, Customer Success, Customer Engineering, and RevOps roles.',
+      tailoredFor:
+        'Puts the Nexique commercial track record first — full GTM/delivery pipeline ownership, retention, CRM build — then shows the Thrive compliance work as evidence of technical credibility for a customer-facing technical role.',
+      keyStats: [
+        { label: 'Revenue owned', value: '$8,500+ / 15+ accounts' },
+        { label: 'Retention', value: '98% satisfaction · 7% churn' },
+        { label: 'Built', value: 'Notion CRM from scratch' },
+      ],
     },
     {
       id: 'ops',
@@ -159,6 +184,13 @@ export const recruiterProfile: RecruiterProfile = {
       formatLabel: 'PDF / A4',
       fileSizeLabel: '106.8 KB',
       focus: 'Founder-associate operations, systems building, and business speed.',
+      tailoredFor:
+        'Framed as a force-multiplier for founders: swaps VenderScope\'s audit angle for Maternify (5th place, VibeHack London, built in 24 hours) to emphasize speed and range across compliance, automation, and 0-to-1 building under pressure.',
+      keyStats: [
+        { label: 'Hackathon result', value: '5th / Health Impact track' },
+        { label: 'MVP build time', value: '24 hours' },
+        { label: 'Approval cycle', value: '-70% via automation' },
+      ],
     },
   ],
 };
@@ -242,6 +274,7 @@ export const linkedInCurrentRole: LinkedInExperienceEntry = {
   company: 'Thrive',
   employmentType: 'Full-time',
   dateRange: 'Sep 2025 - Present',
+  duration: '1 yr internship',
   workMode: 'Remote',
   highlights: [
     'Cut contract and DPA approval time by 70% by redesigning the DPA tracker and shipping ContraAI.',
@@ -258,12 +291,29 @@ export const linkedInExperience: LinkedInExperienceEntry[] = [
     company: 'Nexique Design Labs',
     employmentType: 'Full-time',
     dateRange: 'Sep 2021 - Aug 2024',
+    duration: '3 yrs',
     workMode: 'On-site',
     highlights: [
       'Owned the GTM and delivery pipeline for 3 years, securing $8,500+ across 15+ accounts.',
       'Held 98% satisfaction and 7% churn by running the full account lifecycle.',
       'Built a Notion CRM and project system from scratch, replacing spreadsheet tracking.',
       'Mentored 5 interns with structured tutorials so seniors stayed on delivery.',
+    ],
+  },
+  {
+    title: "Founder's Associate",
+    company: 'Latoon Music',
+    employmentType: 'Full-time',
+    dateRange: 'Jan 2020 - Feb 2021',
+    duration: '1 yr 2 mos',
+    workMode: 'On-site',
+    location: 'Peshawar, Khyber Pakhtunkhwa, Pakistan',
+    highlights: [
+      'Supported the leadership team across commercial deals, project planning, procurement, and client communications, helping move opportunities from initial discussion through to delivery.',
+      "Owned client and stakeholder communication during onsite events, presenting the organisation's services, answering commercial questions, and helping convert conversations into qualified opportunities as a lead on English comms.",
+      'Prepared, reviewed, and refined proposals, project documentation, and client facing materials, improving the clarity and professionalism of submissions across 5 active projects.',
+      'Worked directly with project managers to coordinate requirements, timelines, deliverables, and follow ups, helping keep 5 concurrent client projects moving from planning to execution.',
+      'Acted as a cross functional operator between senior leadership, project teams, clients, and external partners, resolving information gaps and reducing the time required to move decisions forward by approximately 40%.',
     ],
   },
 ];

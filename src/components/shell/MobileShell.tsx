@@ -27,6 +27,7 @@ const MOBILE_LAUNCH_ORDER: AppId[] = [
   'ask-zarak',
   'terminal',
   'backdrop',
+  'performance',
 ];
 
 const MOBILE_APP_COPY: Record<AppId, { eyebrow: string; description: string }> = {
@@ -65,6 +66,14 @@ const MOBILE_APP_COPY: Record<AppId, { eyebrow: string; description: string }> =
   'ask-zarak': {
     eyebrow: 'Interactive assistant',
     description: 'Open Syed-LLM for guided Q&A and recruiter-facing portfolio answers.',
+  },
+  performance: {
+    eyebrow: 'System tuning',
+    description: 'Check or override the visual performance tier and replay the boot intro.',
+  },
+  notes: {
+    eyebrow: 'Leave a mark',
+    description: 'A public guestbook wall — pin a short note for other visitors to see.',
   },
 };
 
@@ -187,7 +196,7 @@ export default function MobileShell({ backgroundId }: MobileShellProps) {
 
       <div className="absolute inset-0 z-20 overflow-y-auto custom-scrollbar">
         <div className="mx-auto flex min-h-full w-full max-w-screen-sm flex-col px-3 pb-[calc(var(--safe-area-bottom)+5.75rem)] pt-[calc(var(--safe-area-top)+0.75rem)]">
-          <header className="rounded-[24px] border border-os-accent/12 bg-white/[0.055] px-3.5 py-3 shadow-xl shadow-black/20 backdrop-blur-2xl saturate-[150%]">
+          <header className="rounded-[24px] border border-os-accent/12 bg-white/[0.055] px-3.5 py-3 shadow-xl shadow-black/20 backdrop-blur-xl saturate-[150%]">
             <div className="flex items-center justify-between gap-3">
               <div className="flex min-w-0 items-center gap-2.5">
                 <img src="/logo.svg" alt="ZARAK_OS" className="h-5 w-5 shrink-0 object-contain opacity-90" />
@@ -275,7 +284,7 @@ export default function MobileShell({ backgroundId }: MobileShellProps) {
       </div>
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 px-3 pb-[calc(var(--safe-area-bottom)+0.75rem)]">
-        <div className="mx-auto grid max-w-screen-sm grid-cols-3 gap-2 rounded-[22px] border border-white/10 bg-os-bg/86 p-2 shadow-2xl shadow-black/30 backdrop-blur-2xl saturate-[150%]">
+        <div className="mx-auto grid max-w-screen-sm grid-cols-3 gap-2 rounded-[22px] border border-white/10 bg-os-bg/86 p-2 shadow-2xl shadow-black/30 backdrop-blur-xl saturate-[150%]">
           <QuickLaunchButton
             icon={Home}
             label="Home"
@@ -302,7 +311,7 @@ export default function MobileShell({ backgroundId }: MobileShellProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 24 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute inset-0 z-40 flex flex-col bg-os-bg/94 backdrop-blur-2xl saturate-[150%]"
+            className="absolute inset-0 z-40 flex flex-col bg-os-bg/94 backdrop-blur-xl saturate-[150%]"
           >
             <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-white/[0.04] via-transparent to-os-accent/[0.04]" />
 
