@@ -9,6 +9,7 @@ import {
   Linkedin,
   MessageSquare,
   Radar,
+  StickyNote,
   Terminal as TerminalIcon,
 } from 'lucide-react';
 import Terminal from '../components/apps/Terminal';
@@ -20,6 +21,7 @@ const BackgroundStudio = lazy(() => import('../components/apps/BackgroundStudio'
 const ContactInfo = lazy(() => import('../components/apps/ContactInfo'));
 const DownloadCV = lazy(() => import('../components/apps/DownloadCV'));
 const LinkedInSnapshot = lazy(() => import('../components/apps/LinkedInSnapshot'));
+const NotesWall = lazy(() => import('../components/apps/NotesWall'));
 const PerformanceSettings = lazy(() => import('../components/apps/PerformanceSettings'));
 const Skills = lazy(() => import('../components/apps/Skills'));
 const VenderScope = lazy(() => import('../components/apps/VenderScope'));
@@ -125,6 +127,16 @@ export const APP_REGISTRY = [
     minimumWindowSize: { width: 480, height: 420 },
     dockVisible: true,
     searchKeywords: ['performance', 'settings', 'device', 'tier', 'lite', 'fps', 'gpu', 'speed', 'fast', 'slow', 'intro', 'replay'],
+  },
+  {
+    id: 'notes',
+    label: 'notes.app',
+    icon: StickyNote,
+    component: NotesWall,
+    defaultWindowSize: { width: 860, height: 620 },
+    minimumWindowSize: { width: 480, height: 420 },
+    dockVisible: true,
+    searchKeywords: ['notes', 'guestbook', 'wall', 'sticky', 'message', 'pin', 'visitor', 'sign'],
   },
 ] satisfies AppDefinition[];
 

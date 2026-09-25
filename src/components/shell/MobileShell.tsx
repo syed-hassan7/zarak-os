@@ -71,6 +71,10 @@ const MOBILE_APP_COPY: Record<AppId, { eyebrow: string; description: string }> =
     eyebrow: 'System tuning',
     description: 'Check or override the visual performance tier and replay the boot intro.',
   },
+  notes: {
+    eyebrow: 'Leave a mark',
+    description: 'A public guestbook wall — pin a short note for other visitors to see.',
+  },
 };
 
 interface MobileShellProps {
