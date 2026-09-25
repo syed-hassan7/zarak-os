@@ -21,3 +21,4 @@ coverage/
 # Local prototype work
 /src/components/shell/RockyBuddyPrototype.tsx
 /summary.md
+.vercel

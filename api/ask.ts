@@ -6,7 +6,7 @@ import type { AssistantActionId, AssistantAnswer, AssistantSearchMatch } from '.
 // no Node-only APIs. See docs/DESIGN_SYSTEM.md for the AskZarak grounding contract.
 export const config = { runtime: 'edge' };
 
-const MODEL_ID = 'gemini-2.5-flash-lite';
+const MODEL_ID = 'gemini-3.1-flash-lite';
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_ID}:generateContent`;
 
 const MAX_QUESTION_LENGTH = 300;
