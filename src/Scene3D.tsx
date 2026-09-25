@@ -104,6 +104,22 @@ function CameraAnimator({
   const workingPosition = useRef(new THREE.Vector3());
   const { invalidate } = useThree();
 
+  // Aim the camera at its correct starting pose the moment it mounts —
+  // *before* `isReady` flips true. The Canvas is already rendering frames
+  // underneath the SceneLoader overlay (frameloop="demand" + FrameDriver's
+  // continuous invalidate()), so if the camera is left at its default,
+  // unaimed rotation until the flight officially starts, a wrong-angle
+  // frame of the raw scene (grid/panels seen from a random direction) can
+  // flash through during the loader's crossfade. Setting position + lookAt
+  // here makes that pre-flight frame identical to true frame 0 of the
+  // flight — nothing to flash, and the animation below continues from it.
+  useEffect(() => {
+    if (!cameraRef.current) return;
+    cameraRef.current.position.copy(CAM_START);
+    cameraRef.current.lookAt(CAM_FINAL_TARGET);
+    invalidate();
+  }, [invalidate]);
+
   useEffect(() => {
     if (isReady) invalidate();
   }, [isReady, invalidate]);
