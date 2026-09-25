@@ -56,7 +56,9 @@ export interface LinkedInExperienceEntry {
   company: string;
   employmentType: string;
   dateRange: string;
+  duration?: string;
   workMode: string;
+  location?: string;
   highlights: string[];
 }
 
@@ -242,6 +244,7 @@ export const linkedInCurrentRole: LinkedInExperienceEntry = {
   company: 'Thrive',
   employmentType: 'Full-time',
   dateRange: 'Sep 2025 - Present',
+  duration: '1 yr internship',
   workMode: 'Remote',
   highlights: [
     'Cut contract and DPA approval time by 70% by redesigning the DPA tracker and shipping ContraAI.',
@@ -258,12 +261,29 @@ export const linkedInExperience: LinkedInExperienceEntry[] = [
     company: 'Nexique Design Labs',
     employmentType: 'Full-time',
     dateRange: 'Sep 2021 - Aug 2024',
+    duration: '3 yrs',
     workMode: 'On-site',
     highlights: [
       'Owned the GTM and delivery pipeline for 3 years, securing $8,500+ across 15+ accounts.',
       'Held 98% satisfaction and 7% churn by running the full account lifecycle.',
       'Built a Notion CRM and project system from scratch, replacing spreadsheet tracking.',
       'Mentored 5 interns with structured tutorials so seniors stayed on delivery.',
+    ],
+  },
+  {
+    title: "Founder's Associate",
+    company: 'Latoon Music',
+    employmentType: 'Full-time',
+    dateRange: 'Jan 2020 - Feb 2021',
+    duration: '1 yr 2 mos',
+    workMode: 'On-site',
+    location: 'Peshawar, Khyber Pakhtunkhwa, Pakistan',
+    highlights: [
+      'Supported the leadership team across commercial deals, project planning, procurement, and client communications, helping move opportunities from initial discussion through to delivery.',
+      "Owned client and stakeholder communication during onsite events, presenting the organisation's services, answering commercial questions, and helping convert conversations into qualified opportunities as a lead on English comms.",
+      'Prepared, reviewed, and refined proposals, project documentation, and client facing materials, improving the clarity and professionalism of submissions across 5 active projects.',
+      'Worked directly with project managers to coordinate requirements, timelines, deliverables, and follow ups, helping keep 5 concurrent client projects moving from planning to execution.',
+      'Acted as a cross functional operator between senior leadership, project teams, clients, and external partners, resolving information gaps and reducing the time required to move decisions forward by approximately 40%.',
     ],
   },
 ];
