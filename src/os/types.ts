@@ -11,7 +11,6 @@ export const APP_IDS = [
   'backdrop',
   'ask-zarak',
   'performance',
-  'audit',
 ] as const;
 
 export type AppId = (typeof APP_IDS)[number];
