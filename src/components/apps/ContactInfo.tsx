@@ -1,11 +1,11 @@
-import { ExternalLink, Linkedin, Mail, MapPin, MessageSquare, ShieldCheck } from 'lucide-react';
+import { Clock, ExternalLink, Globe, Linkedin, Mail, MapPin, MessageSquare, Plane, Radar, ShieldCheck } from 'lucide-react';
 import { recruiterProfile } from '../../data/recruiterProfile';
 import type { AppComponentProps } from '../../os/types';
 
 export default function ContactInfo({ isMobile = false }: AppComponentProps) {
   return (
     <div className={`flex h-full flex-col overflow-y-auto bg-os-bg/65 custom-scrollbar ${isMobile ? 'p-4' : 'p-4 sm:p-7'}`}>
-      <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-4 sm:gap-5">
+      <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-4 sm:gap-5">
         <header className={`rounded-3xl border border-os-accent/12 bg-white/[0.055] shadow-xl shadow-black/10 backdrop-blur-xl saturate-[150%] ${isMobile ? 'p-4' : 'p-5'}`}>
           <div className={`flex gap-4 ${isMobile ? 'flex-col' : 'items-center justify-between'}`}>
             <div className="flex min-w-0 items-center gap-4">
@@ -27,8 +27,8 @@ export default function ContactInfo({ isMobile = false }: AppComponentProps) {
           </div>
         </header>
 
-        <section className={`grid flex-1 ${isMobile ? 'grid-cols-1 gap-4' : 'gap-5 lg:grid-cols-[1.2fr_0.8fr]'}`}>
-          <div className={`rounded-3xl border border-white/10 bg-os-surface/45 shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}>
+        <section className={`grid flex-1 ${isMobile ? 'grid-cols-1 gap-4' : 'gap-5 lg:grid-cols-[1.3fr_0.7fr]'}`}>
+          <div className={`flex flex-col rounded-3xl border border-white/10 bg-os-surface/45 shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}>
             <div className="mb-6 flex items-start justify-between gap-4 border-b border-white/10 pb-5">
               <div>
                 <p className="text-[10px] uppercase tracking-[0.22em] text-os-text-sec/55">Official email</p>
@@ -52,21 +52,52 @@ export default function ContactInfo({ isMobile = false }: AppComponentProps) {
 
             <a
               href={`mailto:${recruiterProfile.email}`}
-              className="mt-7 inline-flex items-center gap-2 rounded-xl border border-os-accent/20 bg-os-accent px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-os-bg shadow-lg shadow-os-accent/10 transition-[filter,box-shadow] duration-100 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-os-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-os-bg motion-reduce:transition-none"
+              className="mt-7 inline-flex w-fit items-center gap-2 rounded-xl border border-os-accent/20 bg-os-accent px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-os-bg shadow-lg shadow-os-accent/10 transition-[filter,box-shadow] duration-100 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-os-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-os-bg motion-reduce:transition-none"
             >
               <Mail size={16} />
               <span>Send Email</span>
               <ExternalLink size={14} />
             </a>
+
+            <div className={`mt-7 grid flex-1 content-start gap-4 border-t border-white/10 pt-6 ${isMobile ? 'grid-cols-1' : 'sm:grid-cols-2'}`}>
+              <div className="rounded-2xl border border-white/8 bg-white/[0.035] p-4">
+                <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-os-text-sec/55">
+                  <Clock className="h-3.5 w-3.5" />
+                  <span>Response time</span>
+                </div>
+                <div className="mt-2 text-sm font-semibold text-os-text-pri">Usually within 24 hours</div>
+              </div>
+              <div className="rounded-2xl border border-white/8 bg-white/[0.035] p-4">
+                <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-os-text-sec/55">
+                  <Radar className="h-3.5 w-3.5" />
+                  <span>Open to</span>
+                </div>
+                <div className="mt-2 text-sm font-semibold text-os-text-pri">GRC, FDE, GTM/CS, and Ops roles</div>
+              </div>
+              <div className="rounded-2xl border border-white/8 bg-white/[0.035] p-4">
+                <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-os-text-sec/55">
+                  <Globe className="h-3.5 w-3.5" />
+                  <span>Timezone</span>
+                </div>
+                <div className="mt-2 text-sm font-semibold text-os-text-pri">GMT / BST (Nottingham, UK)</div>
+              </div>
+              <div className="rounded-2xl border border-white/8 bg-white/[0.035] p-4">
+                <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-os-text-sec/55">
+                  <Plane className="h-3.5 w-3.5" />
+                  <span>Relocation</span>
+                </div>
+                <div className="mt-2 text-sm font-semibold text-os-text-pri">Open to relocation</div>
+              </div>
+            </div>
           </div>
 
-          <aside className={`rounded-3xl border border-white/10 bg-white/[0.055] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-5'}`}>
+          <aside className={`flex flex-col rounded-3xl border border-white/10 bg-white/[0.055] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-5'}`}>
             <div className="mb-5 flex items-center gap-2 border-b border-white/10 pb-4">
               <ShieldCheck className="h-4 w-4 text-os-accent" />
               <span className="text-sm font-semibold text-os-text-pri">Connection status</span>
             </div>
 
-            <div className="space-y-3">
+            <div className="flex flex-1 flex-col gap-3">
               <div className="rounded-2xl border border-white/8 bg-white/[0.035] p-4">
                 <div className="text-[10px] uppercase tracking-[0.2em] text-os-text-sec/55">Channel</div>
                 <div className="mt-2 text-sm font-semibold text-os-text-pri">Email</div>
@@ -96,6 +127,13 @@ export default function ContactInfo({ isMobile = false }: AppComponentProps) {
                   <span>Location</span>
                 </div>
                 <div className="mt-2 text-sm font-semibold text-os-text-pri">{recruiterProfile.location.about}</div>
+              </div>
+              <div className="mt-auto rounded-2xl border border-white/8 bg-white/[0.035] p-4">
+                <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-os-text-sec/55">
+                  <ShieldCheck className="h-3.5 w-3.5" />
+                  <span>Encryption</span>
+                </div>
+                <div className="mt-2 font-mono text-xs text-os-text-pri/80">AES-256 · TLS 1.3</div>
               </div>
             </div>
           </aside>
