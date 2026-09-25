@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Bot, Circle, Send } from 'lucide-react';
 import { answerQuestion, STARTER_QUESTIONS } from '../../assistant/answerEngine';
+import { answerQuestionRemote } from '../../assistant/remoteAnswer';
 import { ACTION_LABELS, runAssistantAction } from '../../assistant/actions';
 import { consumePendingQuery, subscribeToPendingQuery } from '../../assistant/pendingQuery';
 import type { AssistantAnswer } from '../../assistant/types';
@@ -13,6 +14,7 @@ interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
   answer?: AssistantAnswer;
+  pending?: boolean;
 }
 
 const MOBILE_TOPICS = ['Background', 'Projects', 'CV', 'Contact'];
@@ -46,7 +48,7 @@ export default function AskZarak({ isMobile = false }: AppComponentProps) {
       id: 'intro',
       role: 'assistant',
       content:
-        "Ask me about Zarak's background, four CVs, projects, security/GRC, FDE work, GTM/CS, or how to contact him. I only answer from verified local portfolio data.",
+        "Ask me about Zarak's background, four CVs, projects, security/GRC, FDE work, GTM/CS, or how to contact him. Every answer is grounded in his verified portfolio data.",
     },
   ]);
   const [streaming, setStreaming] = useState<{ id: string; chars: number } | null>(null);
@@ -138,15 +140,27 @@ export default function AskZarak({ isMobile = false }: AppComponentProps) {
     const trimmed = question.trim();
     if (!trimmed) return;
 
-    const answer = answerQuestion(trimmed);
+    const userMessageId = crypto.randomUUID();
+    const assistantMessageId = crypto.randomUUID();
 
     setMessages((current) => [
       ...current,
-      { id: crypto.randomUUID(), role: 'user', content: trimmed },
-      { id: crypto.randomUUID(), role: 'assistant', content: '', answer },
+      { id: userMessageId, role: 'user', content: trimmed },
+      { id: assistantMessageId, role: 'assistant', content: '', pending: true },
     ]);
 
     setQuery('');
+
+    void (async () => {
+      const remote = await answerQuestionRemote(trimmed);
+      const answer = remote ?? answerQuestion(trimmed);
+
+      setMessages((current) =>
+        current.map((message) =>
+          message.id === assistantMessageId ? { ...message, answer, pending: false } : message,
+        ),
+      );
+    })();
   }
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -190,11 +204,11 @@ export default function AskZarak({ isMobile = false }: AppComponentProps) {
           </div>
           <div className="hidden items-center gap-1.5 text-[10px] uppercase tracking-[0.16em] text-os-text-sec/70 sm:flex">
             <Circle size={7} fill="currentColor" className="text-os-accent" />
-            <span>local // no api</span>
+            <span>grounded // no invented claims</span>
           </div>
         </div>
         <p className="mt-2 text-xs text-os-text-sec/80">
-          No API. No backend. No hallucinated claims — answers pull only from verified local portfolio data.
+          Reasoning may be model-assisted, but every answer is grounded in Zarak's verified portfolio data — nothing outside it.
         </p>
       </header>
 
@@ -255,6 +269,19 @@ export default function AskZarak({ isMobile = false }: AppComponentProps) {
               return (
                 <div key={message.id} className="text-os-accent">
                   <span className="text-os-text-sec/50">zarak-llm://query&gt;</span> {message.content}
+                </div>
+              );
+            }
+
+            if (message.pending) {
+              return (
+                <div key={message.id} className="flex items-center gap-2 text-os-text-sec/70">
+                  <span className="inline-flex gap-0.5">
+                    <span className="h-1 w-1 animate-pulse rounded-full bg-os-accent/70" style={{ animationDelay: '0ms' }} />
+                    <span className="h-1 w-1 animate-pulse rounded-full bg-os-accent/70" style={{ animationDelay: '150ms' }} />
+                    <span className="h-1 w-1 animate-pulse rounded-full bg-os-accent/70" style={{ animationDelay: '300ms' }} />
+                  </span>
+                  <span>thinking…</span>
                 </div>
               );
             }
