@@ -34,6 +34,7 @@ export default defineConfig(() => {
             if (id.includes('three') || id.includes('@react-three')) return 'vendor-three';
             if (id.includes('gifuct-js')) return 'vendor-gif';
             if (id.includes('motion')) return 'vendor-motion';
+            if (id.includes('axe-core')) return 'vendor-axe';
             return 'vendor';
           },
         },

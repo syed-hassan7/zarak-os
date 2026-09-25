@@ -9,6 +9,7 @@ import {
   Linkedin,
   MessageSquare,
   Radar,
+  ShieldCheck,
   Terminal as TerminalIcon,
 } from 'lucide-react';
 import Terminal from '../components/apps/Terminal';
@@ -16,6 +17,7 @@ import type { AppDefinition, AppId } from './types';
 
 const About = lazy(() => import('../components/apps/About'));
 const AskZarak = lazy(() => import('../components/apps/AskZarak'));
+const AuditPanel = lazy(() => import('../components/apps/AuditPanel'));
 const BackgroundStudio = lazy(() => import('../components/apps/BackgroundStudio'));
 const ContactInfo = lazy(() => import('../components/apps/ContactInfo'));
 const DownloadCV = lazy(() => import('../components/apps/DownloadCV'));
@@ -125,6 +127,16 @@ export const APP_REGISTRY = [
     minimumWindowSize: { width: 480, height: 420 },
     dockVisible: true,
     searchKeywords: ['performance', 'settings', 'device', 'tier', 'lite', 'fps', 'gpu', 'speed', 'fast', 'slow', 'intro', 'replay'],
+  },
+  {
+    id: 'audit',
+    label: 'audit.sys',
+    icon: ShieldCheck,
+    component: AuditPanel,
+    defaultWindowSize: { width: 820, height: 680 },
+    minimumWindowSize: { width: 520, height: 460 },
+    dockVisible: true,
+    searchKeywords: ['audit', 'security', 'headers', 'vitals', 'performance', 'accessibility', 'wcag', 'axe', 'vulnerabilities', 'grc', 'self-audit'],
   },
 ] satisfies AppDefinition[];
 

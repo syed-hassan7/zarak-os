@@ -71,6 +71,10 @@ const MOBILE_APP_COPY: Record<AppId, { eyebrow: string; description: string }> =
     eyebrow: 'System tuning',
     description: 'Check or override the visual performance tier and replay the boot intro.',
   },
+  audit: {
+    eyebrow: 'Live self-audit',
+    description: 'Real Core Web Vitals, security headers, dependency scan, and a live WCAG check.',
+  },
 };
 
 interface MobileShellProps {
