@@ -74,6 +74,7 @@ export const APP_REGISTRY = [
     minimumWindowSize: { width: 620, height: 420 },
     dockVisible: true,
     searchKeywords: ['cv', 'resume', 'document', 'pdf', 'viewer', 'download', 'grc', 'fde', 'gtm', 'ops'],
+    defaultOpen: true,
   },
   {
     id: 'linkedin',
@@ -104,7 +105,6 @@ export const APP_REGISTRY = [
     minimumWindowSize: { width: 520, height: 360 },
     dockVisible: true,
     searchKeywords: ['about', 'profile', 'operator', 'links'],
-    defaultOpen: true,
   },
   {
     id: 'ask-zarak',

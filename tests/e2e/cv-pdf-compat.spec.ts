@@ -16,7 +16,7 @@ test('CV preview renders when newer Map helpers are unavailable', async ({ page 
   ).toBe('undefined');
 
   await page.getByRole('button', { name: 'Enter ZARAK_OS' }).click();
-  await page.getByRole('navigation', { name: 'Application dock' }).getByRole('button', { name: 'CV.app' }).click();
+  await expect(page.locator('.window-handle', { hasText: 'CV.app' })).toBeVisible({ timeout: 30_000 });
 
   await expect(page.locator('canvas').first()).toBeVisible({ timeout: 30_000 });
   await expect(page.getByText('Preview unavailable in this browser')).toHaveCount(0);
