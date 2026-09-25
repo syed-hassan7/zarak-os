@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { canRender3DIntro } from './deviceTier';
 
 export type ExperienceMode = 'desktop' | 'mobile';
 
@@ -40,21 +41,15 @@ export function detectExperienceMode(): ExperienceMode {
     : 'desktop';
 }
 
+/**
+ * Whether the 3D boot sequence is allowed to render at all. Delegates to the
+ * device tier system (docs/DESIGN_SYSTEM.md §9) — only the `full` tier gets
+ * the 3D intro. Kept as a named export for backwards compatibility with
+ * existing call sites.
+ */
 export function canRender3DScene(): boolean {
   if (detectExperienceMode() === 'mobile') return false;
-
-  try {
-    const canvas = document.createElement('canvas');
-    const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
-    if (!gl) return false;
-    canvas.remove();
-  } catch {
-    return false;
-  }
-
-  if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) return false;
-
-  return true;
+  return canRender3DIntro();
 }
 
 export function useExperienceMode(): ExperienceMode {

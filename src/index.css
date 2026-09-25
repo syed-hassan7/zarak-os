@@ -12,6 +12,7 @@
   --color-os-accent: #2DD4BF;
   --color-os-warn: #C084FC;
   --color-os-danger: #F87171;
+  --color-os-success: #4ADE80;
   --color-os-surface: #0D1117;
 }
 
@@ -193,12 +194,50 @@
   }
 }
 
-/* ─── LIQUID GLASS SYSTEM ─── */
+/* ─── TIERED GLASS SYSTEM (docs/DESIGN_SYSTEM.md §5) ───
+   Three blur tiers instead of one blanket backdrop-blur-2xl everywhere.
+   On the `lite` device tier (see src/utils/deviceTier.ts), all three
+   collapse to a flat translucent fill — no backdrop-filter at all, which is
+   the single biggest lever for low-end/Firefox/Safari compositing cost. */
+.glass-1 {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.glass-2 {
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.glass-3 {
+  backdrop-filter: blur(40px) saturate(180%) brightness(0.9);
+  -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(0.9);
+  background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.04) 100%);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+:root[data-tier='lite'] .glass-1,
+:root[data-tier='lite'] .glass-2,
+:root[data-tier='lite'] .glass-3 {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(8, 11, 15, 0.92);
+}
+
+/* Legacy alias kept for any not-yet-migrated call sites. */
 .liquid-glass {
   backdrop-filter: blur(32px) saturate(180%) brightness(0.9);
   -webkit-backdrop-filter: blur(32px) saturate(180%) brightness(0.9);
   background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.04) 100%);
   border: 1px solid rgba(255,255,255,0.12);
+}
+
+:root[data-tier='lite'] .liquid-glass {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(8, 11, 15, 0.92);
 }
 
 .liquid-glass-cyan {
@@ -208,6 +247,26 @@
 
 .glass-glow-active {
   box-shadow: 0 0 30px rgba(45,212,191,0.08), 0 0 80px rgba(45,212,191,0.04), 0 20px 40px rgba(0,0,0,0.5);
+}
+
+:root[data-tier='lite'] .glass-glow-active {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+
+/* Belt-and-suspenders: any component still using raw Tailwind
+   backdrop-blur-* utilities (windows, dock, menu bar, tooltips) also goes
+   flat on the lite tier, not just the .glass-N helpers above. This keeps
+   the "no backdrop-filter on lite" rule true project-wide even before every
+   call site is migrated to the tiered classes. */
+:root[data-tier='lite'] [class*='backdrop-blur'] {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Ambient/particle/decorative motion — hidden entirely on the lite tier
+   per design system §6/§9, not just slowed down. */
+:root[data-tier='lite'] .ambient-decorative {
+  display: none !important;
 }
 
 /* Custom Scrollbar */

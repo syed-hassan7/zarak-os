@@ -4,6 +4,7 @@ import {
   Cpu,
   FileDown,
   FileText,
+  Gauge,
   Image,
   Linkedin,
   MessageSquare,
@@ -19,6 +20,7 @@ const BackgroundStudio = lazy(() => import('../components/apps/BackgroundStudio'
 const ContactInfo = lazy(() => import('../components/apps/ContactInfo'));
 const DownloadCV = lazy(() => import('../components/apps/DownloadCV'));
 const LinkedInSnapshot = lazy(() => import('../components/apps/LinkedInSnapshot'));
+const PerformanceSettings = lazy(() => import('../components/apps/PerformanceSettings'));
 const Skills = lazy(() => import('../components/apps/Skills'));
 const VenderScope = lazy(() => import('../components/apps/VenderScope'));
 
@@ -72,7 +74,6 @@ export const APP_REGISTRY = [
     minimumWindowSize: { width: 620, height: 420 },
     dockVisible: true,
     searchKeywords: ['cv', 'resume', 'document', 'pdf', 'viewer', 'download', 'grc', 'fde', 'gtm', 'ops'],
-    defaultOpen: true,
   },
   {
     id: 'linkedin',
@@ -103,6 +104,7 @@ export const APP_REGISTRY = [
     minimumWindowSize: { width: 520, height: 360 },
     dockVisible: true,
     searchKeywords: ['about', 'profile', 'operator', 'links'],
+    defaultOpen: true,
   },
   {
     id: 'ask-zarak',
@@ -113,6 +115,16 @@ export const APP_REGISTRY = [
     minimumWindowSize: { width: 520, height: 420 },
     dockVisible: false,
     searchKeywords: ['ask', 'zarak', 'assistant', 'chat', 'portfolio', 'hire', 'recruiter', 'qa', 'syed', 'llm'],
+  },
+  {
+    id: 'performance',
+    label: 'performance.sys',
+    icon: Gauge,
+    component: PerformanceSettings,
+    defaultWindowSize: { width: 760, height: 640 },
+    minimumWindowSize: { width: 480, height: 420 },
+    dockVisible: true,
+    searchKeywords: ['performance', 'settings', 'device', 'tier', 'lite', 'fps', 'gpu', 'speed', 'fast', 'slow', 'intro', 'replay'],
   },
 ] satisfies AppDefinition[];
 

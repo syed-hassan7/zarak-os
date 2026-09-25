@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import AegisBuddyPrototype from './shell/AegisBuddyPrototype';
 import DesktopBackgroundLayer from './shell/DesktopBackgroundLayer';
 import { DesktopAppearanceProvider, useDesktopAppearance } from './shell/DesktopAppearance';
@@ -62,6 +63,7 @@ function DesktopShell({
   const [isMissionControlOpen, setIsMissionControlOpen] = useState(false);
   const { backgroundId } = useDesktopAppearance();
   const isMobileExperience = experienceMode === 'mobile';
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -132,7 +134,13 @@ function DesktopShell({
   const activeAppLabel = activeApp ? getAppDefinition(activeApp).label : 'desktop';
 
   return (
-    <div className="absolute inset-0 bg-transparent overflow-hidden">
+    <motion.div
+      initial={shouldReduceMotion ? false : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      className="absolute inset-0 bg-transparent overflow-hidden"
+    >
       <DesktopBackgroundLayer backgroundId={backgroundId} />
       <div className="absolute inset-0 scanlines z-10 opacity-35" />
 
@@ -192,6 +200,6 @@ function DesktopShell({
         onClose={() => setIsMissionControlOpen(false)}
         onFocusApp={focusApp}
       />
-    </div>
+    </motion.div>
   );
 }

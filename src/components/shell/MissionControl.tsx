@@ -142,10 +142,10 @@ export default function MissionControl({
                         onFocusApp(appId);
                         onClose();
                       }}
-                      className={`group flex min-h-56 flex-col rounded-3xl border p-3 text-left outline-none backdrop-blur-2xl transition-[border-color,box-shadow,transform,background-color] duration-150 motion-reduce:transition-none ${
+                      className={`group flex min-h-56 flex-col rounded-3xl border p-3 text-left outline-none backdrop-blur-xl transition-[border-color,box-shadow,transform,background-color] duration-150 motion-reduce:transition-none ${
                         isSelected
-                          ? 'border-os-accent/30 bg-white/12 shadow-2xl shadow-black/40 ring-1 ring-os-accent/30 glass-glow-active backdrop-blur-2xl saturate-[160%]'
-                          : 'border-white/12 bg-white/7 shadow-xl shadow-black/25 hover:border-white/22 hover:bg-white/10 backdrop-blur-2xl saturate-[150%]'
+                          ? 'border-os-accent/30 bg-white/12 shadow-2xl shadow-black/40 ring-1 ring-os-accent/30 glass-glow-active backdrop-blur-xl saturate-[160%]'
+                          : 'border-white/12 bg-white/7 shadow-xl shadow-black/25 hover:border-white/22 hover:bg-white/10 backdrop-blur-xl saturate-[150%]'
                       }`}
                       initial={shouldReduceMotion ? false : { y: 18, scale: 0.96, opacity: 0 }}
                       animate={{ y: 0, scale: 1, opacity: 1 }}
@@ -194,7 +194,7 @@ export default function MissionControl({
                 })}
               </div>
             ) : (
-              <div className="flex flex-1 items-center justify-center rounded-3xl border border-white/10 bg-white/6 text-center shadow-2xl shadow-black/25 backdrop-blur-2xl">
+              <div className="flex flex-1 items-center justify-center rounded-3xl border border-white/10 bg-white/6 text-center shadow-2xl shadow-black/25 backdrop-blur-xl">
                 <div>
                   <Monitor className="mx-auto mb-3 h-8 w-8 text-os-text-sec/60" />
                   <div className="text-sm text-os-text-pri">No open windows</div>

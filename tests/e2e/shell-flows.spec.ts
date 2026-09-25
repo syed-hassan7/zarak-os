@@ -48,7 +48,7 @@ test.describe('Mission Control', () => {
     await page.keyboard.press('F3');
     const dialog = page.getByRole('dialog', { name: 'Mission Control' });
     await expect(dialog).toBeVisible();
-    await expect(page.getByRole('button', { name: /Focus CV\.app/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Focus about\.txt/i })).toBeVisible();
 
     await page.keyboard.press('Enter');
     await expect(dialog).not.toBeVisible();

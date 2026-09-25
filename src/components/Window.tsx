@@ -268,11 +268,11 @@ export default function Window(props: WindowProps) {
         ref={nodeRef}
         className={`absolute pointer-events-auto group/window flex transform-gpu flex-col overflow-hidden rounded-2xl border will-change-transform ${
           isDragging || resizeDirection
-            ? 'transition-none backdrop-blur-xl'
+            ? 'transition-none'
             : isFrameAnimating
             ? 'transition-[width,height,transform,border-color,box-shadow,background-color,opacity] duration-200 ease-out motion-reduce:transition-none'
             : 'transition-[border-color,box-shadow,background-color,opacity] duration-150 motion-reduce:transition-none'
-        } ${isDragging || resizeDirection ? '' : 'backdrop-blur-2xl'} ${
+        } ${isDragging || resizeDirection ? '' : 'backdrop-blur-xl'} ${
           resizeDirection
             ? 'border-white/30 ring-1 ring-white/25 shadow-2xl shadow-black/35'
             : isDragging
