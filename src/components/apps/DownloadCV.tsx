@@ -232,7 +232,7 @@ function PdfCanvasViewer({ handleDownload, fileUrl }: { handleDownload: () => vo
 
           const pageFrame = document.createElement('section');
           pageFrame.className =
-            'mx-auto w-full max-w-[920px] overflow-hidden rounded-[1.75rem] border border-black/10 bg-white shadow-2xl shadow-black/15';
+            'mx-auto w-full max-w-[1180px] overflow-hidden rounded-[1.75rem] border border-black/10 bg-white shadow-2xl shadow-black/15';
 
           const canvas = document.createElement('canvas');
           const context = canvas.getContext('2d');
@@ -406,6 +406,19 @@ export default function DownloadCV({ isMobile = false }: AppComponentProps) {
                     <div className="text-[10px] uppercase tracking-[0.2em] text-os-accent/70">Viewer mode</div>
                     <div className="mt-2 font-mono text-xs text-os-accent">PDFJS_CANVAS_RENDER</div>
                   </div>
+                </div>
+              </section>
+
+              <section className={`rounded-3xl border border-white/10 bg-white/[0.055] shadow-xl shadow-black/10 ${isMobile ? 'p-4' : 'p-6'}`}>
+                <p className="text-[10px] uppercase tracking-[0.22em] text-os-text-sec/55">Why this lane</p>
+                <p className="mt-3 text-sm leading-6 text-os-text-pri/84">{activeCv.tailoredFor}</p>
+                <div className="mt-5 space-y-2.5 border-t border-white/10 pt-4">
+                  {activeCv.keyStats.map((stat) => (
+                    <div key={stat.label} className="flex items-center justify-between gap-3">
+                      <span className="text-xs text-os-text-sec">{stat.label}</span>
+                      <span className="font-mono text-xs font-semibold text-os-accent">{stat.value}</span>
+                    </div>
+                  ))}
                 </div>
               </section>
 
