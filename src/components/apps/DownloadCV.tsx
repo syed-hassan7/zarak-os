@@ -164,7 +164,9 @@ function PdfCanvasViewer({ handleDownload, fileUrl }: { handleDownload: () => vo
     void loadPdf()
       .then(async (pdf) => {
         if (!disposed || !pdf) return;
-        await pdf.destroy();
+        // pdfjs-dist v6 removed PDFDocumentProxy.prototype.destroy() in
+        // favor of cleanup() for releasing a still-referenced document.
+        await pdf.cleanup();
       })
       .catch((error) => {
         if (disposed) return;
@@ -187,7 +189,7 @@ function PdfCanvasViewer({ handleDownload, fileUrl }: { handleDownload: () => vo
       pdfRef.current = null;
       pdfPromiseRef.current = null;
       if (pdf) {
-        void pdf.destroy();
+        void pdf.cleanup();
       }
     };
   }, []);

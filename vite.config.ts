@@ -21,6 +21,13 @@ export default defineConfig(() => {
       hmr: process.env.DISABLE_HMR !== 'true',
     },
     build: {
+      // Explicit, not relying on Vite's implicit production default —
+      // a future contributor flipping this on for local debugging and
+      // forgetting to revert would be the only way client-visible source
+      // maps could ever appear; secrets never enter the client bundle in
+      // the first place (Gemini/Upstash creds are edge-function-only env
+      // vars), but pinning this removes the ambiguity entirely.
+      sourcemap: false,
       // Isolate the heaviest vendor libs into their own async chunks so a
       // recruiter opening the OS doesn't pay for pdf.js/recharts/three
       // unless they actually open CV.app / Skills.app, or the 3D intro
