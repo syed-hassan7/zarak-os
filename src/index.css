@@ -31,6 +31,17 @@
     height: 100%;
   }
 
+  /* Laptop-width density tier: default UI chrome (built for desktop monitors)
+     reads slightly oversized/crowded on 13"-15" laptop screens at 100% zoom.
+     Nudging the root font-size down scales every rem-based Tailwind utility
+     (padding, gaps, icon sizes, radii, glass chrome) proportionally, without
+     touching explicit pixel values used for fine typography. */
+  @media (min-width: 810px) and (max-width: 1536px) {
+    html {
+      font-size: 14.5px;
+    }
+  }
+
   /* On touch devices, use the visual viewport height so browser chrome
      (Safari URL bar + bottom toolbar) doesn't hide below-fold content. */
   @supports (height: 100dvh) {

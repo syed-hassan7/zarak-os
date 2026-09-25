@@ -160,8 +160,8 @@ export default function LoginScreen(props: {
         >
           {/* ── Boot log panel — replaces the old identity/photo card ── */}
           <motion.section
-            initial={shouldReduceMotion ? false : { y: 22, opacity: 0, scale: 0.985 }}
-            animate={{ y: 0, opacity: 1, scale: 1 }}
+            initial={shouldReduceMotion ? false : { y: 22, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.16, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className={`glass-3 relative overflow-hidden shadow-2xl shadow-black/35 ring-1 ring-white/10 ${
               isMobileExperience ? 'rounded-[28px]' : 'min-h-[20rem] rounded-[30px]'
@@ -175,7 +175,7 @@ export default function LoginScreen(props: {
                 <span className="font-mono text-os-accent/75">stdout</span>
               </div>
 
-              <div className="mt-4 flex-1 space-y-1.5 font-mono text-[12.5px] leading-6">
+              <div className="mt-4 min-h-[13.25rem] flex-1 space-y-1.5 font-mono text-[12.5px] leading-6">
                 {BOOT_LINES.slice(0, bootedLineCount).map((line, index) => (
                   <motion.div
                     key={line.text}
@@ -226,8 +226,8 @@ export default function LoginScreen(props: {
 
           {/* ── Guest lane panel — the signature interaction ── */}
           <motion.section
-            initial={shouldReduceMotion ? false : { y: 22, opacity: 0, scale: 0.985 }}
-            animate={{ y: 0, opacity: 1, scale: 1 }}
+            initial={shouldReduceMotion ? false : { y: 22, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.24, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className={`glass-2 w-full overflow-hidden shadow-2xl shadow-black/35 ring-1 ring-white/10 ${
               isMobileExperience ? 'rounded-[26px]' : 'min-h-[20rem] rounded-[26px]'

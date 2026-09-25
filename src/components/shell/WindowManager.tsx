@@ -117,6 +117,7 @@ function getViewportScale(): number {
   if (typeof window === 'undefined') return 1;
   if (window.innerWidth >= 2560) return 1.4;
   if (window.innerWidth >= 1920) return 1.2;
+  if (window.innerWidth <= 1440) return 0.92;
   return 1;
 }
 
