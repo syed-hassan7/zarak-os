@@ -106,9 +106,17 @@ async function handleGet(redis: Redis): Promise<Response> {
     status: 200,
     headers: {
       'content-type': 'application/json',
-      // The wall changes at most once/hour per visitor; let Vercel's edge
-      // absorb repeat reads instead of hitting Redis on every GET.
-      'cache-control': 's-maxage=30, stale-while-revalidate=300',
+      // Deliberately uncached: this is a write-then-read guestbook, and a
+      // visitor posting a note expects to see it immediately, including on
+      // a same-tab reload. A previous s-maxage/stale-while-revalidate
+      // setting here saved a handful of Redis reads but meant Vercel's edge
+      // CDN could serve a stale pre-post snapshot for up to several
+      // minutes after a successful write — a real, user-visible bug
+      // ("I posted a note but it's not there") that matters far more than
+      // the Redis cost on a low-traffic portfolio site. Both endpoints
+      // already have write-side rate limiting (per-IP + global) from the
+      // security pass, which is the actual cost control that matters.
+      'cache-control': 'no-store',
     },
   });
 }
