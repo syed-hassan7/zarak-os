@@ -1,24 +1,37 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { KeyboardEvent } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
-import { ArrowRight, ShieldCheck, Wifi } from 'lucide-react';
+import type { KeyboardEvent, PointerEvent as ReactPointerEvent } from 'react';
+import { motion, useMotionValue, useReducedMotion, useSpring } from 'motion/react';
+import { ArrowRight, Fingerprint, ShieldCheck, Wifi } from 'lucide-react';
 import { recruiterProfile } from '../data/recruiterProfile';
+import { mountSignalField } from '../effects/signalField';
+import { triggerAccessGrantedSweep } from '../effects/accessGrantedSweep';
 
 /**
- * ZARAK_OS login screen — v2.
+ * ZARAK_OS login screen — v3.
  *
  * Design rationale (docs/DESIGN_SYSTEM.md §8): the old screen used a fake
  * self-typing password field + fake progress bar, which is the single most
- * overused "hacker UI" trope. This version replaces it with something the
- * OS can actually justify: a live boot log the recruiter can read (real
- * build/session facts, not lorem), and one honest interaction — the guest
- * lane accepts anything you type, because it's read-only by design, not
- * because it's pretending to check a password. That's a GRC-appropriate
- * joke ("we don't gate the guest lane") instead of hollow security theatre.
+ * overused "hacker UI" trope. v2 replaced it with a live boot log the
+ * recruiter can read (real build/session facts, not lorem) and one honest
+ * interaction — the guest lane accepts anything you type, because it's
+ * read-only by design, not because it's pretending to check a password.
  *
- * The brand mark (`os-brand-mark` / `os-brand-wordmark`) shares layoutId
- * with MenuBar so the login → desktop transition has a persistent visual
- * anchor instead of a plain crossfade (design system §8/§11).
+ * v3 keeps that honesty contract (still no fake auth, still a real boot
+ * log) and spends its "wow factor" budget on things that are true or
+ * genuinely interactive rather than more theatre: a real per-session ID
+ * (crypto.getRandomValues, not a prop), a pointer-reactive signal-field
+ * canvas behind the glass (the single ambient loop for this screen, per
+ * §6 — pauses on tab-hidden / reduced-motion exactly like DigitalBackground
+ * does for the desktop), a subtle pointer-tilt on the two hero panels, a
+ * one-shot "decrypt-in" reveal on the operator name timed to boot
+ * completion, and a one-shot access-granted sweep (distinct from the
+ * glitch-pulse "error" motif) fired on submit instead of the old plain
+ * timeout fade.
+ *
+ * The brand mark (`os-brand-mark` / `os-brand-wordmark`) still shares
+ * layoutId with MenuBar so the login → desktop transition keeps its
+ * persistent visual anchor (design system §8/§11) — do not change these
+ * elements' types/positions without checking that FLIP handoff still works.
  */
 
 const BOOT_LINES = [
@@ -29,6 +42,92 @@ const BOOT_LINES = [
   { text: 'auth policy: guest lane is unrestricted by design', tone: 'secondary' as const },
   { text: 'no credentials required — this is a portfolio, not a vault', tone: 'secondary' as const },
 ];
+
+const DECRYPT_CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&';
+const DECRYPT_FRAME_MS = 38;
+const DECRYPT_TOTAL_FRAMES = 14;
+
+function generateSessionId(): string {
+  if (typeof crypto === 'undefined' || typeof crypto.getRandomValues !== 'function') {
+    return '0000-0000';
+  }
+  const bytes = crypto.getRandomValues(new Uint8Array(4));
+  const hex = Array.from(bytes)
+    .map((byte) => byte.toString(16).padStart(2, '0'))
+    .join('');
+  return `${hex.slice(0, 4)}-${hex.slice(4, 8)}`;
+}
+
+function DecryptText({
+  text,
+  active,
+  className,
+}: {
+  text: string;
+  active: boolean;
+  className?: string;
+}) {
+  const shouldReduceMotion = useReducedMotion();
+  const [display, setDisplay] = useState(text);
+
+  useEffect(() => {
+    if (!active || shouldReduceMotion) {
+      setDisplay(text);
+      return;
+    }
+
+    let frame = 0;
+    const intervalId = window.setInterval(() => {
+      frame += 1;
+      const revealCount = Math.floor((frame / DECRYPT_TOTAL_FRAMES) * text.length);
+      setDisplay(
+        text
+          .split('')
+          .map((char, index) => {
+            if (char === ' ') return ' ';
+            if (index < revealCount) return char;
+            return DECRYPT_CHARSET[Math.floor(Math.random() * DECRYPT_CHARSET.length)];
+          })
+          .join(''),
+      );
+      if (frame >= DECRYPT_TOTAL_FRAMES) {
+        window.clearInterval(intervalId);
+        setDisplay(text);
+      }
+    }, DECRYPT_FRAME_MS);
+
+    return () => window.clearInterval(intervalId);
+  }, [text, active, shouldReduceMotion]);
+
+  return <span className={className}>{display}</span>;
+}
+
+/** Subtle pointer-reactive tilt for a hero panel. No-ops entirely (handlers
+ * become inert) when `disabled` — mobile/touch and reduced-motion both pass
+ * disabled=true, so the panel just sits flat with zero added listeners
+ * doing anything. */
+function usePanelTilt(disabled: boolean) {
+  const rawRotateX = useMotionValue(0);
+  const rawRotateY = useMotionValue(0);
+  const rotateX = useSpring(rawRotateX, { stiffness: 160, damping: 18, mass: 0.4 });
+  const rotateY = useSpring(rawRotateY, { stiffness: 160, damping: 18, mass: 0.4 });
+
+  const handlePointerMove = (event: ReactPointerEvent<HTMLElement>) => {
+    if (disabled) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const relativeX = (event.clientX - rect.left) / rect.width - 0.5;
+    const relativeY = (event.clientY - rect.top) / rect.height - 0.5;
+    rawRotateY.set(relativeX * 6);
+    rawRotateX.set(relativeY * -6);
+  };
+
+  const handlePointerLeave = () => {
+    rawRotateX.set(0);
+    rawRotateY.set(0);
+  };
+
+  return { rotateX, rotateY, handlePointerMove, handlePointerLeave };
+}
 
 export default function LoginScreen(props: {
   onLogin: () => void;
@@ -41,12 +140,25 @@ export default function LoginScreen(props: {
   const [bootedLineCount, setBootedLineCount] = useState(0);
   const [guestInput, setGuestInput] = useState('');
   const [isEntering, setIsEntering] = useState(false);
+  const [sessionId] = useState(generateSessionId);
   const inputRef = useRef<HTMLInputElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const tiltDisabled = shouldReduceMotion || isMobileExperience;
+  const bootTilt = usePanelTilt(tiltDisabled);
+  const guestTilt = usePanelTilt(tiltDisabled);
 
   useEffect(() => {
     const timer = window.setInterval(() => setTime(new Date()), 1000);
     return () => window.clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    if (shouldReduceMotion) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    return mountSignalField(canvas);
+  }, [shouldReduceMotion]);
 
   useEffect(() => {
     if (shouldReduceMotion) {
@@ -71,6 +183,7 @@ export default function LoginScreen(props: {
   const handleEnter = () => {
     if (isEntering) return;
     setIsEntering(true);
+    triggerAccessGrantedSweep();
     window.setTimeout(onLogin, shouldReduceMotion ? 80 : 420);
   };
 
@@ -107,6 +220,11 @@ export default function LoginScreen(props: {
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(45,212,191,0.16),transparent_26%),radial-gradient(circle_at_82%_12%,rgba(148,163,184,0.09),transparent_24%),linear-gradient(135deg,#08130f_0%,#05070a_46%,#0a0810_100%)]" />
       <div className="ambient-decorative absolute inset-0 opacity-[0.16] [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:72px_72px]" />
+      <canvas
+        ref={canvasRef}
+        aria-hidden="true"
+        className="ambient-decorative absolute inset-0 h-full w-full opacity-70"
+      />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,7,10,0.08)_0%,rgba(5,7,10,0.34)_54%,rgba(5,7,10,0.82)_100%)]" />
 
       <header
@@ -124,9 +242,17 @@ export default function LoginScreen(props: {
           </div>
         </div>
 
-        <div className="glass-1 flex items-center gap-3 rounded-2xl border border-white/10 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-os-text-sec/80 shadow-lg shadow-black/10">
-          <Wifi className="h-3.5 w-3.5 text-os-accent" />
-          <span>Guest link</span>
+        <div className="flex items-center gap-2">
+          {!isMobileExperience && (
+            <div className="glass-1 hidden items-center gap-2 rounded-2xl border border-white/10 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-os-text-sec/80 shadow-lg shadow-black/10 sm:flex">
+              <Fingerprint className="h-3.5 w-3.5 text-os-accent" />
+              <span className="font-mono normal-case tracking-normal text-os-text-pri/75">{sessionId}</span>
+            </div>
+          )}
+          <div className="glass-1 flex items-center gap-3 rounded-2xl border border-white/10 px-3 py-2 text-[10px] uppercase tracking-[0.16em] text-os-text-sec/80 shadow-lg shadow-black/10">
+            <Wifi className="h-3.5 w-3.5 text-os-accent" />
+            <span>Guest link</span>
+          </div>
         </div>
       </header>
 
@@ -157,22 +283,47 @@ export default function LoginScreen(props: {
           className={`mx-auto grid w-full gap-5 ${
             isMobileExperience ? 'max-w-[430px]' : 'max-w-[980px] items-stretch lg:grid-cols-[minmax(0,1fr)_23rem]'
           }`}
+          style={isMobileExperience ? undefined : { perspective: 1400 }}
         >
           {/* ── Boot log panel — replaces the old identity/photo card ── */}
           <motion.section
             initial={shouldReduceMotion ? false : { y: 22, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.16, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            onPointerMove={bootTilt.handlePointerMove}
+            onPointerLeave={bootTilt.handlePointerLeave}
+            style={
+              tiltDisabled
+                ? undefined
+                : { rotateX: bootTilt.rotateX, rotateY: bootTilt.rotateY, transformStyle: 'preserve-3d' }
+            }
             className={`glass-3 relative overflow-hidden shadow-2xl shadow-black/35 ring-1 ring-white/10 ${
               isMobileExperience ? 'rounded-[28px]' : 'min-h-[20rem] rounded-[30px]'
             }`}
           >
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
+            {!shouldReduceMotion && (
+              <motion.div
+                aria-hidden="true"
+                initial={{ x: '-130%' }}
+                animate={{ x: '130%' }}
+                transition={{ delay: 0.55, duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+                className="pointer-events-none absolute inset-y-0 w-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+              />
+            )}
 
             <div className={`relative z-10 flex h-full flex-col ${isMobileExperience ? 'p-4' : 'p-6'}`}>
               <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.18em] text-os-text-sec/65">
                 <span>Boot sequence</span>
-                <span className="font-mono text-os-accent/75">stdout</span>
+                <span className="flex items-center gap-1.5 font-mono text-os-accent/75">
+                  <motion.span
+                    aria-hidden="true"
+                    className="h-1.5 w-1.5 rounded-full bg-os-accent"
+                    animate={shouldReduceMotion ? undefined : { opacity: [0.35, 1, 0.35] }}
+                    transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                  />
+                  <span>stdout</span>
+                </span>
               </div>
 
               <div className="mt-4 min-h-[13.25rem] flex-1 space-y-1.5 font-mono text-[12.5px] leading-6">
@@ -208,9 +359,11 @@ export default function LoginScreen(props: {
               <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-white/10 pt-4">
                 <div className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2">
                   <div className="text-[8px] uppercase tracking-[0.18em] text-os-text-sec/54">Operator</div>
-                  <div className="mt-1 truncate text-[11px] font-semibold text-os-text-pri/88">
-                    {recruiterProfile.name}
-                  </div>
+                  <DecryptText
+                    text={recruiterProfile.name}
+                    active={bootComplete}
+                    className="mt-1 block truncate text-[11px] font-semibold text-os-text-pri/88"
+                  />
                 </div>
                 <div className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2">
                   <div className="text-[8px] uppercase tracking-[0.18em] text-os-text-sec/54">Lanes</div>
@@ -229,11 +382,27 @@ export default function LoginScreen(props: {
             initial={shouldReduceMotion ? false : { y: 22, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.24, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            onPointerMove={guestTilt.handlePointerMove}
+            onPointerLeave={guestTilt.handlePointerLeave}
+            style={
+              tiltDisabled
+                ? undefined
+                : { rotateX: guestTilt.rotateX, rotateY: guestTilt.rotateY, transformStyle: 'preserve-3d' }
+            }
             className={`glass-2 w-full overflow-hidden shadow-2xl shadow-black/35 ring-1 ring-white/10 ${
               isMobileExperience ? 'rounded-[26px]' : 'min-h-[20rem] rounded-[26px]'
             }`}
           >
-            <div className={`${isMobileExperience ? 'space-y-4 px-5 py-5' : 'flex h-full flex-col justify-between gap-5 px-5 py-5'}`}>
+            {!shouldReduceMotion && (
+              <motion.div
+                aria-hidden="true"
+                initial={{ x: '-130%' }}
+                animate={{ x: '130%' }}
+                transition={{ delay: 0.68, duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+                className="pointer-events-none absolute inset-y-0 w-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+              />
+            )}
+            <div className={`relative z-10 ${isMobileExperience ? 'space-y-4 px-5 py-5' : 'flex h-full flex-col justify-between gap-5 px-5 py-5'}`}>
               <div>
                 <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.18em] text-os-text-sec/70">
                   <span>Guest access</span>
@@ -245,7 +414,7 @@ export default function LoginScreen(props: {
                 </p>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <label className="flex h-12 items-center gap-3 rounded-2xl border border-white/10 bg-os-bg/42 px-4 shadow-inner shadow-black/15 transition-colors focus-within:border-os-accent/35">
                   <ArrowRight className="h-4 w-4 shrink-0 text-os-text-sec/75" />
                   <input
@@ -261,6 +430,18 @@ export default function LoginScreen(props: {
                     className="min-w-0 flex-1 bg-transparent text-sm font-medium text-os-text-pri outline-none placeholder:text-[13px] placeholder:font-normal placeholder:text-os-text-sec/45"
                   />
                 </label>
+
+                <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.14em] text-os-text-sec/50">
+                  <span>{guestInput.length > 0 ? `signature staged — ${guestInput.length} chars` : 'awaiting input'}</span>
+                  {!isMobileExperience && (
+                    <span className="hidden items-center gap-1.5 normal-case tracking-normal sm:flex">
+                      <kbd className="rounded border border-white/15 bg-white/[0.06] px-1.5 py-0.5 font-mono text-[9px] text-os-text-sec/70">
+                        enter
+                      </kbd>
+                      <span>to proceed</span>
+                    </span>
+                  )}
+                </div>
 
                 <button
                   type="button"

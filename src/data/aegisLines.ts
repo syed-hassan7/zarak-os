@@ -14,6 +14,7 @@ export const AEGIS_LINE_CATEGORIES = [
   'contra-ai',
   'playful',
   'looking-for',
+  'notes',
 ] as const;
 
 export type AegisLineCategory = (typeof AEGIS_LINE_CATEGORIES)[number];
@@ -95,6 +96,29 @@ export const AEGIS_LINES: readonly AegisLine[] = [
   { id: 'looking-for-relocate', text: 'Open to relocation. Not to vague job specs.', categories: ['looking-for', 'playful'] },
   { id: 'looking-for-signal', text: 'Looking for signal-rich roles, naturally.', categories: ['looking-for', 'security'] },
   { id: 'looking-for-fit', text: 'Good fit usually likes evidence first.', categories: ['looking-for', 'cv'] },
+  { id: 'looking-for-coffee-chat', text: 'Book time directly. Skip the email back-and-forth.', categories: ['looking-for', 'recruiter'] },
+  { id: 'looking-for-calendar-open', text: 'Calendar is open. Cold emails are optional now.', categories: ['looking-for', 'customer-success'] },
+
+  { id: 'idle-rate-limit-humor', text: 'Rate limits exist so free tier stays free.', categories: ['idle', 'security', 'playful'] },
+  { id: 'security-prompt-injection', text: 'Prompt injection attempts get logged, not obeyed.', categories: ['security', 'playful'] },
+  { id: 'security-profanity-filter', text: 'Deterministic profanity filter. No vibes-based moderation.', categories: ['security', 'playful'] },
+  { id: 'security-csp-hardened', text: 'CSP hardened. Fewer ways in, fewer surprises out.', categories: ['security', 'builder'] },
+  { id: 'security-pdfjs-patch', text: 'Patched the pdf.js CVE before anyone had to ask.', categories: ['security', 'cv'] },
+  { id: 'security-audit-real', text: 'Every audit-flavored claim here maps to a real finding.', categories: ['security', 'recruiter'] },
+
+  { id: 'notes-guestbook-live', text: 'Guestbook wall is Gemini-moderated. Still reads the room.', categories: ['notes', 'playful'] },
+  { id: 'notes-public-wall', text: 'notes.app is public. Write something worth logging.', categories: ['notes', 'recruiter'] },
+  { id: 'notes-moderation-honest', text: 'Moderation is automated, not absent.', categories: ['notes', 'security'] },
+
+  { id: 'askzarak-grounded', text: 'Syed-LLM answers from real data, not vibes.', categories: ['recruiter', 'security', 'playful'] },
+  { id: 'askzarak-typo-tolerant', text: 'Typo-tolerant search. Recruiters type fast.', categories: ['recruiter', 'playful'] },
+
+  { id: 'playful-self-aware', text: 'One mascot per OS. I do not share screen time.', categories: ['playful', 'idle'] },
+  { id: 'playful-log-style', text: 'I speak in log lines because I respect your time.', categories: ['playful', 'builder'] },
+  { id: 'playful-uptime', text: 'Uptime over hype. Every time.', categories: ['playful', 'builder', 'security'] },
+
+  { id: 'builder-changelog', text: 'This thing actually ships. Check the update feed.', categories: ['builder', 'idle'] },
+  { id: 'builder-v2-overhaul', text: 'v2 dropped the blur-everything era. Perf said thanks.', categories: ['builder', 'projects'] },
 ] as const;
 
 export const AEGIS_FALLBACK_CATEGORIES: readonly AegisLineCategory[] = ['idle', 'playful'];
@@ -108,6 +132,8 @@ export const AEGIS_CONTEXT_CATEGORY_MAP: Partial<Record<AppId, readonly AegisLin
   skills: ['builder', 'security', 'projects'],
   about: ['recruiter', 'idle', 'builder'],
   contact: ['looking-for', 'recruiter', 'customer-success'],
+  notes: ['notes', 'playful', 'security'],
+  'coffee-chat': ['looking-for', 'recruiter', 'customer-success'],
 };
 
 export function getAegisPreferredCategories(activeApp: AppId | null): readonly AegisLineCategory[] {

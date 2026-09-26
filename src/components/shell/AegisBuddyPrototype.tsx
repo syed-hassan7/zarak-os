@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { MutableRefObject } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import {
   AEGIS_AMBIENT_THOUGHTS,
   type AegisAmbientThought,
@@ -11,6 +11,7 @@ import {
   type AegisLine,
   getAegisPreferredCategories,
 } from '../../data/aegisLines';
+import { AEGIS_UPDATES } from '../../data/aegisUpdates';
 import type { AppId } from '../../os/types';
 
 interface AegisBuddyPrototypeProps {
@@ -20,6 +21,27 @@ interface AegisBuddyPrototypeProps {
 }
 
 type AmbientMode = 'idle' | 'hover' | 'thinking' | 'sleeping';
+
+const AEGIS_LAST_SEEN_UPDATE_KEY = 'zarak_os_aegis_last_seen_update';
+
+function getLastSeenUpdateId(): string | null {
+  try {
+    return window.localStorage.getItem(AEGIS_LAST_SEEN_UPDATE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function computeHasUnreadUpdates(): boolean {
+  if (AEGIS_UPDATES.length === 0) return false;
+  return getLastSeenUpdateId() !== AEGIS_UPDATES[0].id;
+}
+
+function formatUpdateDate(isoDate: string): string {
+  const parsed = new Date(`${isoDate}T00:00:00Z`);
+  if (Number.isNaN(parsed.getTime())) return isoDate;
+  return parsed.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+}
 
 const buttonVariants = {
   rest: { scale: 1, y: 0 },
@@ -114,6 +136,8 @@ export default function AegisBuddyPrototype({
   const [isLineVisible, setIsLineVisible] = useState(false);
   const [isBlinking, setIsBlinking] = useState(false);
   const [currentThought, setCurrentThought] = useState<AegisAmbientThought | null>(null);
+  const [isUpdatesPanelOpen, setIsUpdatesPanelOpen] = useState(false);
+  const [hasUnreadUpdates, setHasUnreadUpdates] = useState<boolean>(() => computeHasUnreadUpdates());
   const hoverRef = useRef(false);
   const focusRef = useRef(false);
   const suppressNextFocusRef = useRef(false);
@@ -121,6 +145,7 @@ export default function AegisBuddyPrototype({
   const lineVisibleRef = useRef(isLineVisible);
   const pauseAmbientMotionRef = useRef(pauseAmbientMotion);
   const currentThoughtRef = useRef<AegisAmbientThought | null>(currentThought);
+  const updatesPanelOpenRef = useRef(isUpdatesPanelOpen);
   const isMountedRef = useRef(true);
   const lastActiveAppRef = useRef<AppId | null>(activeApp);
   const prevOpenAppsRef = useRef<AppId[]>(openApps);
@@ -134,6 +159,8 @@ export default function AegisBuddyPrototype({
   const passiveThoughtIdleTimeoutRef = useRef<number | null>(null);
   const passiveThoughtCooldownTimeoutRef = useRef<number | null>(null);
   const passiveThoughtHideTimeoutRef = useRef<number | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const updatesPanelRef = useRef<HTMLDivElement | null>(null);
 
   const clearTimeoutRef = (timeoutRef: MutableRefObject<number | null>) => {
     if (timeoutRef.current === null) return;
@@ -190,7 +217,8 @@ export default function AegisBuddyPrototype({
         focusRef.current ||
         lineVisibleRef.current ||
         modeRef.current === 'thinking' ||
-        pauseAmbientMotionRef.current
+        pauseAmbientMotionRef.current ||
+        updatesPanelOpenRef.current
       ) {
         schedulePassiveThoughtLoop(PASSIVE_THOUGHT_IDLE_DELAY_MS);
         return;
@@ -218,6 +246,28 @@ export default function AegisBuddyPrototype({
   const registerAegisInteraction = () => {
     clearPassiveThought();
     clearPassiveThoughtTimers();
+  };
+
+  const markUpdatesAsRead = () => {
+    if (AEGIS_UPDATES.length === 0) return;
+    try {
+      window.localStorage.setItem(AEGIS_LAST_SEEN_UPDATE_KEY, AEGIS_UPDATES[0].id);
+    } catch {
+      // localStorage unavailable (private mode etc) — unread state just won't persist.
+    }
+    setHasUnreadUpdates(false);
+  };
+
+  const openUpdatesPanel = () => {
+    registerAegisInteraction();
+    setIsUpdatesPanelOpen(true);
+    setIsLineVisible(false);
+    markUpdatesAsRead();
+  };
+
+  const closeUpdatesPanel = () => {
+    setIsUpdatesPanelOpen(false);
+    schedulePassiveThoughtLoop();
   };
 
   useEffect(() => {
@@ -332,8 +382,38 @@ export default function AegisBuddyPrototype({
     currentThoughtRef.current = currentThought;
   }, [currentThought]);
 
-  const shouldShowLine = isLineVisible || hoverRef.current || focusRef.current;
-  const shouldShowPassiveThought = currentThought !== null && !shouldShowLine;
+  useEffect(() => {
+    updatesPanelOpenRef.current = isUpdatesPanelOpen;
+  }, [isUpdatesPanelOpen]);
+
+  useEffect(() => {
+    if (!isUpdatesPanelOpen) return;
+
+    const handleDocumentKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeUpdatesPanel();
+      }
+    };
+
+    const handleDocumentPointerDown = (event: globalThis.PointerEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+      if (updatesPanelRef.current?.contains(target)) return;
+      if (buttonRef.current?.contains(target)) return;
+      closeUpdatesPanel();
+    };
+
+    document.addEventListener('keydown', handleDocumentKeyDown);
+    document.addEventListener('pointerdown', handleDocumentPointerDown);
+    return () => {
+      document.removeEventListener('keydown', handleDocumentKeyDown);
+      document.removeEventListener('pointerdown', handleDocumentPointerDown);
+    };
+  }, [isUpdatesPanelOpen]);
+
+  const shouldShowLine = (isLineVisible || hoverRef.current || focusRef.current) && !isUpdatesPanelOpen;
+  const shouldShowPassiveThought = currentThought !== null && !shouldShowLine && !isUpdatesPanelOpen;
   const isHoveringMode = mode === 'hover';
   const isThinkingMode = mode === 'thinking';
   const isAttentive = isHoveringMode || isThinkingMode;
@@ -397,6 +477,16 @@ export default function AegisBuddyPrototype({
   };
 
   const handleClick = () => {
+    if (hasUnreadUpdates) {
+      openUpdatesPanel();
+      return;
+    }
+
+    if (isUpdatesPanelOpen) {
+      closeUpdatesPanel();
+      return;
+    }
+
     registerAegisInteraction();
     const nextLine = pickNextAegisLine(activeApp, shownLineIdsRef.current, currentLine.id);
     setCurrentLine(nextLine);
@@ -419,7 +509,10 @@ export default function AegisBuddyPrototype({
     <div className="pointer-events-none absolute bottom-[3.85rem] right-[4.5rem] z-40">
       <motion.button
         type="button"
-        aria-label="Cycle Aegis-M ambient status"
+        ref={buttonRef}
+        aria-label={hasUnreadUpdates ? 'Aegis-M — unread updates available' : 'Cycle Aegis-M ambient status'}
+        aria-haspopup="dialog"
+        aria-expanded={isUpdatesPanelOpen}
         onClick={handleClick}
         onPointerDown={handlePointerDown}
         onMouseEnter={handlePointerEnter}
@@ -704,6 +797,14 @@ export default function AegisBuddyPrototype({
             />
           </motion.g>
         </motion.svg>
+        {hasUnreadUpdates && (
+          <span
+            aria-hidden="true"
+            className={`absolute right-[0.55rem] top-[0.55rem] z-20 h-2 w-2 rounded-full bg-os-accent shadow-[0_0_6px_2px_rgba(45,212,191,0.55)] ${
+              !shouldReduceMotion && mode === 'idle' ? 'aegis-prototype-glow' : ''
+            }`}
+          />
+        )}
         <motion.span
           aria-hidden="true"
           initial={false}
@@ -733,6 +834,49 @@ export default function AegisBuddyPrototype({
           <span className="mt-1 text-[11px] leading-4 text-os-text-pri">{currentThought?.text}</span>
         </motion.span>
       </motion.button>
+      <AnimatePresence>
+        {isUpdatesPanelOpen && (
+          <motion.div
+            ref={updatesPanelRef}
+            role="dialog"
+            aria-label="Site update feed"
+            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 8, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.98 }}
+            transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.16, ease: 'easeOut' }}
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={(event) => event.stopPropagation()}
+            className="glass-2 pointer-events-auto absolute bottom-[calc(100%+0.9rem)] right-0 flex max-h-[22rem] w-[19.5rem] flex-col overflow-hidden rounded-[20px] border border-white/12 text-left shadow-2xl shadow-black/40"
+          >
+            <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-4 py-3">
+              <span className="text-[10px] uppercase tracking-[0.2em] text-cyan-100/70">
+                Aegis-M // update feed
+              </span>
+              <button
+                type="button"
+                aria-label="Close update feed"
+                onClick={closeUpdatesPanel}
+                className="rounded-md p-1 text-os-text-sec/60 outline-none transition-colors hover:text-os-text-pri focus-visible:ring-2 focus-visible:ring-cyan-300/60"
+              >
+                ×
+              </button>
+            </div>
+            <div className="custom-scrollbar flex-1 overflow-y-auto px-4 py-3">
+              <ul className="flex flex-col gap-3">
+                {AEGIS_UPDATES.map((entry) => (
+                  <li key={entry.id} className="border-b border-white/6 pb-3 last:border-b-0 last:pb-0">
+                    <span className="text-[9px] uppercase tracking-[0.16em] text-os-text-sec/55">
+                      {formatUpdateDate(entry.date)}
+                    </span>
+                    <p className="mt-1 text-[12px] font-semibold text-os-text-pri">{entry.title}</p>
+                    <p className="mt-1 text-[11px] leading-4 text-os-text-sec/85">{entry.body}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

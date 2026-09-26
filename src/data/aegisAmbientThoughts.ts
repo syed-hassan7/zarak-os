@@ -24,4 +24,11 @@ export const AEGIS_AMBIENT_THOUGHTS: readonly AegisAmbientThought[] = [
   { id: 'ambient-vendor-risk', text: 'Vendor risk looks better when it is visible.' },
   { id: 'ambient-career-trail', text: 'Career trail is mapped if you want the fast pass.' },
   { id: 'ambient-proof-over-polish', text: 'Polish matters. Proof matters more.' },
+  { id: 'ambient-rate-limit', text: 'Rate limits keep the free tier free.' },
+  { id: 'ambient-changelog-nudge', text: 'There is an update feed. Worth a click.' },
+  { id: 'ambient-notes-wall', text: 'The guestbook wall is quietly alive.' },
+  { id: 'ambient-csp-hardened', text: 'CSP got hardened recently. Fewer surprises.' },
+  { id: 'ambient-coffee-chat', text: 'A direct booking link exists now. No email required.' },
+  { id: 'ambient-typo-tolerant', text: 'Syed-LLM forgives typos now. Type freely.' },
+  { id: 'ambient-log-style', text: 'Terse by design. Loud is not the brand.' },
 ] as const;

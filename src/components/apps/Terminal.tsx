@@ -1,8 +1,12 @@
 import { type FormEvent, type KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { ChevronRight, Circle, Terminal as TerminalIcon } from 'lucide-react';
-import { TERMINAL_COMMANDS, TERM_COLORS } from '../../constants';
+import { FORTUNE_LINES, TERMINAL_COMMANDS, TERM_COLORS } from '../../constants';
 import { triggerGlitchPulse } from '../../effects/glitchPulse';
+import { triggerMatrixRain } from '../../effects/matrixRain';
+import { triggerRadarScan } from '../../effects/radarScan';
+import { triggerTerminalOverride } from '../../effects/terminalOverride';
+import { scrambleText } from '../../effects/textScramble';
 import { isAppId, type AppId } from '../../os/types';
 
 interface TerminalProps {
@@ -15,11 +19,20 @@ type TerminalLine = {
   color?: string;
   action?: string;
   target?: string;
+  /** Marks a line for the SCRAMBLE_REVEAL secret effect — see handleCommand. */
+  scramble?: boolean;
 };
 
 function getLineColor(color?: string): string {
   return (TERM_COLORS as Record<string, string>)[color || 'secondary'] || 'text-os-text-pri';
 }
+
+function prefersReducedMotion(): boolean {
+  return typeof window !== 'undefined' && Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
+}
+
+const SCRAMBLE_TICKS = 9;
+const SCRAMBLE_TICK_MS = 90;
 
 export default function Terminal({ isMobile, onOpenApp }: TerminalProps) {
   const [history, setHistory] = useState<TerminalLine[]>([]);
@@ -28,6 +41,8 @@ export default function Terminal({ isMobile, onOpenApp }: TerminalProps) {
   const [historyIndex, setHistoryIndex] = useState(-1);
   const hasInitializedRef = useRef(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const sessionStartRef = useRef<number>(Date.now());
+  const scrambleIntervalRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!hasInitializedRef.current) {
@@ -41,6 +56,57 @@ export default function Terminal({ isMobile, onOpenApp }: TerminalProps) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [history]);
+
+  // Cleanup any in-flight scramble-reveal animation on unmount so it never
+  // keeps ticking against an unmounted component.
+  useEffect(() => {
+    return () => {
+      if (scrambleIntervalRef.current) {
+        window.clearInterval(scrambleIntervalRef.current);
+        scrambleIntervalRef.current = null;
+      }
+    };
+  }, []);
+
+  const startScrambleReveal = (baseIndex: number, responses: TerminalLine[]) => {
+    // Re-entrancy guard: a second scramble trigger interrupts and restarts
+    // cleanly rather than stacking two intervals against the same lines.
+    if (scrambleIntervalRef.current) {
+      window.clearInterval(scrambleIntervalRef.current);
+      scrambleIntervalRef.current = null;
+    }
+
+    const targets = responses
+      .map((res, i) => ({ ...res, i }))
+      .filter((res) => res.scramble);
+    if (targets.length === 0) return;
+
+    const originals = new Map(targets.map((t) => [t.i, t.text]));
+    let tick = 0;
+
+    scrambleIntervalRef.current = window.setInterval(() => {
+      tick += 1;
+      const progress = tick / SCRAMBLE_TICKS;
+      setHistory((prev) => {
+        const next = [...prev];
+        targets.forEach((t) => {
+          const idx = baseIndex + t.i;
+          const original = originals.get(t.i);
+          if (idx < next.length && original !== undefined) {
+            next[idx] = {
+              ...next[idx],
+              text: progress >= 1 ? original : scrambleText(original, progress),
+            };
+          }
+        });
+        return next;
+      });
+      if (tick >= SCRAMBLE_TICKS && scrambleIntervalRef.current) {
+        window.clearInterval(scrambleIntervalRef.current);
+        scrambleIntervalRef.current = null;
+      }
+    }, SCRAMBLE_TICK_MS);
+  };
 
   const handleCommand = (e: FormEvent) => {
     e.preventDefault();
@@ -57,13 +123,41 @@ export default function Terminal({ isMobile, onOpenApp }: TerminalProps) {
     }
 
     const newHistory = [...history.slice(-90), { text: `$ ${cmd}`, color: 'accent' }];
+    const priorCmdHistory = cmdHistory;
     setCmdHistory((prev) => [cmd, ...prev].slice(0, 50));
     setHistoryIndex(-1);
 
     if (cmd === 'clear') {
       setHistory([]);
     } else if (Object.prototype.hasOwnProperty.call(TERMINAL_COMMANDS, cmd)) {
-      const responses = (TERMINAL_COMMANDS as Record<string, TerminalLine[]>)[cmd];
+      const rawResponses = (TERMINAL_COMMANDS as Record<string, TerminalLine[]>)[cmd];
+
+      // Some responses need runtime-computed text (random pick, real
+      // elapsed time, actual session history) that can't live as a static
+      // string in constants.ts — expand those here, just before render.
+      const responses: TerminalLine[] = rawResponses.flatMap((res): TerminalLine[] => {
+        if (res.action === 'FORTUNE') {
+          const line = FORTUNE_LINES[Math.floor(Math.random() * FORTUNE_LINES.length)];
+          return [{ text: `> ${line}`, color: 'accent' }];
+        }
+        if (res.action === 'UPTIME') {
+          const seconds = Math.max(0, Math.floor((Date.now() - sessionStartRef.current) / 1000));
+          const mins = Math.floor(seconds / 60);
+          const secs = seconds % 60;
+          return [{ text: `uptime: ${mins}m ${secs}s (this session, since page load)`, color: 'secondary' }];
+        }
+        if (res.action === 'HISTORY') {
+          if (priorCmdHistory.length === 0) {
+            return [{ text: 'no prior commands this session.', color: 'muted' }];
+          }
+          return [
+            { text: 'session command log:', color: 'accent' },
+            ...priorCmdHistory.map((c, i) => ({ text: ` ${i + 1}  ${c}`, color: 'secondary' as const })),
+          ];
+        }
+        return [res];
+      });
+
       responses.forEach((res) => {
         if (res.action === 'OPEN_WINDOW' && onOpenApp) {
           const targetAppId = res.target?.split('.')[0] ?? '';
@@ -77,8 +171,31 @@ export default function Terminal({ isMobile, onOpenApp }: TerminalProps) {
         if (res.action === 'GLITCH') {
           triggerGlitchPulse();
         }
+        if (res.action === 'MATRIX') {
+          triggerMatrixRain();
+        }
+        if (res.action === 'RADAR_SCAN') {
+          triggerRadarScan();
+        }
+        if (res.action === 'OVERRIDE') {
+          triggerTerminalOverride();
+        }
       });
-      setHistory([...newHistory, ...responses]);
+
+      const hasScrambleReveal = responses.some((res) => res.action === 'SCRAMBLE_REVEAL');
+      const reducedMotion = prefersReducedMotion();
+      const baseIndex = newHistory.length;
+
+      const initialResponses =
+        hasScrambleReveal && !reducedMotion
+          ? responses.map((res) => (res.scramble ? { ...res, text: scrambleText(res.text, 0) } : res))
+          : responses;
+
+      setHistory([...newHistory, ...initialResponses]);
+
+      if (hasScrambleReveal && !reducedMotion) {
+        startScrambleReveal(baseIndex, responses);
+      }
     } else {
       setHistory([
         ...newHistory,

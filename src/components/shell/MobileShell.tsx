@@ -21,6 +21,7 @@ const MOBILE_LAUNCH_ORDER: AppId[] = [
   'cv',
   'linkedin',
   'contact',
+  'coffee-chat',
   'venderscope',
   'about',
   'skills',
@@ -74,6 +75,10 @@ const MOBILE_APP_COPY: Record<AppId, { eyebrow: string; description: string }> =
   notes: {
     eyebrow: 'Leave a mark',
     description: 'A public guestbook wall — pin a short note for other visitors to see.',
+  },
+  'coffee-chat': {
+    eyebrow: 'Book time directly',
+    description: 'Skip the email back-and-forth — grab 30 minutes on the calendar instantly.',
   },
 };
 

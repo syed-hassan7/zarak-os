@@ -205,6 +205,37 @@
   }
 }
 
+.access-granted-sweep-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 210;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(45, 212, 191, 0.16) 46%,
+    rgba(45, 212, 191, 0.05) 52%,
+    transparent 100%
+  );
+  background-size: 100% 340%;
+  background-position: 0 -140%;
+  animation: access-granted-sweep 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes access-granted-sweep {
+  0% { background-position: 0 -140%; opacity: 0; }
+  12% { opacity: 1; }
+  70% { opacity: 0.9; }
+  100% { background-position: 0 140%; opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .access-granted-sweep-overlay {
+    animation: none;
+    display: none;
+  }
+}
+
 /* ─── TIERED GLASS SYSTEM (docs/DESIGN_SYSTEM.md §5) ───
    Three blur tiers instead of one blanket backdrop-blur-2xl everywhere.
    On the `lite` device tier (see src/utils/deviceTier.ts), all three
@@ -278,6 +309,87 @@
    per design system §6/§9, not just slowed down. */
 :root[data-tier='lite'] .ambient-decorative {
   display: none !important;
+}
+
+/* ─── TERMINAL EASTER EGGS (src/effects/matrixRain.ts, radarScan.ts,
+   terminalOverride.ts) ───
+   Plain canvas/DOM overlays, not Canvas/three.js scenes — kept out of the
+   frameloop="demand" contract entirely per docs/DESIGN_SYSTEM.md §11. Each
+   effect's own module owns its bounded lifetime and reduced-motion no-op;
+   these classes are just static positioning/z-index. */
+.effect-canvas-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.terminal-override-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  background: rgba(5, 7, 10, 0.35);
+  animation: terminal-override-fade 1.9s ease-out;
+}
+
+.terminal-override-label {
+  font-family: var(--font-mono);
+  font-size: clamp(20px, 4vw, 36px);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-os-accent);
+  text-shadow: 0 0 24px rgba(45, 212, 191, 0.6);
+  animation: terminal-override-label 1.9s ease-out;
+}
+
+.terminal-override-scanline {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(45, 212, 191, 0.18) 46%,
+    rgba(45, 212, 191, 0.06) 52%,
+    transparent 100%
+  );
+  background-size: 100% 340%;
+  background-position: 0 -140%;
+  animation: terminal-override-sweep 1.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes terminal-override-fade {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  75% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes terminal-override-label {
+  0% { opacity: 0; transform: scale(0.94); }
+  14% { opacity: 1; transform: scale(1); }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes terminal-override-sweep {
+  0% { background-position: 0 -140%; }
+  100% { background-position: 0 140%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terminal-override-overlay,
+  .terminal-override-label,
+  .terminal-override-scanline {
+    animation: none;
+    display: none;
+  }
 }
 
 /* Custom Scrollbar */

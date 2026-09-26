@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 import {
   Bot,
+  Coffee,
   Cpu,
   FileDown,
   FileText,
@@ -18,6 +19,7 @@ import type { AppDefinition, AppId } from './types';
 const About = lazy(() => import('../components/apps/About'));
 const AskZarak = lazy(() => import('../components/apps/AskZarak'));
 const BackgroundStudio = lazy(() => import('../components/apps/BackgroundStudio'));
+const CoffeeChat = lazy(() => import('../components/apps/CoffeeChat'));
 const ContactInfo = lazy(() => import('../components/apps/ContactInfo'));
 const DownloadCV = lazy(() => import('../components/apps/DownloadCV'));
 const LinkedInSnapshot = lazy(() => import('../components/apps/LinkedInSnapshot'));
@@ -137,6 +139,16 @@ export const APP_REGISTRY = [
     minimumWindowSize: { width: 480, height: 420 },
     dockVisible: true,
     searchKeywords: ['notes', 'guestbook', 'wall', 'sticky', 'message', 'pin', 'visitor', 'sign'],
+  },
+  {
+    id: 'coffee-chat',
+    label: 'coffee-chat.link',
+    icon: Coffee,
+    component: CoffeeChat,
+    defaultWindowSize: { width: 760, height: 560 },
+    minimumWindowSize: { width: 460, height: 400 },
+    dockVisible: true,
+    searchKeywords: ['coffee', 'chat', 'meeting', 'calendly', 'book', 'schedule', 'call', 'meet'],
   },
 ] satisfies AppDefinition[];
 
