@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import type { MutableRefObject } from 'react';
+import type { MouseEvent as ReactMouseEvent, MutableRefObject } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { History } from 'lucide-react';
 import {
   AEGIS_AMBIENT_THOUGHTS,
   type AegisAmbientThought,
@@ -160,6 +161,7 @@ export default function AegisBuddyPrototype({
   const passiveThoughtCooldownTimeoutRef = useRef<number | null>(null);
   const passiveThoughtHideTimeoutRef = useRef<number | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const historyButtonRef = useRef<HTMLButtonElement | null>(null);
   const updatesPanelRef = useRef<HTMLDivElement | null>(null);
 
   const clearTimeoutRef = (timeoutRef: MutableRefObject<number | null>) => {
@@ -401,6 +403,7 @@ export default function AegisBuddyPrototype({
       if (!target) return;
       if (updatesPanelRef.current?.contains(target)) return;
       if (buttonRef.current?.contains(target)) return;
+      if (historyButtonRef.current?.contains(target)) return;
       closeUpdatesPanel();
     };
 
@@ -503,6 +506,15 @@ export default function AegisBuddyPrototype({
     thinkTimeoutRef.current = window.setTimeout(() => {
       syncAmbientMode();
     }, 1200);
+  };
+
+  const handleHistoryButtonClick = (event: ReactMouseEvent) => {
+    event.stopPropagation();
+    if (isUpdatesPanelOpen) {
+      closeUpdatesPanel();
+      return;
+    }
+    openUpdatesPanel();
   };
 
   return (
@@ -834,6 +846,18 @@ export default function AegisBuddyPrototype({
           <span className="mt-1 text-[11px] leading-4 text-os-text-pri">{currentThought?.text}</span>
         </motion.span>
       </motion.button>
+      <button
+        type="button"
+        ref={historyButtonRef}
+        onClick={handleHistoryButtonClick}
+        aria-label={isUpdatesPanelOpen ? 'Close update feed' : 'Open Aegis-M update feed'}
+        aria-haspopup="dialog"
+        aria-expanded={isUpdatesPanelOpen}
+        title="Update feed"
+        className="pointer-events-auto absolute -left-2 -top-2 z-20 flex h-6 w-6 items-center justify-center rounded-full border border-white/12 bg-os-bg/90 text-os-text-sec/70 shadow-md shadow-black/25 outline-none backdrop-blur-md transition-colors hover:text-os-text-pri focus-visible:ring-2 focus-visible:ring-cyan-300/60"
+      >
+        <History className="h-3 w-3" aria-hidden="true" />
+      </button>
       <AnimatePresence>
         {isUpdatesPanelOpen && (
           <motion.div

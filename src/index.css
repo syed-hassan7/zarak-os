@@ -96,12 +96,15 @@
    Native cursor is hidden app-wide only once the component confirms a fine
    pointer + no reduced-motion (adds this class itself) — never hidden by
    default, so a no-JS/SSR fallback or an unsupported device always keeps
-   the real OS cursor. Elements that need a specific native cursor (window
-   resize handles, drag handles) still get it: `cursor` is inherited, and
-   any element that sets its own `cursor-*` utility overrides the inherited
-   `none` regardless of ancestor specificity. */
-.custom-cursor-active {
-  cursor: none;
+   the real OS cursor. `!important` + the universal selector are required:
+   Window.tsx's resize handles / drag handle / disabled buttons set an
+   explicit `cursor-*` Tailwind utility on themselves, which is MORE
+   specific than an inherited `cursor: none` on <html> and would otherwise
+   win the cascade and show the native pointer through — CustomCursor.tsx
+   renders its own matching glyph for every one of those cases instead. */
+.custom-cursor-active,
+.custom-cursor-active * {
+  cursor: none !important;
 }
 
 /* ─── MATRIX WAKE (src/effects/matrixWake.ts) ───

@@ -1,5 +1,17 @@
 export type CursorFxMode = 'default' | 'matrix' | 'waking';
 
+export type CursorShape =
+  | 'default'
+  | 'interactive'
+  | 'text'
+  | 'move'
+  | 'resize-ns'
+  | 'resize-ew'
+  | 'resize-nesw'
+  | 'resize-nwse'
+  | 'wait'
+  | 'not-allowed';
+
 let current: CursorFxMode = 'default';
 const listeners = new Set<(mode: CursorFxMode) => void>();
 
@@ -22,4 +34,30 @@ export function getCursorFxMode(): CursorFxMode {
 export function subscribeCursorFxMode(listener: (mode: CursorFxMode) => void): () => void {
   listeners.add(listener);
   return () => listeners.delete(listener);
+}
+
+let forcedShape: CursorShape | null = null;
+const shapeListeners = new Set<(shape: CursorShape | null) => void>();
+
+/**
+ * Lets a component that owns an active drag/resize gesture (Window.tsx)
+ * PIN the cursor shape for the gesture's duration. Without this, fast
+ * pointer movement that briefly slips off a thin 6px resize handle (or
+ * outside the window entirely, once dragging) would cause CustomCursor's
+ * under-pointer hit-test to flicker back to 'default' mid-gesture even
+ * though the OS-level drag is still very much in progress.
+ */
+export function setForcedCursorShape(shape: CursorShape | null): void {
+  if (forcedShape === shape) return;
+  forcedShape = shape;
+  shapeListeners.forEach((listener) => listener(shape));
+}
+
+export function getForcedCursorShape(): CursorShape | null {
+  return forcedShape;
+}
+
+export function subscribeForcedCursorShape(listener: (shape: CursorShape | null) => void): () => void {
+  shapeListeners.add(listener);
+  return () => shapeListeners.delete(listener);
 }

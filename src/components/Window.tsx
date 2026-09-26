@@ -1,6 +1,7 @@
 import Draggable from 'react-draggable';
 import { type PointerEvent, ReactNode, useEffect, useRef, useState } from 'react';
 import type { AppId, WindowLayout, WindowRect, WindowSize } from '../os/types';
+import { setForcedCursorShape } from '../effects/cursorMode';
 
 const SHELL_MARGIN = 12;
 const SHELL_BOTTOM = 96;
@@ -28,6 +29,17 @@ interface WindowProps {
 type ResizeDirection = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
 type WorkArea = { minX: number; minY: number; maxX: number; maxY: number };
 type DragBounds = { left: number; top: number; right: number; bottom: number };
+
+const RESIZE_CURSOR_SHAPE: Record<ResizeDirection, 'resize-ns' | 'resize-ew' | 'resize-nesw' | 'resize-nwse'> = {
+  n: 'resize-ns',
+  s: 'resize-ns',
+  e: 'resize-ew',
+  w: 'resize-ew',
+  ne: 'resize-nesw',
+  sw: 'resize-nesw',
+  nw: 'resize-nwse',
+  se: 'resize-nwse',
+};
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
@@ -180,6 +192,7 @@ export default function Window(props: WindowProps) {
     const previousCursor = document.body.style.cursor;
     const previousUserSelect = document.body.style.userSelect;
     setResizeDirection(direction);
+    setForcedCursorShape(RESIZE_CURSOR_SHAPE[direction]);
     document.body.style.cursor = window.getComputedStyle(event.currentTarget).cursor;
     document.body.style.userSelect = 'none';
 
@@ -223,6 +236,7 @@ export default function Window(props: WindowProps) {
 
     const handlePointerUp = () => {
       setResizeDirection(null);
+      setForcedCursorShape(null);
       document.body.style.cursor = previousCursor;
       document.body.style.userSelect = previousUserSelect;
       window.removeEventListener('pointermove', handlePointerMove);
@@ -241,6 +255,7 @@ export default function Window(props: WindowProps) {
       onStart={() => {
         onFocus();
         setIsDragging(true);
+        setForcedCursorShape('move');
       }}
       onDrag={(_, data) => {
         if (layout.isMaximized) return;
@@ -253,6 +268,7 @@ export default function Window(props: WindowProps) {
       }}
       onStop={(_, data) => {
         setIsDragging(false);
+        setForcedCursorShape(null);
         if (layout.isMaximized) return;
         const nextRect = clampRect({ ...layout, x: data.x, y: data.y }, minSize);
         onLayoutChange({
