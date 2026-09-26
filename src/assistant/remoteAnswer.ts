@@ -1,7 +1,13 @@
 import type { AssistantAnswer } from './types';
 
 const ENDPOINT = '/api/ask';
-const TIMEOUT_MS = 9000;
+// The edge function now makes two sequential upstream Gemini calls per
+// request (embed the question, then generate the answer) instead of one —
+// see api/ask.ts's EMBED_TIMEOUT_MS + REQUEST_TIMEOUT_MS. This client-side
+// budget must exceed their combined worst case (4000 + 9000 = 13000ms) with
+// margin, or the client aborts and silently falls back to the local
+// keyword-only engine before the server call had a real chance to finish.
+const TIMEOUT_MS = 14000;
 
 /**
  * Calls the Gemini-backed /api/ask edge function. Returns null on any

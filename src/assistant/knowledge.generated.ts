@@ -147,6 +147,40 @@ export const ASSISTANT_KNOWLEDGE: AssistantKnowledgeEntry[] = [
     "body": "Zarak's CVs live inside CV.app — four recruiter-ready PDFs, each viewable and downloadable:\r\n\r\n- GRC & Security — GRC Engineer, Analyst, and Information Security roles.\r\n- Forward Deployed Engineer — AI-native internal tools, n8n workflows, and production deployment.\r\n- GTM & Customer Success — GTM, Customer Success, Customer Engineering, and RevOps roles.\r\n- Technical Operations — founder-associate operations, systems building, and business speed.\r\n\r\nUse the \"Open CV.app\" button below to launch the viewer."
   },
   {
+    "id": "design-background",
+    "title": "Design and UI/UX background",
+    "tags": [
+      "design",
+      "figma",
+      "ui",
+      "ux",
+      "uiux",
+      "prototyping",
+      "design-intern",
+      "nexique",
+      "wireframing"
+    ],
+    "aliases": [
+      "figma",
+      "ui/ux",
+      "design skills",
+      "is he good at figma",
+      "design background",
+      "ui ux design",
+      "product design"
+    ],
+    "sources": [
+      "linkedin",
+      "cv"
+    ],
+    "confidence": "verified",
+    "actions": [
+      "open-linkedin",
+      "open-cv"
+    ],
+    "body": "Before co-founding Nexique Design Labs, Zarak spent his first year there (Sep 2021 onward) as a Design Intern, working hands-on in Figma before moving into the Commercial Lead / GTM role that defined the rest of his time at the studio.\n\nHis Figma/UI-UX level is comfortable-with-basics: prototyping and inspiration-led design work, not a specialist product designer. Two design projects from that period are visible on his LinkedIn profile — a brand website for Lumiverse, and a general homepage design for Jucifiy.\n\nThis design background sits underneath his later product work (ZARAK_OS, VenderScope, ContraAI) — he can reason about UI/UX and prototype interfaces himself, not just brief a designer, even though his primary lane is GRC/security engineering."
+  },
+  {
     "id": "education",
     "title": "Education",
     "tags": [
@@ -209,7 +243,7 @@ export const ASSISTANT_KNOWLEDGE: AssistantKnowledgeEntry[] = [
       "open-linkedin",
       "open-contact"
     ],
-    "body": "Zarak is currently a Compliance Analyst at Thrive Learning (Sep 2025 to present, fixed-term contract through Sep 2026, Nottingham UK). He cut contract and DPA approval time by 70% by redesigning the company-wide DPA tracker and shipping ContraAI, an internal Next.js + Claude API contract-review platform. He also built the Thrive Content Audit Tool, now the company standard for compliance cross-referencing. Other results: ISO 9001 Stage 1 passed with 6 process flows, MDM migration to Kandji/Iru across 250+ endpoints with zero downtime (−40% IT tickets), 50+ vendor audits in Vanta, 75+ Cakewalk ownership records, a high-value prospect RFI that contributed to deal closure, and a custom Shai-Hulud NPM supply-chain scan + remediation deployed via Iru.\r\n\r\nBefore that, he co-founded Nexique Design Labs (Sep 2021 to Aug 2024) and ran it as Commercial Lead. He owned the GTM and delivery pipeline for 3 years — cold outreach, phone calling, and organic lead generation — securing $8,500+ across 15+ accounts, holding 98% satisfaction and 7% churn, building a Notion CRM from scratch, driving 50k+ organic views with no paid budget, and mentoring 5 interns.\r\n\r\nHe is completing an MSc in Cyber Security at Nottingham Trent University (Jan 2025 to expected Dec 2026), on top of a BSc Software Engineering with Distinction from Iqra National University (2020 to 2024). Full detail lives in CV.app, with four versions: GRC, FDE, GTM + CS, and Tech Ops."
+    "body": "Zarak is currently a Compliance Analyst at Thrive Learning (Sep 2025 to present, fixed-term contract through Sep 2026, Nottingham UK). He cut contract and DPA approval time by 70% by redesigning the company-wide DPA tracker and shipping ContraAI, an internal Next.js + Claude API contract-review platform. He also built the Thrive Content Audit Tool, now the company standard for compliance cross-referencing. Other results: ISO 9001 Stage 1 passed with 6 process flows, MDM migration to Kandji/Iru across 250+ endpoints with zero downtime (−40% IT tickets), 50+ vendor audits in Vanta, 75+ Cakewalk ownership records, a high-value prospect RFI that contributed to deal closure, and a custom Shai-Hulud NPM supply-chain scan + remediation deployed via Iru.\r\n\r\nBefore that, he co-founded Nexique Design Labs (Sep 2021 to Aug 2024), starting as a Design Intern in Figma before moving into the Commercial Lead role that defined the rest of his time there. As Commercial Lead he owned the GTM and delivery pipeline for 3 years — cold outreach, phone calling, and organic lead generation — securing $8,500+ across 15+ accounts, holding 98% satisfaction and 7% churn, building a Notion CRM from scratch, driving 50k+ organic views with no paid budget, and mentoring 5 interns.\r\n\r\nEarlier still, he worked full-time as Founder's Associate at Latoon Music in Pakistan (Jan 2020 to Feb 2021) — his first commercial/client-facing role, coordinating proposals, stakeholder communication, and delivery across 5 concurrent client projects.\r\n\r\nHe is completing an MSc in Cyber Security at Nottingham Trent University (Jan 2025 to expected Dec 2026), on top of a BSc Software Engineering with Distinction from Iqra National University (2020 to 2024). Full detail lives in CV.app, with four versions: GRC, FDE, GTM + CS, and Tech Ops."
   },
   {
     "id": "forward-deployed",
@@ -237,6 +271,36 @@ export const ASSISTANT_KNOWLEDGE: AssistantKnowledgeEntry[] = [
       "open-cv"
     ],
     "body": "Zarak positions himself as a Forward Deployed Engineer: he sits with the business problem, then ships the production system that removes the manual work.\r\n\r\nAt Thrive Learning that meant:\r\n- ContraAI (Next.js, Claude API), adopted as the procurement/legal review path and, with the DPA tracker redesign, cut contract/DPA approval time by 70%. One review also caught a mission-critical redline human review missed.\r\n- The Thrive Content Audit Tool, which replaced manual ChatGPT workflows and is now the company standard.\r\n- An n8n pre-sales automation suite that compressed bid cycles by 57%.\r\n- Acting as the technical bridge on enterprise deals — owning implementation architecture and security responses to unblock procurement.\r\n- Kandji/Iru endpoint work, including a custom Shai-Hulud NPM remediation deployed without developer downtime.\r\n\r\nHe is supported by an MSc in Cyber Security and four years of technical experience spanning agency delivery and internal tooling."
+  },
+  {
+    "id": "latoon-music",
+    "title": "Founder's Associate at Latoon Music",
+    "tags": [
+      "latoon",
+      "founders-associate",
+      "commercial",
+      "stakeholder",
+      "operations",
+      "client-facing",
+      "pakistan"
+    ],
+    "aliases": [
+      "latoon",
+      "latoon music",
+      "founders associate",
+      "founder's associate"
+    ],
+    "sources": [
+      "cv",
+      "linkedin"
+    ],
+    "confidence": "verified",
+    "actions": [
+      "open-cv",
+      "open-linkedin",
+      "open-contact"
+    ],
+    "body": "Zarak worked full-time as Founder's Associate at Latoon Music in Pakistan, Jan 2020 to Feb 2021.\n\nHe supported the leadership team across commercial deals, project planning, procurement, and client communications, helping move opportunities from initial discussion through to delivery. He owned client and stakeholder communication during onsite events — presenting the organisation's services, answering commercial questions, and leading English-language comms to help convert conversations into qualified opportunities.\n\nHe prepared, reviewed, and refined proposals, project documentation, and client-facing materials, improving clarity and professionalism across 5 active projects. Working directly with project managers, he coordinated requirements, timelines, deliverables, and follow-ups to keep those 5 concurrent client projects moving from planning to execution.\n\nHe acted as a cross-functional operator between senior leadership, project teams, clients, and external partners — resolving information gaps and reducing the time required to move decisions forward by approximately 40%.\n\nThis was his first commercial/client-facing role, predating Nexique Design Labs, and shows the same high-agency, stakeholder-coordination pattern that shows up later in his GTM and compliance work."
   },
   {
     "id": "profile",
