@@ -311,7 +311,7 @@
   display: none !important;
 }
 
-/* ─── TERMINAL EASTER EGGS (src/effects/matrixRain.ts, radarScan.ts,
+/* ─── TERMINAL EASTER EGGS (src/effects/matrixRain.ts,
    terminalOverride.ts) ───
    Plain canvas/DOM overlays, not Canvas/three.js scenes — kept out of the
    frameloop="demand" contract entirely per docs/DESIGN_SYSTEM.md §11. Each

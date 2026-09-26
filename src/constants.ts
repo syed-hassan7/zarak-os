@@ -296,12 +296,6 @@ export const TERMINAL_COMMANDS = {
     { text: "" },
     { text: "no secrets stored client-side. anything sensitive lives server-side, in env vars vercel manages.", color: "muted" },
   ],
-  "scan --deep": [
-    { text: "initiating deep scan...", color: "muted" },
-    { text: "enumerating live hosts...", color: "muted" },
-    { text: "", action: "RADAR_SCAN" },
-    { text: "scan complete. 0 open vulnerabilities. 1 open role.", color: "green" },
-  ],
   override: [
     { text: "escalating privileges...", color: "muted" },
     { text: "bypassing standard auth flow...", color: "warn" },

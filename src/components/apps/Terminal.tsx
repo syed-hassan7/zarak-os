@@ -4,7 +4,6 @@ import { ChevronRight, Circle, Terminal as TerminalIcon } from 'lucide-react';
 import { FORTUNE_LINES, TERMINAL_COMMANDS, TERM_COLORS } from '../../constants';
 import { triggerGlitchPulse } from '../../effects/glitchPulse';
 import { triggerMatrixRain } from '../../effects/matrixRain';
-import { triggerRadarScan } from '../../effects/radarScan';
 import { triggerTerminalOverride } from '../../effects/terminalOverride';
 import { scrambleText } from '../../effects/textScramble';
 import { isAppId, type AppId } from '../../os/types';
@@ -173,9 +172,6 @@ export default function Terminal({ isMobile, onOpenApp }: TerminalProps) {
         }
         if (res.action === 'MATRIX') {
           triggerMatrixRain();
-        }
-        if (res.action === 'RADAR_SCAN') {
-          triggerRadarScan();
         }
         if (res.action === 'OVERRIDE') {
           triggerTerminalOverride();
