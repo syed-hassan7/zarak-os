@@ -20,6 +20,7 @@ const RESIZE_EW_SELECTOR = '[class*="cursor-e-resize"], [class*="cursor-w-resize
 const RESIZE_NESW_SELECTOR = '[class*="cursor-ne-resize"], [class*="cursor-sw-resize"]';
 const RESIZE_NWSE_SELECTOR = '[class*="cursor-nw-resize"], [class*="cursor-se-resize"]';
 const MATRIX_GLYPHS = 'アイウエオカキクケコサシスセソ0123456789$#%';
+const ACCENT_LUMA_TOLERANCE = 40;
 
 type HoverShape = Exclude<CursorShape, 'default'>;
 
@@ -28,6 +29,39 @@ function isCoarsePointerDevice(): boolean {
     typeof window !== 'undefined' &&
     (window.matchMedia?.('(pointer: coarse)').matches || window.matchMedia?.('(hover: none)').matches)
   );
+}
+
+/**
+ * Walks a few ancestors up from the hovered element looking for a solid
+ * (opaque) background close to the accent teal — the same color our cursor
+ * renders in by default, which otherwise makes the cursor nearly vanish
+ * over solid-teal buttons ("Enter ZARAK_OS", "Pin it", coffee-chat CTAs,
+ * etc). Stops at the first opaque background found either way, since
+ * anything further up is visually occluded by it anyway.
+ */
+function isOverAccentSurface(target: Element | null): boolean {
+  let node: Element | null = target;
+  let depth = 0;
+
+  while (node && depth < 6) {
+    const bg = window.getComputedStyle(node).backgroundColor;
+    const match = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+
+    if (match) {
+      const [, r, g, b, alphaRaw] = match;
+      const alpha = alphaRaw === undefined ? 1 : parseFloat(alphaRaw);
+
+      if (alpha > 0.55) {
+        const distance = Math.abs(Number(r) - 45) + Math.abs(Number(g) - 212) + Math.abs(Number(b) - 191);
+        return distance < ACCENT_LUMA_TOLERANCE;
+      }
+    }
+
+    node = node.parentElement;
+    depth += 1;
+  }
+
+  return false;
 }
 
 /**
@@ -67,6 +101,11 @@ function resolveHoverShape(target: Element | null): HoverShape | null {
  * slips off a thin handle doesn't flicker the cursor back to default
  * mid-gesture.
  *
+ * Also self-inverts to bg-dark colors (isOverAccentSurface) whenever the
+ * hovered element sits on a solid accent-teal background — the cursor's
+ * own default color — so it never visually disappears into a teal button
+ * like "Enter ZARAK_OS" or "Pin it".
+ *
  * Skips entirely — leaves the native cursor alone — on touch/coarse
  * pointers and under prefers-reduced-motion, per docs/DESIGN_SYSTEM.md §6/§10.
  */
@@ -77,6 +116,7 @@ export default function CustomCursor() {
   const [forcedShape, setForcedShapeState] = useState<CursorShape | null>(() => getForcedCursorShape());
   const [isPressed, setIsPressed] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [overAccent, setOverAccent] = useState(false);
   const [fxMode, setFxMode] = useState<CursorFxMode>(getCursorFxMode());
   const [glyph, setGlyph] = useState(MATRIX_GLYPHS[0]);
 
@@ -104,7 +144,9 @@ export default function CustomCursor() {
       dotX.set(event.clientX);
       dotY.set(event.clientY);
       setVisible(true);
-      setHoverShape(resolveHoverShape(event.target as Element | null));
+      const target = event.target as Element | null;
+      setHoverShape(resolveHoverShape(target));
+      setOverAccent(isOverAccentSurface(target));
     };
     const handleDown = () => setIsPressed(true);
     const handleUp = () => setIsPressed(false);
@@ -169,6 +211,8 @@ export default function CustomCursor() {
   const isNotAllowed = shape === 'not-allowed';
 
   const resizeRotationDeg = isResizeNS ? 0 : isResizeEW ? 90 : isResizeNESW ? 45 : isResizeNWSE ? 135 : 0;
+  const useContrastColor = overAccent && !isMatrix && !isNotAllowed;
+  const glyphSvgFill = useContrastColor ? 'var(--color-os-bg)' : 'var(--color-os-accent)';
 
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[400]">
@@ -178,9 +222,11 @@ export default function CustomCursor() {
             ? 'border border-os-accent bg-transparent'
             : isNotAllowed
               ? 'border border-os-danger/70 bg-os-danger/[0.06]'
-              : isText
-                ? 'border border-os-accent/70 bg-transparent'
-                : 'border border-os-accent/60 bg-os-accent/[0.06]'
+              : useContrastColor
+                ? 'border border-os-bg/80 bg-os-bg/[0.1]'
+                : isText
+                  ? 'border border-os-accent/70 bg-transparent'
+                  : 'border border-os-accent/60 bg-os-accent/[0.06]'
         }`}
         style={{ x: ringX, y: ringY }}
         animate={{
@@ -199,7 +245,9 @@ export default function CustomCursor() {
             ? 'bg-os-accent shadow-[0_0_10px_2px_rgba(45,212,191,0.7)]'
             : isNotAllowed
               ? 'bg-os-danger'
-              : 'bg-os-accent'
+              : useContrastColor
+                ? 'bg-os-bg shadow-[0_0_4px_1px_rgba(5,7,10,0.6)]'
+                : 'bg-os-accent'
         }`}
         style={{ x: dotX, y: dotY }}
         animate={{
@@ -220,7 +268,7 @@ export default function CustomCursor() {
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
             <path
               d="M9 0.5 L11.5 3.5 H9.8 V7.2 H13.5 V5.5 L16.5 8 L13.5 10.5 V8.8 H9.8 V12.5 H11.5 L9 15.5 L6.5 12.5 H8.2 V8.8 H4.5 V10.5 L1.5 8 L4.5 5.5 V7.2 H8.2 V3.5 H6.5 Z"
-              fill="var(--color-os-accent)"
+              fill={glyphSvgFill}
               opacity="0.9"
             />
           </svg>
@@ -237,7 +285,7 @@ export default function CustomCursor() {
           <svg width="18" height="14" viewBox="0 0 18 14" fill="none">
             <path
               d="M4 7 L0 7 M0 7 L3 4 M0 7 L3 10 M14 7 L18 7 M18 7 L15 4 M18 7 L15 10"
-              stroke="var(--color-os-accent)"
+              stroke={glyphSvgFill}
               strokeWidth="1.6"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -247,7 +295,9 @@ export default function CustomCursor() {
       )}
       {isWait && (
         <motion.div
-          className="absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-os-accent/25 border-t-os-accent"
+          className={`absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 ${
+            useContrastColor ? 'border-os-bg/30 border-t-os-bg' : 'border-os-accent/25 border-t-os-accent'
+          }`}
           style={{ x: dotX, y: dotY, width: 16, height: 16 }}
           animate={{ rotate: 360 }}
           transition={{ duration: 0.7, repeat: Infinity, ease: 'linear' }}

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { MouseEvent as ReactMouseEvent, MutableRefObject } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { History } from 'lucide-react';
 import {
   AEGIS_AMBIENT_THOUGHTS,
   type AegisAmbientThought,
@@ -854,9 +853,23 @@ export default function AegisBuddyPrototype({
         aria-haspopup="dialog"
         aria-expanded={isUpdatesPanelOpen}
         title="Update feed"
-        className="pointer-events-auto absolute -left-2 -top-2 z-20 flex h-6 w-6 items-center justify-center rounded-full border border-white/12 bg-os-bg/90 text-os-text-sec/70 shadow-md shadow-black/25 outline-none backdrop-blur-md transition-colors hover:text-os-text-pri focus-visible:ring-2 focus-visible:ring-cyan-300/60"
+        className="group/log pointer-events-auto absolute -left-1 -top-1 z-20 flex h-5 w-5 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60"
       >
-        <History className="h-3 w-3" aria-hidden="true" />
+        <svg
+          viewBox="0 0 16 16"
+          className="h-3.5 w-3.5 text-os-text-sec/45 transition-colors duration-150 group-hover/log:text-os-accent/90"
+          aria-hidden="true"
+        >
+          <path
+            d="M3 4.5H13M3 8H10.5M3 11.5H8"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+          />
+          {hasUnreadUpdates && (
+            <circle cx="13.4" cy="11.6" r="1.6" fill="var(--color-os-accent)" />
+          )}
+        </svg>
       </button>
       <AnimatePresence>
         {isUpdatesPanelOpen && (
