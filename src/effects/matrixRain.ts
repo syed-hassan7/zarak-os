@@ -1,3 +1,6 @@
+import { setCursorFxMode } from './cursorMode';
+import { triggerMatrixWake } from './matrixWake';
+
 const OVERLAY_ID = 'matrix-rain-overlay';
 const DURATION_MS = 5200;
 // Mirrors --color-os-accent / --color-os-bg from src/index.css — canvas 2D
@@ -15,10 +18,26 @@ const GLYPHS = 'アイウエオカキクケコサシスセソ0123456789ABCDEF$%#
  * Auto-stops after ~5s or on any keypress/click/resize. No-ops entirely
  * under prefers-reduced-motion. Safe to call while already running — it
  * tears down the previous instance first instead of stacking loops.
+ *
+ * While running, the custom cursor (CustomCursor.tsx, via cursorMode.ts)
+ * switches into a matching "matrix" glyph-trail look; on exit it hands off
+ * to triggerMatrixWake() for a Neo-waking-up beat instead of an instant
+ * cut, then resets the cursor to default once that beat finishes.
  */
 export function triggerMatrixRain(): void {
   if (typeof document === 'undefined') return;
-  if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+
+  const lastPointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+  const trackPointer = (event: PointerEvent) => {
+    lastPointer.x = event.clientX;
+    lastPointer.y = event.clientY;
+  };
+  window.addEventListener('pointermove', trackPointer);
+
+  if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+    window.removeEventListener('pointermove', trackPointer);
+    return;
+  }
 
   const existing = document.getElementById(OVERLAY_ID);
   if (existing) existing.remove();
@@ -31,6 +50,7 @@ export function triggerMatrixRain(): void {
   const ctx = canvas.getContext('2d');
   if (!ctx) {
     canvas.remove();
+    window.removeEventListener('pointermove', trackPointer);
     return;
   }
 
@@ -46,6 +66,8 @@ export function triggerMatrixRain(): void {
   let timeoutId = 0;
   let stopped = false;
 
+  setCursorFxMode('matrix');
+
   const stop = () => {
     if (stopped) return;
     stopped = true;
@@ -54,7 +76,12 @@ export function triggerMatrixRain(): void {
     window.removeEventListener('keydown', stop);
     window.removeEventListener('pointerdown', stop);
     window.removeEventListener('resize', stop);
+    window.removeEventListener('pointermove', trackPointer);
     canvas.remove();
+
+    triggerMatrixWake(lastPointer.x, lastPointer.y);
+    setCursorFxMode('waking');
+    window.setTimeout(() => setCursorFxMode('default'), 640);
   };
 
   const draw = () => {

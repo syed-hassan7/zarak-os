@@ -92,6 +92,87 @@
   }
 }
 
+/* ─── CUSTOM CURSOR (src/components/CustomCursor.tsx) ───
+   Native cursor is hidden app-wide only once the component confirms a fine
+   pointer + no reduced-motion (adds this class itself) — never hidden by
+   default, so a no-JS/SSR fallback or an unsupported device always keeps
+   the real OS cursor. Elements that need a specific native cursor (window
+   resize handles, drag handles) still get it: `cursor` is inherited, and
+   any element that sets its own `cursor-*` utility overrides the inherited
+   `none` regardless of ancestor specificity. */
+.custom-cursor-active {
+  cursor: none;
+}
+
+/* ─── MATRIX WAKE (src/effects/matrixWake.ts) ───
+   Closes out the `matrix` terminal easter egg with a Neo-opening-his-eyes
+   beat instead of an instant cut: two solid lids (matching the rain's dark
+   backdrop) retract from the vertical center, plus a brief teal flash
+   anchored at the cursor's last position. Bounded, self-removing overlay;
+   only created when prefers-reduced-motion is off (see matrixWake.ts). */
+.matrix-wake-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 310;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.matrix-wake-lid {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 51%;
+  background: #05070a;
+}
+
+.matrix-wake-lid--top {
+  top: 0;
+  transform-origin: top;
+  animation: matrix-wake-lid-top 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.matrix-wake-lid--bottom {
+  bottom: 0;
+  transform-origin: bottom;
+  animation: matrix-wake-lid-bottom 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.matrix-wake-flash {
+  position: absolute;
+  left: var(--wake-x, 50%);
+  top: var(--wake-y, 50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--color-os-accent);
+  box-shadow: 0 0 0 0 rgba(45, 212, 191, 0.6);
+  transform: translate(-50%, -50%);
+  animation: matrix-wake-flash 0.64s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes matrix-wake-lid-top {
+  0% { transform: scaleY(1); }
+  100% { transform: scaleY(0); }
+}
+
+@keyframes matrix-wake-lid-bottom {
+  0% { transform: scaleY(1); }
+  100% { transform: scaleY(0); }
+}
+
+@keyframes matrix-wake-flash {
+  0% { box-shadow: 0 0 0 0 rgba(45, 212, 191, 0.6); opacity: 1; }
+  60% { box-shadow: 0 0 0 60px rgba(45, 212, 191, 0); opacity: 1; }
+  100% { box-shadow: 0 0 0 90px rgba(45, 212, 191, 0); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .matrix-wake-overlay {
+    display: none;
+  }
+}
+
 @keyframes flicker {
   0% { opacity: 0.97; }
   5% { opacity: 0.95; }

@@ -3,6 +3,7 @@ import { AnimatePresence, LayoutGroup } from 'motion/react';
 import LoginScreen from './components/LoginScreen';
 import Desktop from './components/Desktop';
 import DigitalBackground from './components/DigitalBackground';
+import CustomCursor from './components/CustomCursor';
 import { useExperienceMode } from './utils/deviceExperience';
 
 type OSState = 'LOGIN' | 'DESKTOP';
@@ -28,6 +29,7 @@ export default function App() {
       {showDesktopBackground && <DigitalBackground />}
       <div className="noise-overlay" />
       <div className="crt-flicker" />
+      <CustomCursor />
       {/*
         Continuity transition (docs/DESIGN_SYSTEM.md §8/§11): default
         (sync) AnimatePresence mode keeps LoginScreen mounted during its own
