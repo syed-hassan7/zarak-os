@@ -1,7 +1,8 @@
 ---
 id: profile
-title: Profile
-tags: [profile, about, headline, location, contact, linkedin]
+title: Profile and current employment status
+tags: [profile, about, headline, location, contact, linkedin, thrive, employment, employment-status, current-role, status]
+aliases: [is he still at thrive, still at thrive, still with thrive, still work at thrive, still working at thrive, currently at thrive, current employer, is he currently employed, employment status, is he still employed, does he still work there, is he available, is he open to work, current job status]
 sources: [cv, linkedin, portfolio]
 confidence: verified
 actions: [open-cv, open-linkedin, open-contact, copy-email]

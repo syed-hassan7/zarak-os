@@ -304,16 +304,36 @@ export const ASSISTANT_KNOWLEDGE: AssistantKnowledgeEntry[] = [
   },
   {
     "id": "profile",
-    "title": "Profile",
+    "title": "Profile and current employment status",
     "tags": [
       "profile",
       "about",
       "headline",
       "location",
       "contact",
-      "linkedin"
+      "linkedin",
+      "thrive",
+      "employment",
+      "employment-status",
+      "current-role",
+      "status"
     ],
-    "aliases": [],
+    "aliases": [
+      "is he still at thrive",
+      "still at thrive",
+      "still with thrive",
+      "still work at thrive",
+      "still working at thrive",
+      "currently at thrive",
+      "current employer",
+      "is he currently employed",
+      "employment status",
+      "is he still employed",
+      "does he still work there",
+      "is he available",
+      "is he open to work",
+      "current job status"
+    ],
     "sources": [
       "cv",
       "linkedin",
