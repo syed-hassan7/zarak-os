@@ -128,7 +128,7 @@ export const recruiterProfile: RecruiterProfile = {
       fileUrl: '/Syed_Zarak_Hassan_CV_GRC_2026.pdf',
       previewUrl: '/Syed_Zarak_Hassan_CV_GRC_2026.pdf#view=FitH',
       formatLabel: 'PDF / A4',
-      fileSizeLabel: '114.0 KB',
+      fileSizeLabel: '114.3 KB',
       focus: 'GRC Engineer, Analyst, and Information Security roles.',
       tailoredFor:
         'Leads with compliance frameworks and control operations — ISO 27001/9001, SOC 2, GDPR — and separates the Thrive role into Key Achievements vs. day-to-day Responsibilities so an auditor or GRC hiring manager can scan ownership at a glance.',
@@ -146,7 +146,7 @@ export const recruiterProfile: RecruiterProfile = {
       fileUrl: '/Syed_Zarak_Hassan_CV_FDE_2026.pdf',
       previewUrl: '/Syed_Zarak_Hassan_CV_FDE_2026.pdf#view=FitH',
       formatLabel: 'PDF / A4',
-      fileSizeLabel: '116.5 KB',
+      fileSizeLabel: '116.2 KB',
       focus: 'AI-native internal tools, n8n workflows, and production deployment.',
       tailoredFor:
         'Leads with the build: ContraAI and the Thrive Content Audit Tool shipped to production and adopted as company standard, plus a dedicated n8n pre-sales automation suite (57% faster bid cycles) — framed for an FDE screen that wants to see shipped systems, not just process ownership.',
@@ -164,7 +164,7 @@ export const recruiterProfile: RecruiterProfile = {
       fileUrl: '/Syed_Zarak_Hassan_CV_GTM_CS_2026.pdf',
       previewUrl: '/Syed_Zarak_Hassan_CV_GTM_CS_2026.pdf#view=FitH',
       formatLabel: 'PDF / A4',
-      fileSizeLabel: '105.8 KB',
+      fileSizeLabel: '106.1 KB',
       focus: 'GTM, Customer Success, Customer Engineering, and RevOps roles.',
       tailoredFor:
         'Puts the Nexique commercial track record first — full GTM/delivery pipeline ownership, retention, CRM build — then shows the Thrive compliance work as evidence of technical credibility for a customer-facing technical role.',
@@ -182,7 +182,7 @@ export const recruiterProfile: RecruiterProfile = {
       fileUrl: '/Syed_Zarak_Hassan_CV_TechOps_2026.pdf',
       previewUrl: '/Syed_Zarak_Hassan_CV_TechOps_2026.pdf#view=FitH',
       formatLabel: 'PDF / A4',
-      fileSizeLabel: '106.8 KB',
+      fileSizeLabel: '106.9 KB',
       focus: 'Founder-associate operations, systems building, and business speed.',
       tailoredFor:
         'Framed as a force-multiplier for founders: swaps VenderScope\'s audit angle for Maternify (5th place, VibeHack London, built in 24 hours) to emphasize speed and range across compliance, automation, and 0-to-1 building under pressure.',
