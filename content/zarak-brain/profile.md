@@ -9,12 +9,12 @@ actions: [open-cv, open-linkedin, open-contact, copy-email]
 
 Syed Zarak Hassan is a technical builder and GRC professional based in Nottingham, England, United Kingdom, open to relocation.
 
-Current headline: Placement Compliance Analyst @ THRIVE.
+Current headline: GRC & Security Professional, open to work. Most recent role: Compliance Analyst @ Thrive Learning (Sep 2025 to Sep 2026).
 
 Core positioning: he bridges software engineering and cyber security, shipping production tools that make manual compliance friction obsolete. Target lanes include GRC Engineer/Analyst, Forward Deployed Engineer, GTM/Customer Success, and technical operations.
 
 Contact:
-- Email: syedzrk1000@gmail.com
-- LinkedIn: https://www.linkedin.com/in/zarak-hassan7/
-- GitHub: https://github.com/syed-hassan7
-- Portfolio: https://zarak-os.vercel.app/
+Email: syedzrk1000@gmail.com
+LinkedIn: https://www.linkedin.com/in/zarak-hassan7/
+GitHub: https://github.com/syed-hassan7
+Portfolio: https://zarak-os.vercel.app/

@@ -98,10 +98,10 @@ export const recruiterProfile: RecruiterProfile = {
   name: 'Syed Zarak Hassan',
   pronouns: 'He/Him',
   profileImageUrl: '/syed-zarak-hassan-v2.png',
-  headline: 'Placement Compliance Analyst @ THRIVE',
-  currentRoleSummary: 'Compliance Analyst @ Thrive Learning',
+  headline: 'GRC & Security Professional — Open to Work',
+  currentRoleSummary: 'Compliance Analyst @ Thrive Learning (ended Sep 2026)',
   currentStudySummary: 'MSc Cyber Security, Nottingham Trent University (expected Dec 2026)',
-  terminalHeadline: 'compliance analyst @ thrive learning // msc cyber security — ntu 2026',
+  terminalHeadline: 'grc & security professional — open to work // msc cyber security — ntu 2026',
   shortIntro: 'building tools that make manual compliance friction obsolete',
   email: 'syedzrk1000@gmail.com',
   location: {
@@ -118,7 +118,7 @@ export const recruiterProfile: RecruiterProfile = {
     openToWork: 'recruiters only',
   },
   aboutSummary:
-    'Technical builder and GRC professional bridging software engineering and cyber security. At Thrive Learning he ships production tools that automate compliance bottlenecks — including ContraAI, which with a redesigned DPA tracker cut contract and DPA approval time by 70%. He owns third-party risk across 50+ vendors in Vanta, has guided ISO 9001 Stage 1, and previously co-led a design agency as Commercial Lead across 15+ accounts. Targeting GRC Engineer, Analyst, FDE, GTM/CS, and technical operations roles.',
+    'Technical builder and GRC professional bridging software engineering and cyber security. Most recently at Thrive Learning, he shipped production tools that automated compliance bottlenecks — including ContraAI, which with a redesigned DPA tracker cut contract and DPA approval time by 70%. He owned third-party risk across 50+ vendors in Vanta, guided ISO 9001 Stage 1, and previously co-led a design agency as Commercial Lead across 15+ accounts. Now open to work, targeting GRC Engineer, Analyst, FDE, GTM/CS, and technical operations roles.',
   cvs: [
     {
       id: 'grc',
@@ -198,10 +198,10 @@ export const recruiterProfile: RecruiterProfile = {
 export const experienceTimeline: ExperienceTimelineEntry[] = [
   {
     id: 'thrive',
-    date: '[2025-09 → present]',
+    date: '[2025-09 → 2026-09]',
     company: 'THRIVE LEARNING',
     role: 'Compliance Analyst',
-    status: 'ACTIVE',
+    status: 'CLOSED',
     achievements: [
       'ContraAI + DPA redesign: contract/DPA approval time cut 70%',
       'MDM migration: 250+ endpoints, 0 downtime, -40% support tickets',
@@ -210,7 +210,7 @@ export const experienceTimeline: ExperienceTimelineEntry[] = [
       '50+ vendor audits in Vanta; 75+ Cakewalk ownership records',
       'Shai-Hulud NPM supply-chain threat: custom scan + Iru remediation',
     ],
-    terminalSubtitle: ' Fixed-term contract through Sep 2026 · Nottingham, UK',
+    terminalSubtitle: ' Fixed-term contract, Sep 2025 to Sep 2026 · Nottingham, UK',
     terminalLines: [
       { text: ' → MDM migration to Kandji: 250 endpoints, 0 downtime', color: 'secondary' },
       { text: ' result: IT support tickets reduced by 40%', color: 'muted' },
@@ -270,11 +270,11 @@ export const experienceTimeline: ExperienceTimelineEntry[] = [
 ];
 
 export const linkedInCurrentRole: LinkedInExperienceEntry = {
-  title: 'Placement Compliance Analyst',
+  title: 'Compliance Analyst',
   company: 'Thrive',
   employmentType: 'Full-time',
-  dateRange: 'Sep 2025 - Present',
-  duration: '1 yr internship',
+  dateRange: 'Sep 2025 - Sep 2026',
+  duration: '1 yr',
   workMode: 'Remote',
   highlights: [
     'Cut contract and DPA approval time by 70% by redesigning the DPA tracker and shipping ContraAI.',

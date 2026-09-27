@@ -11,7 +11,7 @@ actions: [open-contact]
 ContraAI is an internal Thrive Learning tool: an AI-powered contract review engine built with Next.js 15 and the Claude API, analyzing legal documents against a configurable company playbook. Together with a redesigned company-wide DPA tracker, it cut contract and DPA approval time by 70% by automating detection of high-risk clauses and giving legal teams instant negotiation guidance. On at least one review it also uncovered a mission-critical redline that human review missed.
 
 Notable design choices:
-- Deterministic risk scoring that tiers contracts from Acceptable to Critical based on playbook deviations, not model variance — reproducible results, not LLM guesswork.
-- A full immutable audit trail for every sensitive action (clause reviews, user invites) to meet internal GRC logging requirements.
-- A DPA-specific intelligence module that detects subprocessor gaps and flags missing required clauses automatically.
-- Role-based governance (Viewer, Legal, Admin) so sensitive contract data stays restricted to authorized personnel.
+Deterministic risk scoring that tiers contracts from Acceptable to Critical based on playbook deviations, not model variance — reproducible results, not LLM guesswork.
+A full immutable audit trail for every sensitive action (clause reviews, user invites) to meet internal GRC logging requirements.
+A DPA-specific intelligence module that detects subprocessor gaps and flags missing required clauses automatically.
+Role-based governance (Viewer, Legal, Admin) so sensitive contract data stays restricted to authorized personnel.

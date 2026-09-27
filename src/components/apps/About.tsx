@@ -49,7 +49,7 @@ export default function About({ isMobile = false }: AppComponentProps) {
             <div>
               <div className="text-[10px] uppercase tracking-[0.2em] text-os-text-sec/60">Signal brief</div>
               <p className="mt-2 text-sm leading-6 text-os-text-pri/84">
-                {recruiterProfile.shortIntro}. Current focus: {recruiterProfile.currentRoleSummary}.
+                {recruiterProfile.shortIntro}. Most recently: {recruiterProfile.currentRoleSummary}.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -83,7 +83,7 @@ export default function About({ isMobile = false }: AppComponentProps) {
               </span>
             </span>
 
-            <span className="text-xs uppercase tracking-[0.18em] text-os-text-sec/70">Current</span>
+            <span className="text-xs uppercase tracking-[0.18em] text-os-text-sec/70">Most recent</span>
             <span className="leading-relaxed text-os-text-pri">
               {recruiterProfile.currentRoleSummary}
               <br />

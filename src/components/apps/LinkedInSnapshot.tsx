@@ -128,7 +128,7 @@ export default function LinkedInSnapshot({ isMobile = false }: AppComponentProps
 
                 <div className="mt-5 grid gap-3 sm:grid-cols-2">
                   <div className="rounded-2xl border border-white/8 bg-white/[0.035] p-4">
-                    <div className="text-[10px] uppercase tracking-[0.2em] text-os-text-sec/55">Current role</div>
+                    <div className="text-[10px] uppercase tracking-[0.2em] text-os-text-sec/55">Most recent role</div>
                     <div className="mt-2 text-sm font-semibold text-os-text-pri">{linkedInCurrentRole.title}</div>
                     <div className="mt-1 text-xs text-os-text-sec">{linkedInCurrentRole.company} · {linkedInCurrentRole.employmentType} · {linkedInCurrentRole.dateRange} · {linkedInCurrentRole.workMode}</div>
                   </div>
@@ -198,7 +198,7 @@ export default function LinkedInSnapshot({ isMobile = false }: AppComponentProps
                           </div>
                         </div>
                         <span className={`shrink-0 rounded-full border px-3 py-1 text-[10px] uppercase tracking-[0.18em] ${index === 0 ? 'border-white/10 bg-white/[0.08] text-os-accent' : 'border-white/10 bg-white/[0.04] text-os-text-sec'}`}>
-                          {index === 0 ? 'Current' : 'Previous'}
+                          {index === 0 ? 'Most Recent' : 'Previous'}
                         </span>
                       </div>
 
