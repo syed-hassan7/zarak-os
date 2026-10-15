@@ -182,7 +182,7 @@ export const recruiterProfile: RecruiterProfile = {
       fileUrl: '/Syed_Zarak_Hassan_CV_TechOps_2026.pdf',
       previewUrl: '/Syed_Zarak_Hassan_CV_TechOps_2026.pdf#view=FitH',
       formatLabel: 'PDF / A4',
-      fileSizeLabel: '106.9 KB',
+      fileSizeLabel: '117.3 KB',
       focus: 'Founder-associate operations, systems building, and business speed.',
       tailoredFor:
         'Framed as a force-multiplier for founders: swaps VenderScope\'s audit angle for Maternify (5th place, VibeHack London, built in 24 hours) to emphasize speed and range across compliance, automation, and 0-to-1 building under pressure.',
