@@ -15,11 +15,30 @@ export function getClientIp(request: Request): string | null {
   if (!raw) return null;
 
   if (raw.includes(':') && !raw.includes('.')) {
-    // IPv6 — collapse to /64.
-    const groups = raw.split(':').filter(Boolean);
-    return groups.slice(0, 4).join(':') + '::/64';
+    return ipv6Prefix64(raw);
   }
   return raw;
+}
+
+/**
+ * First four hextets of an IPv6 address, with `::` correctly expanded first.
+ * (Naively splitting on ':' and dropping empty groups loses the position of
+ * `::`, so `2001:db8:1::1` and `2001:db8:1::2` — same /64 — landed in
+ * different buckets.)
+ */
+export function ipv6Prefix64(address: string): string {
+  const withoutZone = address.split('%')[0].toLowerCase();
+  const [head = '', tail = ''] = withoutZone.split('::');
+  const headGroups = head ? head.split(':') : [];
+  const tailGroups = tail ? tail.split(':') : [];
+  const missing = Math.max(0, 8 - headGroups.length - tailGroups.length);
+  const groups = [...headGroups, ...Array<string>(missing).fill('0'), ...tailGroups];
+  return (
+    groups
+      .slice(0, 4)
+      .map((group) => group.replace(/^0+(?=.)/, ''))
+      .join(':') + '::/64'
+  );
 }
 
 export interface RateLimitOptions {
@@ -42,15 +61,33 @@ export async function consumeRateLimit({ redis, key, windowSeconds }: RateLimitO
 }
 
 /**
+ * Fixed-window counter: returns true while this call is within `cap` for the
+ * window. INCR and EXPIRE NX go out as one MULTI/EXEC transaction, so the key
+ * always gets a TTL — a timeout between two separate calls (or a retried INCR
+ * returning 2, which skipped the old `count === 1` EXPIRE) could previously
+ * leave a counter that never expired and locked everyone out permanently.
+ * EXPIRE NX only sets a TTL when none exists, so later hits don't slide the
+ * window.
+ */
+export async function consumeCounter(
+  redis: Redis,
+  key: string,
+  cap: number,
+  windowSeconds: number,
+): Promise<boolean> {
+  const [count] = await redis.multi().incr(key).expire(key, windowSeconds, 'NX').exec<[number, number]>();
+  return count <= cap;
+}
+
+/**
  * A shared global ceiling (independent of per-IP buckets) so that
  * IP-rotation abuse can't multiply total upstream (Gemini) spend just by
  * spreading requests across many distinct addresses/spoofed headers.
- * Returns true if this call is still within the global cap.
+ * Returns true if this call is still within the global cap. Callers must
+ * check their per-IP limit FIRST — a request the per-IP limiter would reject
+ * must not consume global budget, or one abusive IP can drain the global cap
+ * and lock out every honest visitor.
  */
-export async function consumeGlobalQuota(redis: Redis, key: string, cap: number, windowSeconds: number): Promise<boolean> {
-  const count = await redis.incr(key);
-  if (count === 1) {
-    await redis.expire(key, windowSeconds);
-  }
-  return count <= cap;
+export function consumeGlobalQuota(redis: Redis, key: string, cap: number, windowSeconds: number): Promise<boolean> {
+  return consumeCounter(redis, key, cap, windowSeconds);
 }

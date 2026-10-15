@@ -2,6 +2,13 @@ import { Redis } from '@upstash/redis/cloudflare';
 import { englishDataset, englishRecommendedTransformers, RegExpMatcher } from 'obscenity';
 import type { GuestNote } from '../src/notes/types';
 import { consumeGlobalQuota, consumeRateLimit, getClientIp } from '../src/server/rateLimit';
+import {
+  BodyTooLargeError,
+  isJsonContentType,
+  neutralizeForFence,
+  readJsonBody,
+  stripHiddenCharacters,
+} from '../src/server/inputSafety';
 
 // Runs on Vercel's Edge Runtime — same environment/constraints as api/ask.ts.
 export const config = { runtime: 'edge' };
@@ -16,6 +23,9 @@ const NOTES_PER_PAGE = 60;
 
 const MAX_BODY_LENGTH = 220;
 const MAX_NAME_LENGTH = 24;
+// Hard ceiling on the raw request body. A max-length note + name is well under
+// 1 KB, even fully JSON-escaped; anything past this is rejected unparsed.
+const MAX_BODY_BYTES = 2048;
 const RATE_LIMIT_WINDOW_S = 60 * 60; // 1 note per IP per hour
 const GLOBAL_HOURLY_CAP = 40; // shared ceiling across all visitors, protects the Gemini quota from IP-rotation abuse
 const GLOBAL_QUOTA_KEY = 'notes:global-quota';
@@ -76,19 +86,11 @@ function getRedis(): Redis | null {
 
 function sanitizeName(raw: unknown): string | null {
   if (typeof raw !== 'string') return null;
-  const trimmed = raw.trim().slice(0, MAX_NAME_LENGTH);
+  const trimmed = stripHiddenCharacters(raw).trim().slice(0, MAX_NAME_LENGTH);
   if (!trimmed) return null;
   // Letters, numbers, spaces, and a small set of harmless punctuation only.
   const cleaned = trimmed.replace(/[^\p{L}\p{N} .'-]/gu, '').trim();
   return cleaned || null;
-}
-
-// Strips control characters and zero-width/bidi-override characters that
-// have no legitimate use in a guestbook note but can be used to hide text
-// from a casual re-read of stored content (defense-in-depth independent of
-// moderation — this runs regardless of what Gemini decides).
-function stripHiddenCharacters(value: string): string {
-  return value.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u200B-\u200F\u202A-\u202E\u2060-\u2064\uFEFF]/g, '');
 }
 
 async function handleGet(redis: Redis): Promise<Response> {
@@ -122,8 +124,7 @@ async function handleGet(redis: Redis): Promise<Response> {
 }
 
 async function handlePost(request: Request, redis: Redis): Promise<Response> {
-  const contentType = request.headers.get('content-type') ?? '';
-  if (!contentType.toLowerCase().includes('application/json')) {
+  if (!isJsonContentType(request.headers.get('content-type'))) {
     // Rejects the no-preflight CSRF trick (text/plain body crafted to parse
     // as JSON server-side while dodging a CORS preflight from a foreign page).
     return jsonResponse({ status: 'error', error: 'unsupported_content_type' }, 415);
@@ -142,13 +143,22 @@ async function handlePost(request: Request, redis: Redis): Promise<Response> {
 
   let payload: { body?: unknown; name?: unknown };
   try {
-    payload = await request.json();
-  } catch {
+    const parsed = await readJsonBody(request, MAX_BODY_BYTES);
+    if (typeof parsed !== 'object' || parsed === null) {
+      return jsonResponse({ status: 'error', error: 'bad_request' }, 400);
+    }
+    payload = parsed as { body?: unknown; name?: unknown };
+  } catch (error) {
+    if (error instanceof BodyTooLargeError) return jsonResponse({ status: 'error', error: 'payload_too_large' }, 413);
     return jsonResponse({ status: 'error', error: 'bad_request' }, 400);
   }
 
-  const rawBody = typeof payload.body === 'string' ? payload.body.trim() : '';
-  const body = stripHiddenCharacters(rawBody);
+  const rawBody = typeof payload.body === 'string' ? payload.body : '';
+  // Hidden characters stripped first (so they can't pad past the length cap
+  // or hide text), then whitespace-collapsed and fence-lookalike dash runs
+  // shortened so the stored/moderated note can never forge an
+  // ---END UNTRUSTED NOTE--- boundary in the moderation prompt.
+  const body = neutralizeForFence(rawBody);
   const name = sanitizeName(payload.name);
 
   if (!body) {
@@ -172,16 +182,19 @@ async function handlePost(request: Request, redis: Redis): Promise<Response> {
     return jsonResponse({ status: 'error', error: 'unidentifiable_client' }, 400);
   }
 
-  // Global ceiling first: caps total Gemini spend from this endpoint
-  // regardless of how many distinct IPs an attacker rotates through.
-  const withinGlobalQuota = await consumeGlobalQuota(redis, GLOBAL_QUOTA_KEY, GLOBAL_HOURLY_CAP, RATE_LIMIT_WINDOW_S);
-  if (!withinGlobalQuota) {
-    return jsonResponse({ status: 'rate_limited' });
-  }
-
+  // Per-IP FIRST: a request this IP's own bucket would reject must not
+  // consume global budget, or one abusive IP could drain the shared cap
+  // and lock out every honest visitor.
   const rateLimitKey = `notes:rl:${ip}`;
   const withinPerIpLimit = await consumeRateLimit({ redis, key: rateLimitKey, windowSeconds: RATE_LIMIT_WINDOW_S });
   if (!withinPerIpLimit) {
+    return jsonResponse({ status: 'rate_limited' });
+  }
+
+  // Then the global ceiling: caps total Gemini spend from this endpoint
+  // regardless of how many distinct IPs an attacker rotates through.
+  const withinGlobalQuota = await consumeGlobalQuota(redis, GLOBAL_QUOTA_KEY, GLOBAL_HOURLY_CAP, RATE_LIMIT_WINDOW_S);
+  if (!withinGlobalQuota) {
     return jsonResponse({ status: 'rate_limited' });
   }
 

@@ -4,7 +4,8 @@ import { embedQuery } from '../src/assistant/semanticSearch';
 import { ASSISTANT_KNOWLEDGE } from '../src/assistant/knowledge.generated';
 import type { AssistantActionId, AssistantAnswer } from '../src/assistant/types';
 import type { HybridMatch } from '../src/assistant/hybridSearch';
-import { consumeGlobalQuota, consumeRateLimit, getClientIp } from '../src/server/rateLimit';
+import { consumeCounter, consumeGlobalQuota, getClientIp } from '../src/server/rateLimit';
+import { BodyTooLargeError, isJsonContentType, neutralizeForFence, readJsonBody } from '../src/server/inputSafety';
 
 // Runs on Vercel's Edge Runtime: fast cold starts, standard fetch/Request/Response,
 // no Node-only APIs. See docs/RAG_ARCHITECTURE.md for the hybrid retrieval design
@@ -15,6 +16,10 @@ const MODEL_ID = 'gemini-3.1-flash-lite';
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_ID}:generateContent`;
 
 const MAX_QUESTION_LENGTH = 300;
+// Hard ceiling on the raw request body (a 300-char question is ~2 KB even if
+// every character is JSON-escaped), so a multi-MB POST is rejected before it
+// is parsed or buffered further.
+const MAX_BODY_BYTES = 4096;
 const MAX_OUTPUT_TOKENS = 400;
 const REQUEST_TIMEOUT_MS = 9000;
 // The question-embedding call is much smaller/cheaper than the generate
@@ -142,8 +147,7 @@ export default async function handler(request: Request): Promise<Response> {
     return jsonResponse({ error: 'method_not_allowed' }, 405);
   }
 
-  const contentType = request.headers.get('content-type') ?? '';
-  if (!contentType.toLowerCase().includes('application/json')) {
+  if (!isJsonContentType(request.headers.get('content-type'))) {
     return jsonResponse({ error: 'unsupported_content_type' }, 415);
   }
 
@@ -162,9 +166,13 @@ export default async function handler(request: Request): Promise<Response> {
 
   let question: string;
   try {
-    const body = await request.json();
-    question = typeof body?.question === 'string' ? body.question.trim() : '';
-  } catch {
+    const body = (await readJsonBody(request, MAX_BODY_BYTES)) as { question?: unknown } | null;
+    // Hidden/bidi/tag characters stripped and newlines + fence-lookalike dash
+    // runs neutralized, so the question can never forge a ---END UNTRUSTED
+    // QUESTION--- boundary or smuggle invisible instructions to the model.
+    question = typeof body?.question === 'string' ? neutralizeForFence(body.question) : '';
+  } catch (error) {
+    if (error instanceof BodyTooLargeError) return jsonResponse({ error: 'payload_too_large' }, 413);
     return jsonResponse({ error: 'bad_request' }, 400);
   }
 
@@ -186,25 +194,23 @@ export default async function handler(request: Request): Promise<Response> {
       return jsonResponse({ error: 'unidentifiable_client' }, 400);
     }
 
+    // Per-IP FIRST: a request this IP's own bucket would reject must not
+    // consume global budget, or one abusive IP could drain the shared cap
+    // and lock out every honest visitor. Up to PER_IP_HOURLY_CAP requests per
+    // window (a recruiter reasonably asks several questions in a session);
+    // INCR + EXPIRE NX run atomically so the counter can never be left
+    // without a TTL.
+    const withinPerIpLimit = await consumeCounter(redis, `ask:rl:${ip}`, PER_IP_HOURLY_CAP, RATE_LIMIT_WINDOW_S);
+    if (!withinPerIpLimit) {
+      return jsonResponse(RATE_LIMITED_ANSWER, 200);
+    }
+
     const withinGlobalQuota = await consumeGlobalQuota(redis, GLOBAL_QUOTA_KEY, GLOBAL_HOURLY_CAP, RATE_LIMIT_WINDOW_S);
     if (!withinGlobalQuota) {
       // 200, not 429: remoteAnswer.ts treats any non-ok response as a
       // silent-fallback signal and discards the body, so a distinct,
       // friendly rate-limit message can only reach the user via a
       // successful response with a recognized `status` value.
-      return jsonResponse(RATE_LIMITED_ANSWER, 200);
-    }
-
-    const rateLimitKey = `ask:rl:${ip}`;
-    // Not strict NX (would cap at 1/hour like the guestbook) — a legitimate
-    // recruiter reasonably asks several questions in one session, so this
-    // allows up to PER_IP_HOURLY_CAP requests per window via INCR, still
-    // bounded and still expiring.
-    const count = await redis.incr(rateLimitKey);
-    if (count === 1) {
-      await redis.expire(rateLimitKey, RATE_LIMIT_WINDOW_S);
-    }
-    if (count > PER_IP_HOURLY_CAP) {
       return jsonResponse(RATE_LIMITED_ANSWER, 200);
     }
   }
