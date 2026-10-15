@@ -52,15 +52,29 @@ export function setTierOverride(tier: DeviceTier | null): void {
   listeners.forEach((listener) => listener(cachedTier!));
 }
 
-function isMobileLikeDevice(win: Window): boolean {
+const MOBILE_USER_AGENT_PATTERN =
+  /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop|Mobile/i;
+
+/**
+ * True when the *only* way to interact is touch: the primary input is coarse /
+ * non-hovering AND no mouse, trackpad or other precise hovering pointer is
+ * available. Deliberately ignores `navigator.maxTouchPoints` — touch-screen
+ * laptops (Surface, Yoga, Chromebooks, touch ultrabooks) report touch points
+ * but also expose a trackpad, so `any-pointer: fine` + `any-hover: hover`
+ * keeps them on the desktop experience.
+ */
+export function isTouchOnlyDevice(win: Window): boolean {
+  const primaryIsTouch =
+    win.matchMedia('(pointer: coarse)').matches || win.matchMedia('(hover: none)').matches;
+  const hasPreciseInput =
+    win.matchMedia('(any-pointer: fine)').matches && win.matchMedia('(any-hover: hover)').matches;
+  return primaryIsTouch && !hasPreciseInput;
+}
+
+export function isMobileLikeDevice(win: Window): boolean {
   const isSmallViewport = win.matchMedia('(max-width: 767px)').matches;
-  const isCoarsePointer = win.matchMedia('(pointer: coarse)').matches;
-  const hasNoHover = win.matchMedia('(hover: none)').matches;
-  const hasTouchPoints = navigator.maxTouchPoints > 0;
-  const hasMobileUserAgent = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop|Mobile/i.test(
-    navigator.userAgent,
-  );
-  return isSmallViewport || isCoarsePointer || hasNoHover || hasTouchPoints || hasMobileUserAgent;
+  const hasMobileUserAgent = MOBILE_USER_AGENT_PATTERN.test(navigator.userAgent);
+  return isSmallViewport || hasMobileUserAgent || isTouchOnlyDevice(win);
 }
 
 /**

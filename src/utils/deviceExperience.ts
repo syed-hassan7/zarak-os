@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
-import { canRender3DIntro } from './deviceTier';
+import { canRender3DIntro, isMobileLikeDevice } from './deviceTier';
 
 export type ExperienceMode = 'desktop' | 'mobile';
 
+// Every media query isMobileLikeDevice() reads, so plugging in / removing a
+// mouse or resizing the window re-evaluates the mode live.
 const MOBILE_MEDIA_QUERIES = [
   '(max-width: 767px)',
   '(pointer: coarse)',
   '(hover: none)',
+  '(any-pointer: fine)',
+  '(any-hover: hover)',
 ] as const;
-
-const MOBILE_USER_AGENT_PATTERN =
-  /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop|Mobile/i;
 
 function getWindowObject(): Window | null {
   return typeof window === 'undefined' ? null : window;
@@ -30,15 +31,7 @@ export function detectExperienceMode(): ExperienceMode {
   const currentWindow = getWindowObject();
   if (!currentWindow) return 'desktop';
 
-  const isSmallViewport = currentWindow.matchMedia('(max-width: 767px)').matches;
-  const isCoarsePointer = currentWindow.matchMedia('(pointer: coarse)').matches;
-  const hasNoHover = currentWindow.matchMedia('(hover: none)').matches;
-  const hasTouchPoints = navigator.maxTouchPoints > 0;
-  const hasMobileUserAgent = MOBILE_USER_AGENT_PATTERN.test(navigator.userAgent);
-
-  return isSmallViewport || isCoarsePointer || hasNoHover || hasTouchPoints || hasMobileUserAgent
-    ? 'mobile'
-    : 'desktop';
+  return isMobileLikeDevice(currentWindow) ? 'mobile' : 'desktop';
 }
 
 /**

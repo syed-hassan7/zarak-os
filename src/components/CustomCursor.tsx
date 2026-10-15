@@ -8,6 +8,7 @@ import {
   type CursorFxMode,
   type CursorShape,
 } from '../effects/cursorMode';
+import { isTouchOnlyDevice } from '../utils/deviceTier';
 
 const INTERACTIVE_SELECTOR =
   'button, a, [role="button"], [role="link"], summary, select, [data-cursor-interactive]';
@@ -25,10 +26,7 @@ const ACCENT_LUMA_TOLERANCE = 40;
 type HoverShape = Exclude<CursorShape, 'default'>;
 
 function isCoarsePointerDevice(): boolean {
-  return (
-    typeof window !== 'undefined' &&
-    (window.matchMedia?.('(pointer: coarse)').matches || window.matchMedia?.('(hover: none)').matches)
-  );
+  return typeof window !== 'undefined' && Boolean(window.matchMedia) && isTouchOnlyDevice(window);
 }
 
 /**
