@@ -7,6 +7,13 @@ import { triggerMatrixRain } from '../../effects/matrixRain';
 import { triggerTerminalOverride } from '../../effects/terminalOverride';
 import { scrambleText } from '../../effects/textScramble';
 import { isAppId, type AppId } from '../../os/types';
+import {
+  TERMINAL_SECRETS,
+  UNADVERTISED_ALIASES,
+  isSecretCommand,
+  loadFoundSecrets,
+  saveFoundSecrets,
+} from '../../utils/terminalSecrets';
 
 interface TerminalProps {
   isMobile?: boolean;
@@ -30,6 +37,15 @@ function prefersReducedMotion(): boolean {
   return typeof window !== 'undefined' && Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
 }
 
+function longestCommonPrefix(values: string[]): string {
+  if (values.length === 0) return '';
+  let prefix = values[0];
+  for (const value of values.slice(1)) {
+    while (!value.startsWith(prefix)) prefix = prefix.slice(0, -1);
+  }
+  return prefix;
+}
+
 const SCRAMBLE_TICKS = 9;
 const SCRAMBLE_TICK_MS = 90;
 
@@ -38,6 +54,7 @@ export default function Terminal({ isMobile, onOpenApp }: TerminalProps) {
   const [input, setInput] = useState('');
   const [cmdHistory, setCmdHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
+  const [foundSecrets, setFoundSecrets] = useState<Set<string>>(() => loadFoundSecrets());
   const hasInitializedRef = useRef(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const sessionStartRef = useRef<number>(Date.now());
@@ -145,6 +162,30 @@ export default function Terminal({ isMobile, onOpenApp }: TerminalProps) {
           const secs = seconds % 60;
           return [{ text: `uptime: ${mins}m ${secs}s (this session, since page load)`, color: 'secondary' }];
         }
+        if (res.action === 'SECRETS') {
+          return [
+            { text: `hidden commands: ${foundSecrets.size}/${TERMINAL_SECRETS.length} found`, color: 'accent' },
+            { text: '' },
+            ...TERMINAL_SECRETS.flatMap((secret): TerminalLine[] =>
+              foundSecrets.has(secret.command)
+                ? [
+                    { text: ` [x] ${secret.command}`, color: 'green' },
+                    { text: `     ${secret.summary}`, color: 'muted' },
+                  ]
+                : [
+                    { text: ' [ ] ????????', color: 'secondary' },
+                    { text: `     hint: ${secret.hint}`, color: 'muted' },
+                  ],
+            ),
+            { text: '' },
+            foundSecrets.size === TERMINAL_SECRETS.length
+              ? { text: 'every door opened. the operator is impressed.', color: 'green' }
+              : {
+                  text: "stuck? the boring commands hold the clues: sudo -l, ps, nmap szh_os, ls -la. tab completes anything you've found.",
+                  color: 'muted',
+                },
+          ];
+        }
         if (res.action === 'HISTORY') {
           if (priorCmdHistory.length === 0) {
             return [{ text: 'no prior commands this session.', color: 'muted' }];
@@ -187,7 +228,21 @@ export default function Terminal({ isMobile, onOpenApp }: TerminalProps) {
           ? responses.map((res) => (res.scramble ? { ...res, text: scrambleText(res.text, 0) } : res))
           : responses;
 
-      setHistory([...newHistory, ...initialResponses]);
+      const unlockLines: TerminalLine[] = [];
+      if (isSecretCommand(cmd) && !foundSecrets.has(cmd)) {
+        const nextFound = new Set(foundSecrets).add(cmd);
+        setFoundSecrets(nextFound);
+        saveFoundSecrets(nextFound);
+        unlockLines.push({ text: '' });
+        unlockLines.push({
+          text: `[secret unlocked ${nextFound.size}/${TERMINAL_SECRETS.length}]${
+            foundSecrets.size === 0 ? " type 'secrets' to track them" : ''
+          }`,
+          color: 'accent',
+        });
+      }
+
+      setHistory([...newHistory, ...initialResponses, ...unlockLines]);
 
       if (hasScrambleReveal && !reducedMotion) {
         startScrambleReveal(baseIndex, responses);
@@ -203,7 +258,42 @@ export default function Terminal({ isMobile, onOpenApp }: TerminalProps) {
     setInput('');
   };
 
+  // Tab completion over advertised commands only: hidden ones become
+  // completable once found, so Tab can't be used to enumerate them.
+  const handleTabComplete = (): boolean => {
+    const typed = input.toLowerCase().replace(/^\s+/, '').replace(/\s+/g, ' ');
+    if (!typed) return false;
+
+    const matches = Object.keys(TERMINAL_COMMANDS).filter(
+      (c) =>
+        c.startsWith(typed) &&
+        !UNADVERTISED_ALIASES.has(c) &&
+        (!isSecretCommand(c) || foundSecrets.has(c)),
+    );
+    if (matches.length === 0) return false;
+
+    const completed = longestCommonPrefix(matches);
+    if (matches.length === 1) {
+      setInput(completed);
+    } else if (completed.length > typed.length) {
+      setInput(completed);
+    } else {
+      setHistory((prev) => [
+        ...prev.slice(-90),
+        { text: `$ ${typed}`, color: 'accent' },
+        { text: matches.join('   '), color: 'muted' },
+      ]);
+    }
+    return true;
+  };
+
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    // Only swallow Tab when it actually completes something — otherwise it
+    // keeps its normal focus-moving behaviour (no keyboard trap).
+    if (e.key === 'Tab' && !e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey) {
+      if (handleTabComplete()) e.preventDefault();
+      return;
+    }
     if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (historyIndex < cmdHistory.length - 1) {
@@ -250,7 +340,7 @@ export default function Terminal({ isMobile, onOpenApp }: TerminalProps) {
             <div className="border-b border-white/10 bg-white/[0.03] px-4 py-3">
               <div className="text-[10px] uppercase tracking-[0.18em] text-os-text-sec/55">Quick commands</div>
               <div className="mt-2 flex flex-wrap gap-2">
-                {['help', 'whoami', 'open about.txt'].map((cmd) => (
+                {['help', 'secrets', 'whoami', 'open about.txt'].map((cmd) => (
                   <button
                     key={cmd}
                     type="button"
